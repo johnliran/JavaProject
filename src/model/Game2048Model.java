@@ -1,6 +1,7 @@
 package model;
 
 import org.eclipse.swt.graphics.Point;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Observable;
@@ -49,7 +50,7 @@ public class Game2048Model extends Observable implements Model {
         board = newBoard.clone();
     }
 
-    public void move() {
+    public boolean move(boolean simulate) {
         //We use linkedlist to organize all the cells which have numbers
         LinkedList<Integer> numbers = new LinkedList<Integer>();
         boolean moved = false;
@@ -73,25 +74,30 @@ public class Game2048Model extends Observable implements Model {
                 if (!numbers.isEmpty())
                     if (numberToCheck == numbers.peek()) {
                         numberToCheck += numbers.poll();
-                        setScore(getScore() + numberToCheck);
-                        if (numberToCheck == TARGETSCORE && !isWin()) {
-                            setWin(true);
-                            System.out.println("WIN");
+                        if (!simulate) {
+                            setScore(getScore() + numberToCheck);
+                            if (numberToCheck == TARGETSCORE && !isWin()) {
+                                setWin(true);
+                                System.out.println("WIN");
+                            }
                         }
                         moved = true;
                     }
-                board[row][column] = numberToCheck;
+                if (!simulate) {
+                    board[row][column] = numberToCheck;
+                }
             }
         }
-        if (moved) {
+        if (moved && !simulate) {
             generate();
         }
+        return moved;
     }
 
     @Override
     public void moveUp() {
         rotate(LEFT);
-        move();
+        move(false);
         rotate(RIGHT);
         setChanged();
         notifyObservers();
@@ -101,7 +107,7 @@ public class Game2048Model extends Observable implements Model {
     @Override
     public void moveDown() {
         rotate(RIGHT);
-        move();
+        move(false);
         rotate(LEFT);
         setChanged();
         notifyObservers();
@@ -111,7 +117,7 @@ public class Game2048Model extends Observable implements Model {
     public void moveRight() {
         rotate(LEFT);
         rotate(LEFT);
-        move();
+        move(false);
         rotate(RIGHT);
         rotate(RIGHT);
         setChanged();
@@ -120,7 +126,7 @@ public class Game2048Model extends Observable implements Model {
 
     @Override
     public void moveLeft() {
-        move();
+        move(false);
         setChanged();
         notifyObservers();
     }
@@ -168,7 +174,7 @@ public class Game2048Model extends Observable implements Model {
             int column = point.y;
             board[row][column] = generateValue();
             if (freeStates.size() == 1) {
-             //   setLoose(!hasEqualNeighbour(row, column));
+                setLoose(move(true));
                 if (isLoose()) {
                     System.out.println("LOOSE");
                     // setChanged();
