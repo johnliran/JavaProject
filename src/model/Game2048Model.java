@@ -1,7 +1,6 @@
 package model;
 
 import org.eclipse.swt.graphics.Point;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Observable;
