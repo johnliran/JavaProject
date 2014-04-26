@@ -34,12 +34,7 @@ public class Board extends Composite {
 		boardSize = BOARDSIZE;
 		boardData = new int[boardSize][boardSize];
 		setBackground(new Color(getDisplay(), 187, 173, 160));
-		GridLayout gridLayout = new GridLayout();
-        gridLayout.numColumns = boardSize;
-        gridLayout.makeColumnsEqualWidth = true;
-        gridLayout.horizontalSpacing = 0;
-        gridLayout.verticalSpacing = 0;
-		setLayout(gridLayout);
+		setLayout(new GridLayout(boardSize,true));
 		
 		tiles = new Tile[boardSize][boardSize];
 		for (int row = 0; row < boardSize; row++) {

@@ -30,7 +30,6 @@ public Tile(Composite parent, int style) {
 				//Set the default bgcolor of the canvas
 				setBackground(new Color(getDisplay(), 187, 173, 160));
 				
-				
 				//Set the fontMetrics
 				FontMetrics fm = event.gc.getFontMetrics();
 				int charWidth = fm.getAverageCharWidth();
@@ -40,9 +39,9 @@ public Tile(Composite parent, int style) {
 				//Set the font color
 				setForeground(new Color(getDisplay(), 119, 110, 101));
 				
-				//Set the color Draw the RoundedRectangle shape  (passes the event in order to change the event's specific color)
+				//Set the color and Draw the RoundedRectangle shape  (passes the event in order to change the event's specific color)
 				setTileBackground(event);
-				event.gc.fillRoundRectangle(0, 0, getSize().x-getSize().x/10, getSize().y-getSize().y/10, 30, 30);
+				event.gc.fillRoundRectangle(0, 0, getSize().x, getSize().y, 30, 30);
 				
 				//Set another font color for numbers higher than 8
 				if (value>8)
