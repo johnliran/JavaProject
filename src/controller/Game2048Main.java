@@ -13,6 +13,6 @@ public class Game2048Main {
 		m.addObserver(p);
 		ui.addObserver(p);
 		p.startGame();
-	}
-
+        System.out.println("Changed");
+    }
 }
