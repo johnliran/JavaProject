@@ -20,22 +20,22 @@ public class Presenter implements Observer {
         if (observable instanceof View) {
             switch (ui.getUserCommand()) {
                 case SWT.ARROW_UP: {
-                    m.moveUp();
+                    m.moveUp(false);
                     break;
                 }
 
                 case SWT.ARROW_DOWN: {
-                    m.moveDown();
+                    m.moveDown(false);
                     break;
                 }
 
                 case SWT.ARROW_RIGHT: {
-                    m.moveRight();
+                    m.moveRight(false);
                     break;
                 }
 
                 case SWT.ARROW_LEFT: {
-                    m.moveLeft();
+                    m.moveLeft(false);
                     break;
                 }
                 case 1:
