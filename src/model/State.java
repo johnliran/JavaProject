@@ -5,18 +5,20 @@ package model;
 
 public class State {//implements Comparable<State> {
 
-	Object state;
-	
-	public Object getState() {
-		return state;
-	}
-	public void setState(Object state) {
-		this.state = state;
-	}
-	public State(Object state) {
-		this.state = state;
-	}
-	
+    Object state;
+
+    public Object getState() {
+        return state;
+    }
+
+    public void setState(Object state) {
+        this.state = state;
+    }
+
+    public State(Object state) {
+        this.state = state;
+    }
+
 }
 
 
