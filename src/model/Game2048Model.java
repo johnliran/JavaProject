@@ -7,23 +7,22 @@ import java.util.Observable;
 import java.util.Random;
 
 public class Game2048Model extends Observable implements Model {
+    private final static int TARGETSCORE = 32;
+    private final static int RIGHT = 1;
+    private final static int LEFT = 2;
     private int[][] board;
     private int score;
-
-    public void setScore(int score) {
-        this.score = score;
-    }
+    private boolean win;
+    private boolean loose;
 
     public Game2048Model() {
         this.board = new int[4][4];
         this.score = 0;
+        this.win = false;
+        this.loose = false;
     }
 
-    //direction Constants
-    private final static int RIGHT = 1;
-    private final static int LEFT = 2;
-
-    public void rotateData(int direction) {
+    public void rotate(int direction) {
         int[][] newBoard = new int[board.length][board.length];
         switch (direction) {
             case RIGHT: {
@@ -75,6 +74,10 @@ public class Game2048Model extends Observable implements Model {
                     if (numberToCheck == numbers.peek()) {
                         numberToCheck += numbers.poll();
                         setScore(getScore() + numberToCheck);
+                        if (numberToCheck == TARGETSCORE && !isWin()) {
+                            setWin(true);
+                            System.out.println("WIN");
+                        }
                         moved = true;
                     }
                 board[row][column] = numberToCheck;
@@ -87,9 +90,9 @@ public class Game2048Model extends Observable implements Model {
 
     @Override
     public void moveUp() {
-        rotateData(LEFT);
+        rotate(LEFT);
         move();
-        rotateData(RIGHT);
+        rotate(RIGHT);
         setChanged();
         notifyObservers();
 
@@ -97,20 +100,20 @@ public class Game2048Model extends Observable implements Model {
 
     @Override
     public void moveDown() {
-        rotateData(RIGHT);
+        rotate(RIGHT);
         move();
-        rotateData(LEFT);
+        rotate(LEFT);
         setChanged();
         notifyObservers();
     }
 
     @Override
     public void moveRight() {
-        rotateData(LEFT);
-        rotateData(LEFT);
+        rotate(LEFT);
+        rotate(LEFT);
         move();
-        rotateData(RIGHT);
-        rotateData(RIGHT);
+        rotate(RIGHT);
+        rotate(RIGHT);
         setChanged();
         notifyObservers();
     }
@@ -158,17 +161,46 @@ public class Game2048Model extends Observable implements Model {
 
     public void generate() {
         ArrayList<State> freeStates = getFreeStates();
-        int index = new Random().nextInt(freeStates.size());
-        Point point = (Point) (freeStates.get(index).getState());
-        int row = point.x;
-        int column = point.y;
-        board[row][column] = generateValue();
-
+        if (freeStates.size() > 0) {
+            int index = new Random().nextInt(freeStates.size());
+            Point point = (Point) (freeStates.get(index).getState());
+            int row = point.x;
+            int column = point.y;
+            board[row][column] = generateValue();
+            if (freeStates.size() == 1) {
+             //   setLoose(!hasEqualNeighbour(row, column));
+                if (isLoose()) {
+                    System.out.println("LOOSE");
+                    // setChanged();
+                    // notifyObservers();
+                }
+            }
+        }
     }
 
     @Override
     public int getScore() {
         return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public boolean isWin() {
+        return win;
+    }
+
+    public void setWin(boolean win) {
+        this.win = win;
+    }
+
+    public boolean isLoose() {
+        return loose;
+    }
+
+    public void setLoose(boolean loose) {
+        this.loose = loose;
     }
 }
 
