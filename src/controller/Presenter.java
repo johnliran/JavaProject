@@ -9,10 +9,6 @@ import model.Model;
 import view.View;
 
 public class Presenter implements Observer {
-
-	boolean win = false;
-	boolean loose = false;
-	
 	View ui;
 	Model m;
 	
@@ -20,11 +16,9 @@ public class Presenter implements Observer {
 	public void update(Observable observable, Object object) {
 		if (observable instanceof Model) {		
 			ui.displayScore(((Model) observable).getScore());
-			ui.displayData(((Model) observable).getData());
-			
+			ui.displayData(((Model) observable).getData());	
 		}
 		if (observable instanceof View) {
-			if (!win && !loose) {
 				switch (ui.getUserCommand()) {
 				case SWT.ARROW_UP: {
 					m.moveUp();
@@ -55,7 +49,7 @@ public class Presenter implements Observer {
 		}
 			
 		
-	}
+	
 
 	public Presenter(Model m, View ui) {
 		this.m = m;

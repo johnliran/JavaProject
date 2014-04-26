@@ -41,7 +41,7 @@ public Tile(Composite parent, int style) {
 				
 				//Set the color and Draw the RoundedRectangle shape  (passes the event in order to change the event's specific color)
 				setTileBackground(event);
-				event.gc.fillRoundRectangle(0, 0, getSize().x, getSize().y, 30, 30);
+				event.gc.fillRoundRectangle(0, 0, getSize().x, getSize().y, 20, 20);
 				
 				//Set another font color for numbers higher than 8
 				if (value>8)

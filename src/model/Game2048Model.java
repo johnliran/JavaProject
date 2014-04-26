@@ -11,7 +11,7 @@ import org.eclipse.swt.graphics.Point;
 
 public class Game2048Model extends Observable implements Model {
 	private int[][] board;
-	private int score = 0;
+	private int score;
 	
 	public void setScore(int score) {
 		this.score = score;
@@ -19,25 +19,12 @@ public class Game2048Model extends Observable implements Model {
 
 	public Game2048Model() {
 		this.board = new int[4][4];
+		this.score = 0;
 	}
 	
-
 	//direction Constants
 	private final static int RIGHT = 1;
 	private final static int LEFT = 2;
-	
-	public void printBoard() {
-		   for(int i = 0; i < board.length; i++)
-		   {
-		      for(int j = 0; j < board.length; j++)
-		      {
-		         System.out.printf("%5d ", board[i][j]);
-		      }
-		      System.out.println();
-		   }
-		   System.out.println("\n");
-			
-		}
 	
 	public void rotateData(int direction){
 		int[][] newBoard = new int[board.length][board.length];
@@ -48,24 +35,22 @@ public class Game2048Model extends Observable implements Model {
 					newBoard[column][(board.length-1)-row] = board[row][column];
 				}
 			}
-		
-		}	
 			break;
+		}	
+			
 		case LEFT: {
 			for (int row = 0; row < board.length; row++) {
 				for (int column = 0; column < board.length; column++) {
 					newBoard[(board.length-1)-column][row] = board[row][column];
 				}
 			}
-		
-			
+			break;
 		}
 			
 		default:
 			break;
 		}
 		board = newBoard.clone();
-		return;
 	}
 	
 	public void move() {
@@ -93,7 +78,7 @@ public class Game2048Model extends Observable implements Model {
 				if (!numbers.isEmpty())
 						if (numberToCheck == numbers.peek()) {
 							numberToCheck += numbers.poll();
-							score += numberToCheck;
+							setScore(getScore() + numberToCheck);
 							moved = true;
 						}
 				board[row][column] = numberToCheck;
@@ -147,8 +132,6 @@ public class Game2048Model extends Observable implements Model {
 	@Override
 	public int[][] getData() {
 		return board;
-		
-	
 	}
 	
 	@Override

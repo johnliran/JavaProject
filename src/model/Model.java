@@ -6,7 +6,6 @@ public interface Model {
 	public void moveRight();
 	public void moveLeft();
 	public int[][] getData();
-	public void printBoard();
 	public void initializeBoard();
 	public int getScore();
 }
