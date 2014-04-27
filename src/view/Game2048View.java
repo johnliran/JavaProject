@@ -18,7 +18,7 @@ public class Game2048View extends Observable implements View, Runnable {
 	WindowShell ws;
 	Display display;
 	Shell shell;
-	Board board;
+	Board2048 board;
 	int userCommand;
 
 	private void initComponents() {

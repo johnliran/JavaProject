@@ -15,7 +15,7 @@ import org.eclipse.swt.widgets.Shell;
 public class WindowShell {
 	Display display;
 	Shell shell;
-	Board board;
+	Board2048 board;
 	Label score;
 	
 	public Label getScore() {
@@ -42,11 +42,11 @@ public class WindowShell {
 		this.shell = shell;
 	}
 
-	public Board getBoard() {
+	public Board2048 getBoard() {
 		return board;
 	}
 
-	public void setBoard(Board board) {
+	public void setBoard(Board2048 board) {
 		this.board = board;
 	}
 
@@ -87,7 +87,7 @@ public class WindowShell {
 	        undoButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
 	        
 	      //Define the Board Widget and initialize it:
-	        board = new Board(shell, SWT.NO_BACKGROUND);
+	        board = new Board2048(shell, SWT.NO_BACKGROUND);
 	        board.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 6));
 	        
 	        Button resetButton = new Button(shell, SWT.PUSH);
