@@ -187,7 +187,7 @@ public class Game2048Model extends Observable implements Model {
             int column = point.y;
             board[row][column] = generateValue();
             if (freeStates.size() == 1) {
-                if (!(moveUp(true) && moveDown(true) && moveLeft(true) && moveRight(true))) {
+                if (!(moveUp(true) || moveDown(true) || moveLeft(true) || moveRight(true))) {
                     setLoose(true);
                     System.out.println("LOOSE");
                 }
