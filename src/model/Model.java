@@ -1,13 +1,13 @@
 package model;
 
 public interface Model {
-    public void moveUp();
+    public boolean moveUp(boolean simulate);
 
-    public void moveDown();
+    public boolean moveDown(boolean simulate);
 
-    public void moveRight();
+    public boolean moveRight(boolean simulate);
 
-    public void moveLeft();
+    public boolean moveLeft(boolean simulate);
 
     public int[][] getData();
 
