@@ -12,14 +12,14 @@ public class Game2048Model extends Observable implements Model {
     private final static int LEFT = 2;
     private int[][] board;
     private int score;
-    private boolean win;
-    private boolean loose;
+    private boolean gameWon;
+    private boolean gameOver;
 
     public Game2048Model() {
         this.board = new int[4][4];
         this.score = 0;
-        this.win = false;
-        this.loose = false;
+        this.gameWon = false;
+        this.gameOver = false;
     }
 
     public void rotate(int direction) {
@@ -78,9 +78,10 @@ public class Game2048Model extends Observable implements Model {
                         moved = true;
                         if (!simulate) {
                             setScore(getScore() + numberToCheck);
-                            if (numberToCheck == TARGETSCORE && !isWin()) {
-                                setWin(true);
-                                System.out.println("WIN");
+                            if (numberToCheck == TARGETSCORE && !isGameWon()) {
+                                setGameWon(true);
+                                setChanged();
+                                notifyObservers("gameWon");
                             }
                         } else return moved;
                     }
@@ -188,8 +189,9 @@ public class Game2048Model extends Observable implements Model {
             board[row][column] = generateValue();
             if (freeStates.size() == 1) {
                 if (!(moveUp(true) || moveDown(true) || moveLeft(true) || moveRight(true))) {
-                    setLoose(true);
-                    System.out.println("LOOSE");
+                    setGameOver(true);
+                    setChanged();
+                    notifyObservers("gameOver");
                 }
             }
         }
@@ -204,31 +206,19 @@ public class Game2048Model extends Observable implements Model {
         this.score = score;
     }
 
-    public boolean isWin() {
-        return win;
+    public boolean isGameWon() {
+        return gameWon;
     }
 
-    public void setWin(boolean win) {
-        this.win = win;
+    public void setGameWon(boolean gameWon) {
+        this.gameWon = gameWon;
     }
 
-    public boolean isLoose() {
-        return loose;
+    public boolean isGameOver() {
+        return gameOver;
     }
 
-    public void setLoose(boolean loose) {
-        this.loose = loose;
+    public void setGameOver(boolean gameOver) {
+        this.gameOver = gameOver;
     }
 }
-
-
-	
-
-
-
-
-
-
-
-
-
