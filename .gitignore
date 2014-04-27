@@ -1,11 +1,5 @@
 *.class
 
-<<<<<<< HEAD
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-=======
->>>>>>> liran
 # Package Files #
 *.jar
 *.war
