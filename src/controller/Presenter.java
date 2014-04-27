@@ -13,11 +13,12 @@ public class Presenter implements Observer {
 
     @Override
     public void update(Observable observable, Object object) {
-        if (observable instanceof Model) {
+        if (observable == m) {
             ui.displayScore(((Model) observable).getScore());
             ui.displayData(((Model) observable).getData());
+            
         }
-        if (observable instanceof View) {
+        if (observable == ui) {
             switch (ui.getUserCommand()) {
                 case SWT.ARROW_UP: {
                     m.moveUp(false);
