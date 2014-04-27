@@ -1,7 +1,6 @@
 package model;
 
 import org.eclipse.swt.graphics.Point;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Observable;
@@ -73,18 +72,19 @@ public class Game2048Model extends Observable implements Model {
             //Merge if there are equal numbers
             for (int column = 0; column < board.length && !numbers.isEmpty(); column++) {
                 int numberToCheck = numbers.poll();
-                if (!numbers.isEmpty())
+                if (!numbers.isEmpty()) {
                     if (numberToCheck == numbers.peek()) {
                         numberToCheck += numbers.poll();
+                        moved = true;
                         if (!simulate) {
                             setScore(getScore() + numberToCheck);
                             if (numberToCheck == TARGETSCORE && !isWin()) {
                                 setWin(true);
                                 System.out.println("WIN");
                             }
-                        }
-                        moved = true;
+                        } else return moved;
                     }
+                }
                 if (!simulate) {
                     board[row][column] = numberToCheck;
                 }
@@ -144,7 +144,6 @@ public class Game2048Model extends Observable implements Model {
         return moved;
     }
 
-
     @Override
     public int[][] getData() {
         return board;
@@ -157,6 +156,7 @@ public class Game2048Model extends Observable implements Model {
                 board[i][j] = 0;
             }
         }
+        generate();
         generate();
         setChanged();
         notifyObservers();
@@ -187,14 +187,9 @@ public class Game2048Model extends Observable implements Model {
             int column = point.y;
             board[row][column] = generateValue();
             if (freeStates.size() == 1) {
-                if (moveUp(true) && moveDown(true) && moveLeft(true) && moveRight(true)) {
-                    setLoose(move(true));
-                }
-
-                if (isLoose()) {
+                if (!(moveUp(true) && moveDown(true) && moveLeft(true) && moveRight(true))) {
+                    setLoose(true);
                     System.out.println("LOOSE");
-                    // setChanged();
-                    // notifyObservers();
                 }
             }
         }
