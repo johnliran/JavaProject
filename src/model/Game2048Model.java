@@ -80,8 +80,7 @@ public class Game2048Model extends Observable implements Model {
                             setScore(getScore() + numberToCheck);
                             if (numberToCheck == TARGETSCORE && !isGameWon()) {
                                 setGameWon(true);
-                                setChanged();
-                                notifyObservers("gameWon");
+                                notifyObservers();
                             }
                         } else return moved;
                     }
@@ -190,8 +189,7 @@ public class Game2048Model extends Observable implements Model {
             if (freeStates.size() == 1) {
                 if (!(moveUp(true) || moveDown(true) || moveLeft(true) || moveRight(true))) {
                     setGameOver(true);
-                    setChanged();
-                    notifyObservers("gameOver");
+                    notifyObservers();
                 }
             }
         }
@@ -206,6 +204,7 @@ public class Game2048Model extends Observable implements Model {
         this.score = score;
     }
 
+    @Override
     public boolean isGameWon() {
         return gameWon;
     }
@@ -214,6 +213,7 @@ public class Game2048Model extends Observable implements Model {
         this.gameWon = gameWon;
     }
 
+    @Override
     public boolean isGameOver() {
         return gameOver;
     }
