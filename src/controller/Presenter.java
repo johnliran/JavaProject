@@ -1,22 +1,21 @@
 package controller;
 
+import view.View;
 import model.Model;
 import org.eclipse.swt.SWT;
-import view.View;
-
 import java.util.Observable;
 import java.util.Observer;
 
 public class Presenter implements Observer {
-    View ui;
-    Model m;
+    private View ui;
+    private Model m;
 
     @Override
     public void update(Observable observable, Object object) {
         if (observable == m) {
             ui.displayScore(((Model) observable).getScore());
             ui.displayData(((Model) observable).getData());
-            
+
         }
         if (observable == ui) {
             switch (ui.getUserCommand()) {
@@ -48,7 +47,6 @@ public class Presenter implements Observer {
         }
     }
 
-
     public Presenter(Model m, View ui) {
         this.m = m;
         this.ui = ui;
@@ -58,4 +56,3 @@ public class Presenter implements Observer {
         m.initializeBoard();
     }
 }
-
