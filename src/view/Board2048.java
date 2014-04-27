@@ -6,7 +6,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
-public class Board extends Composite {
+public class Board2048 extends Composite {
     private final static int BOARDSIZE = 4;
     int boardSize;
     int[][] boardData;
@@ -22,7 +22,7 @@ public class Board extends Composite {
         }
     }
 
-    public Board(Composite parent, int style) {
+    public Board2048(Composite parent, int style) {
         super(parent, style);
         boardSize = BOARDSIZE;
         boardData = new int[boardSize][boardSize];
