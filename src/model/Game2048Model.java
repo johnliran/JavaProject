@@ -9,9 +9,7 @@ public class Game2048Model extends Observable implements Model {
     private final static int RIGHT = 1;
     private final static int LEFT = 2;
     private int[][] board;
-    private int[][] savedBoard;
     private int score;
-    private int savedScore;
     private boolean gameWon;
     private boolean gameOver;
     private Stack<int[][]> previousBoards;
@@ -19,10 +17,9 @@ public class Game2048Model extends Observable implements Model {
 
     public Game2048Model() {
         this.board = new int[BOARDSIZE][BOARDSIZE];
-        this.savedBoard = new int[BOARDSIZE][BOARDSIZE];
+        this.score = 0;
         this.previousBoards = new Stack<int[][]>();
         this.previousScores = new Stack<Integer>();
-        this.score = 0;
         this.gameWon = false;
         this.gameOver = false;
     }
@@ -31,18 +28,18 @@ public class Game2048Model extends Observable implements Model {
         int[][] newBoard = new int[board.length][board.length];
         switch (direction) {
             case RIGHT: {
-                for (int row = 0; row < board.length; row++) {
-                    for (int column = 0; column < board.length; column++) {
-                        newBoard[column][(board.length - 1) - row] = board[row][column];
+                for (int row = 0; row < newBoard.length; row++) {
+                    for (int column = 0; column < newBoard.length; column++) {
+                        newBoard[column][(newBoard.length - 1) - row] = board[row][column];
                     }
                 }
                 break;
             }
 
             case LEFT: {
-                for (int row = 0; row < board.length; row++) {
-                    for (int column = 0; column < board.length; column++) {
-                        newBoard[(board.length - 1) - column][row] = board[row][column];
+                for (int row = 0; row < newBoard.length; row++) {
+                    for (int column = 0; column < newBoard.length; column++) {
+                        newBoard[(newBoard.length - 1) - column][row] = board[row][column];
                     }
                 }
                 break;
@@ -51,31 +48,34 @@ public class Game2048Model extends Observable implements Model {
             default:
                 break;
         }
-        board = newBoard.clone();
+        setData(newBoard);
     }
 
     public boolean move(boolean simulate) {
+        int[][] newBoard = new int[board.length][board.length];
         //We use linkedlist to organize all the cells which have numbers
         LinkedList<Integer> numbers = new LinkedList<Integer>();
         boolean moved = false;
         boolean seenZero;
         //Get over all the board and take out the numbers into List.
-        for (int row = 0; row < board.length; row++) {
+        for (int row = 0; row < newBoard.length; row++) {
             seenZero = false;
-            for (int column = 0; column < board.length; column++) {
+            for (int column = 0; column < newBoard.length; column++) {
                 if (board[row][column] != 0) {
                     numbers.add(board[row][column]);
                     //After putting the numbers into the stack,We can override and pad the line with 0;
                     if (!simulate) {
-                        board[row][column] = 0;
+                        newBoard[row][column] = 0;
                     }
-                    if (seenZero)
+                    if (seenZero) {
                         moved = true;
-                } else
+                    }
+                } else {
                     seenZero = true;
+                }
             }
             //Merge if there are equal numbers
-            for (int column = 0; column < board.length && !numbers.isEmpty(); column++) {
+            for (int column = 0; column < newBoard.length && !numbers.isEmpty(); column++) {
                 int numberToCheck = numbers.poll();
                 if (!numbers.isEmpty()) {
                     if (numberToCheck == numbers.peek()) {
@@ -91,11 +91,12 @@ public class Game2048Model extends Observable implements Model {
                     }
                 }
                 if (!simulate) {
-                    board[row][column] = numberToCheck;
+                    newBoard[row][column] = numberToCheck;
                 }
             }
         }
         if (moved && !simulate) {
+            setData(newBoard);
             generate();
         }
         return moved;
@@ -104,12 +105,12 @@ public class Game2048Model extends Observable implements Model {
     @Override
     public boolean moveUp(boolean simulate) {
         if (!simulate) {
-            copy();
+            save();
         }
         rotate(LEFT);
         boolean moved = move(simulate);
-        if (moved && !simulate) {
-            save();
+        if (!simulate && !moved) {
+            delete();
         }
         rotate(RIGHT);
         if (!simulate) {
@@ -122,12 +123,12 @@ public class Game2048Model extends Observable implements Model {
     @Override
     public boolean moveDown(boolean simulate) {
         if (!simulate) {
-            copy();
+            save();
         }
         rotate(RIGHT);
         boolean moved = move(simulate);
-        if (moved && !simulate) {
-            save();
+        if (!simulate && !moved) {
+            delete();
         }
         rotate(LEFT);
         if (!simulate) {
@@ -140,13 +141,13 @@ public class Game2048Model extends Observable implements Model {
     @Override
     public boolean moveRight(boolean simulate) {
         if (!simulate) {
-            copy();
+            save();
         }
         rotate(LEFT);
         rotate(LEFT);
         boolean moved = move(simulate);
-        if (moved && !simulate) {
-            save();
+        if (!simulate && !moved) {
+            delete();
         }
         rotate(RIGHT);
         rotate(RIGHT);
@@ -160,11 +161,13 @@ public class Game2048Model extends Observable implements Model {
     @Override
     public boolean moveLeft(boolean simulate) {
         if (!simulate) {
-            copy();
+            save();
         }
         boolean moved = move(simulate);
-        if (moved && !simulate) {
-            save();
+        if (!simulate && !moved) {
+            delete();
+        }
+        if (!simulate) {
             setChanged();
             notifyObservers();
         }
@@ -176,9 +179,8 @@ public class Game2048Model extends Observable implements Model {
         return board;
     }
 
-    @Override
-    public int[][] setData(int[][] data) {
-        return this.board = data.clone();
+    public void setData(int[][] data) {
+        this.board = data;
     }
 
     @Override
@@ -205,13 +207,13 @@ public class Game2048Model extends Observable implements Model {
     }
 
     public void save() {
-        previousBoards.push(savedBoard);
-        previousScores.push(savedScore);
+        previousBoards.push(board);
+        previousScores.push(score);
     }
 
-    public void copy() {
-        savedBoard = board.clone();
-        savedScore = score;
+    public void delete() {
+        previousBoards.pop();
+        previousScores.pop();
     }
 
     public ArrayList<State> getFreeStates() {

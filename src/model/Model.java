@@ -16,8 +16,6 @@ public interface Model {
 
     public int[][] getData();
 
-    public int[][] setData(int[][] data);
-
     public int getScore();
 
     public boolean isGameWon();
