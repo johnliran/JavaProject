@@ -24,27 +24,32 @@ public class Presenter implements Observer {
         if (observable == ui) {
             switch (ui.getUserCommand()) {
                 case SWT.ARROW_UP: {
+                    System.out.println("UP");
                     m.moveUp(false);
                     break;
                 }
 
                 case SWT.ARROW_DOWN: {
+                    System.out.println("DOWN");
                     m.moveDown(false);
                     break;
                 }
 
                 case SWT.ARROW_RIGHT: {
+                    System.out.println("RIGHT");
                     m.moveRight(false);
                     break;
                 }
 
                 case SWT.ARROW_LEFT: {
+                    System.out.println("LEFT");
                     m.moveLeft(false);
                     break;
                 }
 
                 // For testing only; RESTORE
                 case SWT.SPACE: {
+                    System.out.println("SPACE");
                     m.restore();
                     break;
                 }
