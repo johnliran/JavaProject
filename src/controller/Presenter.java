@@ -14,9 +14,9 @@ public class Presenter implements Observer {
     public void update(Observable observable, Object notification) {
         if (observable == m) {
             if (((Model) observable).isGameOver()) {
-                System.out.println("gameOver");
+                ui.gameOver();
             } else if (((Model) observable).isGameWon()) {
-                System.out.println("gameWon");
+                ui.gameWon();
             }
             ui.displayScore(((Model) observable).getScore());
             ui.displayData(((Model) observable).getData());

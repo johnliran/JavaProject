@@ -6,20 +6,15 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 public class Game2048View extends Observable implements View, Runnable {
-	WindowShell ws;
-	Display display;
-	Shell shell;
-	Board2048 board;
-	int userCommand;
+    private Game2048Board board;
+    private WindowShell ws;
+	private Display display;
+	private Shell shell;
+	private int userCommand;
 
 	private void initComponents() {
 		ws = new WindowShell(400, 300, "2048");
@@ -31,16 +26,16 @@ public class Game2048View extends Observable implements View, Runnable {
 		board = ws.getBoard();
 		board.addKeyListener(new KeyListener() {
 			@Override
-			public void keyReleased(KeyEvent arg0) {
+			public void keyReleased(KeyEvent event) {
 			}
 
 			@Override
-			public void keyPressed(KeyEvent e) {
-				if ((e.keyCode == SWT.ARROW_DOWN) ||
-						(e.keyCode == SWT.ARROW_LEFT) ||
-						(e.keyCode == SWT.ARROW_UP) ||
-						(e.keyCode == SWT.ARROW_RIGHT)) {
-					userCommand = e.keyCode;
+			public void keyPressed(KeyEvent event) {
+				if ((event.keyCode == SWT.ARROW_DOWN) ||
+						(event.keyCode == SWT.ARROW_LEFT) ||
+						(event.keyCode == SWT.ARROW_UP) ||
+						(event.keyCode == SWT.ARROW_RIGHT)) {
+					userCommand = event.keyCode;
 					setChanged();
 					notifyObservers();
 				}
@@ -77,7 +72,6 @@ public class Game2048View extends Observable implements View, Runnable {
 		return userCommand;
 	}
 
-
 	public Game2048View() {
 		initComponents();
 	}
@@ -86,4 +80,14 @@ public class Game2048View extends Observable implements View, Runnable {
 	public void displayScore(int score) {
 		ws.setScore(score);
 	}
+
+    @Override
+    public void gameWon() {
+        System.out.println("gameWon");
+    }
+
+    @Override
+    public void gameOver() {
+        System.out.println("gameOver");
+    }
 }
