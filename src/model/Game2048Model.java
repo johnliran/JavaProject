@@ -48,10 +48,11 @@ public class Game2048Model extends Observable implements Model {
             default:
                 break;
         }
-        setData(newBoard.clone());
+        setData(newBoard);
     }
 
     public boolean move(boolean simulate) {
+        int[][] newBoard = new int[board.length][board.length];
         //We use linkedlist to organize all the cells which have numbers
         LinkedList<Integer> numbers = new LinkedList<Integer>();
         boolean moved = false;
@@ -64,7 +65,7 @@ public class Game2048Model extends Observable implements Model {
                     numbers.add(board[row][column]);
                     //After putting the numbers into the stack,We can override and pad the line with 0;
                     if (!simulate) {
-                        board[row][column] = 0;
+                        newBoard[row][column] = 0;
                     }
                     if (seenZero) {
                         moved = true;
@@ -90,11 +91,12 @@ public class Game2048Model extends Observable implements Model {
                     }
                 }
                 if (!simulate) {
-                    board[row][column] = numberToCheck;
+                    newBoard[row][column] = numberToCheck;
                 }
             }
         }
         if (moved && !simulate) {
+            setData(newBoard);
             generate();
         }
         return moved;
@@ -161,9 +163,7 @@ public class Game2048Model extends Observable implements Model {
         if (!simulate) {
             save();
         }
-        System.out.println("simulate " + simulate);
         boolean moved = move(simulate);
-        System.out.println("moved " + moved);
         if (!simulate) {
             if (moved) {
                 setChanged();
@@ -178,9 +178,8 @@ public class Game2048Model extends Observable implements Model {
         return board;
     }
 
-    @Override
-    public int[][] setData(int[][] data) {
-        return this.board = data.clone();
+    public void setData(int[][] data) {
+        this.board = data.clone();
     }
 
     @Override
@@ -199,7 +198,6 @@ public class Game2048Model extends Observable implements Model {
     @Override
     public void restore() {
         if (!previousBoards.isEmpty()) {
-            System.out.println("Restored");
             setData(previousBoards.pop());
             setScore(previousScores.pop());
             setChanged();
@@ -208,13 +206,11 @@ public class Game2048Model extends Observable implements Model {
     }
 
     public void save() {
-        System.out.println("Saved");
-        previousBoards.push(board.clone());
+        previousBoards.push(board);
         previousScores.push(score);
     }
 
     public void delete() {
-        System.out.println("Deleted");
         previousBoards.pop();
         previousScores.pop();
     }
