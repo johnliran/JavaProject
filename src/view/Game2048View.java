@@ -31,15 +31,25 @@ public class Game2048View extends Observable implements View, Runnable {
 
 			@Override
 			public void keyPressed(KeyEvent event) {
+					userCommand = event.keyCode;
+					setChanged();
+					notifyObservers();
+
+			}
+
+            // Commented until we will have a buttons listener
+
+            /* @Override
+			public void keyPressed(KeyEvent event) {
 				if ((event.keyCode == SWT.ARROW_DOWN) ||
-						(event.keyCode == SWT.ARROW_LEFT) ||
-						(event.keyCode == SWT.ARROW_UP) ||
-						(event.keyCode == SWT.ARROW_RIGHT)) {
+				    (event.keyCode == SWT.ARROW_LEFT) ||
+					(event.keyCode == SWT.ARROW_UP)   ||
+					(event.keyCode == SWT.ARROW_RIGHT)) {
 					userCommand = event.keyCode;
 					setChanged();
 					notifyObservers();
 				}
-			}
+			}*/
 		});
 		shell.open();
 	}

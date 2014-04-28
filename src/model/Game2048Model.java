@@ -1,10 +1,7 @@
 package model;
 
 import org.eclipse.swt.graphics.Point;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Observable;
-import java.util.Random;
+import java.util.*;
 
 public class Game2048Model extends Observable implements Model {
     private final static int BOARDSIZE = 4;
@@ -12,12 +9,19 @@ public class Game2048Model extends Observable implements Model {
     private final static int RIGHT = 1;
     private final static int LEFT = 2;
     private int[][] board;
+    private int[][] savedBoard;
     private int score;
+    private int savedScore;
     private boolean gameWon;
     private boolean gameOver;
+    private Stack<int[][]> previousBoards;
+    private Stack<Integer> previousScores;
 
     public Game2048Model() {
         this.board = new int[BOARDSIZE][BOARDSIZE];
+        this.savedBoard = new int[BOARDSIZE][BOARDSIZE];
+        this.previousBoards = new Stack<int[][]>();
+        this.previousScores = new Stack<Integer>();
         this.score = 0;
         this.gameWon = false;
         this.gameOver = false;
@@ -99,8 +103,14 @@ public class Game2048Model extends Observable implements Model {
 
     @Override
     public boolean moveUp(boolean simulate) {
+        if (!simulate) {
+            copy();
+        }
         rotate(LEFT);
         boolean moved = move(simulate);
+        if (moved && !simulate) {
+            save();
+        }
         rotate(RIGHT);
         if (!simulate) {
             setChanged();
@@ -111,8 +121,14 @@ public class Game2048Model extends Observable implements Model {
 
     @Override
     public boolean moveDown(boolean simulate) {
+        if (!simulate) {
+            copy();
+        }
         rotate(RIGHT);
         boolean moved = move(simulate);
+        if (moved && !simulate) {
+            save();
+        }
         rotate(LEFT);
         if (!simulate) {
             setChanged();
@@ -123,9 +139,15 @@ public class Game2048Model extends Observable implements Model {
 
     @Override
     public boolean moveRight(boolean simulate) {
+        if (!simulate) {
+            copy();
+        }
         rotate(LEFT);
         rotate(LEFT);
         boolean moved = move(simulate);
+        if (moved && !simulate) {
+            save();
+        }
         rotate(RIGHT);
         rotate(RIGHT);
         if (!simulate) {
@@ -137,8 +159,12 @@ public class Game2048Model extends Observable implements Model {
 
     @Override
     public boolean moveLeft(boolean simulate) {
-        boolean moved = move(simulate);
         if (!simulate) {
+            copy();
+        }
+        boolean moved = move(simulate);
+        if (moved && !simulate) {
+            save();
             setChanged();
             notifyObservers();
         }
@@ -151,7 +177,12 @@ public class Game2048Model extends Observable implements Model {
     }
 
     @Override
-    public void initializeBoard() {
+    public int[][] setData(int[][] data) {
+        return this.board = data.clone();
+    }
+
+    @Override
+    public void initialize() {
         for (int i = 0; i < board.length; ++i) {
             for (int j = 0; j < board[0].length; ++j) {
                 board[i][j] = 0;
@@ -161,6 +192,26 @@ public class Game2048Model extends Observable implements Model {
         generate();
         setChanged();
         notifyObservers();
+    }
+
+    @Override
+    public void restore() {
+        if (!previousBoards.isEmpty()) {
+            setData(previousBoards.pop());
+            setScore(previousScores.pop());
+            setChanged();
+            notifyObservers();
+        }
+    }
+
+    public void save() {
+        previousBoards.push(savedBoard);
+        previousScores.push(savedScore);
+    }
+
+    public void copy() {
+        savedBoard = board.clone();
+        savedScore = score;
     }
 
     public ArrayList<State> getFreeStates() {

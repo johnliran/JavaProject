@@ -42,8 +42,12 @@ public class Presenter implements Observer {
                     m.moveLeft(false);
                     break;
                 }
-                case 1:
-                    startGame();
+
+                // For testing only; RESTORE
+                case SWT.SPACE: {
+                    m.restore();
+                    break;
+                }
 
                 default:
                     break;
@@ -57,6 +61,6 @@ public class Presenter implements Observer {
     }
 
     public void startGame() {
-        m.initializeBoard();
+        m.initialize();
     }
 }
