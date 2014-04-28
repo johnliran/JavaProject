@@ -2,7 +2,6 @@ package model;
 
 /*import java.util.Comparator;*/
 
-
 public class State {//implements Comparable<State> {
 
     Object state;

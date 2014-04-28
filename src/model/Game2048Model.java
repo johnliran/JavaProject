@@ -7,6 +7,7 @@ import java.util.Observable;
 import java.util.Random;
 
 public class Game2048Model extends Observable implements Model {
+    private final static int BOARDSIZE = 4;
     private final static int TARGETSCORE = 32;
     private final static int RIGHT = 1;
     private final static int LEFT = 2;
@@ -16,7 +17,7 @@ public class Game2048Model extends Observable implements Model {
     private boolean gameOver;
 
     public Game2048Model() {
-        this.board = new int[4][4];
+        this.board = new int[BOARDSIZE][BOARDSIZE];
         this.score = 0;
         this.gameWon = false;
         this.gameOver = false;
