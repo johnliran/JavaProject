@@ -9,13 +9,18 @@ import java.util.Observer;
 public class Presenter implements Observer {
     private View ui;
     private Model m;
+    private final static int RESET 		= 1;
+    private final static int SAVE 		= 2;
+    private final static int LOAD		= 3;
+    
+    
 
     @Override
     public void update(Observable observable, Object notification) {
         if (observable == m) {
             if (((Model) observable).isGameOver()) {
                 ui.gameOver();
-            } else if (((Model) observable).isGameWon()) {
+            } else if (((Model) observable).isGameWon() && !(ui.isUserNotified())) {
                 ui.gameWon();
             }
             ui.displayScore(((Model) observable).getScore());
@@ -48,6 +53,23 @@ public class Presenter implements Observer {
                     m.restore();
                     break;
                 }
+                
+                case RESET: {
+                	m.initialize();
+                	break;
+                }
+                
+                case SAVE: {
+                	
+                	break;
+                }
+                
+                case LOAD: {
+                	
+                	break;
+                }
+                
+
 
                 default:
                     break;

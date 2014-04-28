@@ -11,5 +11,8 @@ public interface View {
     public void gameWon();
 
     public void gameOver();
+    
+    public boolean isUserNotified();
+		
 
 }
