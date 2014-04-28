@@ -28,18 +28,18 @@ public class Game2048Model extends Observable implements Model {
         int[][] newBoard = new int[board.length][board.length];
         switch (direction) {
             case RIGHT: {
-                for (int row = 0; row < board.length; row++) {
-                    for (int column = 0; column < board.length; column++) {
-                        newBoard[column][(board.length - 1) - row] = board[row][column];
+                for (int row = 0; row < newBoard.length; row++) {
+                    for (int column = 0; column < newBoard.length; column++) {
+                        newBoard[column][(newBoard.length - 1) - row] = board[row][column];
                     }
                 }
                 break;
             }
 
             case LEFT: {
-                for (int row = 0; row < board.length; row++) {
-                    for (int column = 0; column < board.length; column++) {
-                        newBoard[(board.length - 1) - column][row] = board[row][column];
+                for (int row = 0; row < newBoard.length; row++) {
+                    for (int column = 0; column < newBoard.length; column++) {
+                        newBoard[(newBoard.length - 1) - column][row] = board[row][column];
                     }
                 }
                 break;
@@ -58,9 +58,9 @@ public class Game2048Model extends Observable implements Model {
         boolean moved = false;
         boolean seenZero;
         //Get over all the board and take out the numbers into List.
-        for (int row = 0; row < board.length; row++) {
+        for (int row = 0; row < newBoard.length; row++) {
             seenZero = false;
-            for (int column = 0; column < board.length; column++) {
+            for (int column = 0; column < newBoard.length; column++) {
                 if (board[row][column] != 0) {
                     numbers.add(board[row][column]);
                     //After putting the numbers into the stack,We can override and pad the line with 0;
@@ -75,7 +75,7 @@ public class Game2048Model extends Observable implements Model {
                 }
             }
             //Merge if there are equal numbers
-            for (int column = 0; column < board.length && !numbers.isEmpty(); column++) {
+            for (int column = 0; column < newBoard.length && !numbers.isEmpty(); column++) {
                 int numberToCheck = numbers.poll();
                 if (!numbers.isEmpty()) {
                     if (numberToCheck == numbers.peek()) {
@@ -164,11 +164,12 @@ public class Game2048Model extends Observable implements Model {
             save();
         }
         boolean moved = move(simulate);
+        if (!simulate && !moved) {
+            delete();
+        }
         if (!simulate) {
-            if (moved) {
-                setChanged();
-                notifyObservers();
-            } else delete();
+            setChanged();
+            notifyObservers();
         }
         return moved;
     }
@@ -179,7 +180,7 @@ public class Game2048Model extends Observable implements Model {
     }
 
     public void setData(int[][] data) {
-        this.board = data.clone();
+        this.board = data;
     }
 
     @Override
