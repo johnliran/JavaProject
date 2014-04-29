@@ -1,23 +1,32 @@
 package controller;
 
+import view.View;
 import model.Model;
 import org.eclipse.swt.SWT;
-import view.View;
-
 import java.util.Observable;
 import java.util.Observer;
 
 public class Presenter implements Observer {
-    View ui;
-    Model m;
+    private View ui;
+    private Model m;
+    private final static int RESET 		= 1;
+    private final static int SAVE 		= 2;
+    private final static int LOAD		= 3;
+    
+    
 
     @Override
-    public void update(Observable observable, Object object) {
-        if (observable instanceof Model) {
+    public void update(Observable observable, Object notification) {
+        if (observable == m) {
+            if (((Model) observable).isGameOver()) {
+                ui.gameOver();
+            } else if (((Model) observable).isGameWon() && !(ui.isUserNotified())) {
+                ui.gameWon();
+            }
             ui.displayScore(((Model) observable).getScore());
             ui.displayData(((Model) observable).getData());
         }
-        if (observable instanceof View) {
+        if (observable == ui) {
             switch (ui.getUserCommand()) {
                 case SWT.ARROW_UP: {
                     m.moveUp(false);
@@ -38,8 +47,29 @@ public class Presenter implements Observer {
                     m.moveLeft(false);
                     break;
                 }
-                case 1:
-                    startGame();
+
+                // For testing only; RESTORE
+                case SWT.SPACE: {
+                    m.restore();
+                    break;
+                }
+                
+                case RESET: {
+                	m.initialize();
+                	break;
+                }
+                
+                case SAVE: {
+                	
+                	break;
+                }
+                
+                case LOAD: {
+                	
+                	break;
+                }
+                
+
 
                 default:
                     break;
@@ -47,14 +77,12 @@ public class Presenter implements Observer {
         }
     }
 
-
     public Presenter(Model m, View ui) {
         this.m = m;
         this.ui = ui;
     }
 
     public void startGame() {
-        m.initializeBoard();
+        m.initialize();
     }
 }
-

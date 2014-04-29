@@ -20,7 +20,6 @@ public class Tile extends Canvas {
 
     public Tile(Composite parent, int style) {
         super(parent, style);
-        //this.value = 0;
         Font font = getFont();
         setFont(new Font(getDisplay(), font.getFontData()[0].getName(), 16, SWT.BOLD));
         addPaintListener(new PaintListener() {
@@ -54,7 +53,6 @@ public class Tile extends Canvas {
             }
         });
     }
-
 
     public void setTileBackground(PaintEvent event) {
         switch (value) {
@@ -109,9 +107,5 @@ public class Tile extends Canvas {
             default:
                 break;
         }
-
-
     }
-
-
 }

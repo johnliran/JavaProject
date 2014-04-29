@@ -1,6 +1,11 @@
 package model;
 
 public interface Model {
+
+    public void initialize();
+
+    public void restore();
+
     public boolean moveUp(boolean simulate);
 
     public boolean moveDown(boolean simulate);
@@ -11,7 +16,11 @@ public interface Model {
 
     public int[][] getData();
 
-    public void initializeBoard();
-
     public int getScore();
+
+    public boolean isGameWon();
+
+    public boolean isGameOver();
+    
+    public void setGameWon(boolean gameWon);
 }
