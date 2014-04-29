@@ -17,13 +17,10 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
-import quicktime.app.image.Redrawable;
-
 public class Game2048View extends Observable implements View, Runnable {
 	private final static int RESET 		= 1;
     private final static int SAVE 		= 2;
     private final static int LOAD		= 3;
-    private final static int CONTINUE 	= 4;
     private Game2048Board board;
 	private Display display;
 	private Label score;
@@ -187,8 +184,9 @@ public class Game2048View extends Observable implements View, Runnable {
 					break;
     	    	}
 	    	    case SWT.NO:
-	    	      System.out.println("SWT.NO");
-	    	      break;
+	    	    	display.dispose();
+	      	      	System.exit(0);
+	      	      	break;
     	    }    
     	    }
 
@@ -202,6 +200,7 @@ public class Game2048View extends Observable implements View, Runnable {
 	    switch (rc) {
 	    	case SWT.YES: {
 	    		userCommand = RESET;
+	    		userNotified = false;
 				setChanged();
 				notifyObservers();	    	      
 				break;
