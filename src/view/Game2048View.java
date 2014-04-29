@@ -143,7 +143,6 @@ public class Game2048View extends Observable implements View, Runnable {
 			@Override
 			public void run() {
 				board.redraw();
-				
 				while (!shell.isDisposed()) {
 					if (!display.readAndDispatch()) {
 						display.sleep();
