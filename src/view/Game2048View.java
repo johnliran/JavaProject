@@ -178,7 +178,6 @@ public class Game2048View extends Observable implements View, Runnable {
 
     	    switch (rc) {
     	    	case SWT.YES: {
-					setChanged();
 					notifyObservers();	    	      
 					break;
     	    	}
@@ -200,7 +199,6 @@ public class Game2048View extends Observable implements View, Runnable {
 	    	case SWT.YES: {
 	    		userCommand = RESET;
 	    		userNotified = false;
-				setChanged();
 				notifyObservers();	    	      
 				break;
 	    	}
