@@ -15,7 +15,7 @@ public class Game2048Board extends Composite {
         this.board = board;
         for (int row = 0; row < this.board.length; row++) {
             for (int column = 0; column < this.board.length; column++) {
-                tiles[row][column].setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+//                tiles[row][column].setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
                 tiles[row][column].setValue(this.board[row][column]);
             }
         }

@@ -18,13 +18,16 @@ public class Presenter implements Observer {
     @Override
     public void update(Observable observable, Object notification) {
         if (observable == m) {
-            if (((Model) observable).isGameOver()) {
+        	ui.displayScore(((Model) observable).getScore());
+            ui.displayData(((Model) observable).getData());
+        
+            
+        	if (((Model) observable).isGameOver()) {
                 ui.gameOver();
             } else if (((Model) observable).isGameWon() && !(ui.isUserNotified())) {
                 ui.gameWon();
             }
-            ui.displayScore(((Model) observable).getScore());
-            ui.displayData(((Model) observable).getData());
+            
         }
         if (observable == ui) {
             switch (ui.getUserCommand()) {
@@ -55,7 +58,7 @@ public class Presenter implements Observer {
                 }
                 
                 case RESET: {
-                	m.initialize();
+                	startGame();
                 	break;
                 }
                 
@@ -84,5 +87,6 @@ public class Presenter implements Observer {
 
     public void startGame() {
         m.initialize();
+        ui.run();
     }
 }

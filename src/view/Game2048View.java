@@ -98,7 +98,7 @@ public class Game2048View extends Observable implements View, Runnable {
 
         board.setFocus();
 
-
+        
 		shell.setBackground(new Color(display, 187, 173, 160));
 		board.addKeyListener(new KeyListener() {
 			@Override
@@ -132,23 +132,22 @@ public class Game2048View extends Observable implements View, Runnable {
 
 	@Override
 	public void run() {
-
+		while (!shell.isDisposed()) {
+			if (!display.readAndDispatch()) {
+				display.sleep();
+			}
+		}
+		display.dispose();
+	
 	}
 
 	@Override
 	public void displayData(int[][] data) {
-
 		board.setBoardData(data);
 		display.syncExec(new Runnable() {
 			@Override
 			public void run() {
 				board.redraw();
-				while (!shell.isDisposed()) {
-					if (!display.readAndDispatch()) {
-						display.sleep();
-					}
-				}
-				display.dispose();
 			}
 		});
 	}
@@ -178,6 +177,7 @@ public class Game2048View extends Observable implements View, Runnable {
 
     	    switch (rc) {
     	    	case SWT.YES: {
+    	    		setChanged();
 					notifyObservers();	    	      
 					break;
     	    	}
@@ -198,7 +198,8 @@ public class Game2048View extends Observable implements View, Runnable {
 	    switch (rc) {
 	    	case SWT.YES: {
 	    		userCommand = RESET;
-	    		userNotified = false;
+	    		userNotified = false; 
+	    		setChanged();
 				notifyObservers();	    	      
 				break;
 	    	}
