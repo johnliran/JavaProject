@@ -1,10 +1,12 @@
-package view;
+package view.game2048;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+
+import view.Tile;
 
 public class Game2048Board extends Composite {
     private final static int BOARDSIZE = 4;
@@ -15,7 +17,6 @@ public class Game2048Board extends Composite {
         this.board = board;
         for (int row = 0; row < this.board.length; row++) {
             for (int column = 0; column < this.board.length; column++) {
-//                tiles[row][column].setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
                 tiles[row][column].setValue(this.board[row][column]);
             }
         }

@@ -1,9 +1,13 @@
-package model;
+package model.gamemaze;
+
+import model.Model;
+import model.State;
 
 import org.eclipse.swt.graphics.Point;
+
 import java.util.*;
 
-public class Game2048Model extends Observable implements Model {
+public class GameMazeModel extends Observable implements Model {
 	private final static int BOARDSIZE = 4;
 	private final static int TARGETSCORE = 32;
 	private final static int RIGHT = 1;
@@ -15,7 +19,7 @@ public class Game2048Model extends Observable implements Model {
 	private Stack<int[][]> previousBoards;
 	private Stack<Integer> previousScores;
 
-	public Game2048Model() {
+	public GameMazeModel() {
 		this.board = new int[BOARDSIZE][BOARDSIZE];
 		this.score = 0;
 		this.previousBoards = new Stack<int[][]>();

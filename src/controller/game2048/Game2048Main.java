@@ -1,7 +1,8 @@
-package controller;
+package controller.game2048;
 
-import model.Game2048Model;
-import view.Game2048View;
+import controller.Presenter;
+import model.game2048.Game2048Model;
+import view.game2048.Game2048View;
 
 public class Game2048Main {
 
