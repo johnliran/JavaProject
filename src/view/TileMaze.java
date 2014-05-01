@@ -9,7 +9,7 @@ import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 
-public class Tile extends Canvas {
+public class TileMaze extends Canvas {
     private int value;
 
 
@@ -18,7 +18,7 @@ public class Tile extends Canvas {
         redraw();
     }
 
-    public Tile(Composite parent, int style) {
+    public TileMaze(Composite parent, int style) {
         super(parent, style);
         Font font = getFont();
         setFont(new Font(getDisplay(), font.getFontData()[0].getName(), 16, SWT.BOLD));
@@ -40,7 +40,7 @@ public class Tile extends Canvas {
 
                 //Set the color and Draw the RoundedRectangle shape  (passes the event in order to change the event's specific color)
                 setTileBackground(event);
-                event.gc.fillRoundRectangle(0, 0, getSize().x, getSize().y, 20, 20);
+                event.gc.fillRectangle(0, 0, getSize().x, getSize().y);
 
                 //Set another font color for numbers higher than 8
                 if (value > 8)
@@ -56,56 +56,20 @@ public class Tile extends Canvas {
 
     public void setTileBackground(PaintEvent event) {
         switch (value) {
-            case 0:
-                event.gc.setBackground(new Color(getDisplay(), 205, 193, 180));
-                break;
+        	case -1:
+            	event.gc.setBackground(new Color(getDisplay(), 111, 111, 111));
+            	break;
 
+            case 1:
+                event.gc.setBackground(new Color(getDisplay(), 150, 150, 150));
+                break;
+       
             case 2:
                 event.gc.setBackground(new Color(getDisplay(), 238, 228, 218));
                 break;
 
-            case 4:
-                event.gc.setBackground(new Color(getDisplay(), 237, 224, 200));
-                break;
-
-            case 8:
-                event.gc.setBackground(new Color(getDisplay(), 242, 177, 121));
-                break;
-
-            case 16:
-                event.gc.setBackground(new Color(getDisplay(), 245, 149, 99));
-                break;
-
-            case 32:
-                event.gc.setBackground(new Color(getDisplay(), 246, 124, 95));
-                break;
-
-            case 64:
-                event.gc.setBackground(new Color(getDisplay(), 246, 94, 59));
-                break;
-
-            case 128:
-                event.gc.setBackground(new Color(getDisplay(), 237, 207, 114));
-                break;
-
-            case 256:
-                event.gc.setBackground(new Color(getDisplay(), 237, 204, 97));
-                break;
-
-            case 512:
-                event.gc.setBackground(new Color(getDisplay(), 237, 200, 80));
-                break;
-
-            case 1024:
-                event.gc.setBackground(new Color(getDisplay(), 237, 197, 63));
-                break;
-
-            case 2048:
-                event.gc.setBackground(new Color(getDisplay(), 237, 194, 46));
-                break;
-
             default:
-                break;
+            	event.gc.setBackground(new Color(getDisplay(), 224, 215, 201));
         }
     }
 }

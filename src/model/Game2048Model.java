@@ -1,6 +1,7 @@
 package model;
 
 import org.eclipse.swt.graphics.Point;
+
 import java.util.*;
 
 public class Game2048Model extends Observable implements Model {
