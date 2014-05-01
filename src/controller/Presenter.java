@@ -18,10 +18,10 @@ public class Presenter implements Observer {
     @Override
     public void update(Observable observable, Object notification) {
         if (observable == m) {
+        	System.out.println("Model");
         	ui.displayScore(((Model) observable).getScore());
             ui.displayData(((Model) observable).getData());
-        
-            
+
         	if (((Model) observable).isGameOver()) {
                 ui.gameOver();
             } else if (((Model) observable).isGameWon() && !(ui.isUserNotified())) {
@@ -30,7 +30,8 @@ public class Presenter implements Observer {
             
         }
         if (observable == ui) {
-            switch (ui.getUserCommand()) {
+        	System.out.println("UI" + ui.getUserCommand());
+        	switch (ui.getUserCommand()) {
                 case SWT.ARROW_UP: {
                     m.moveUp(false);
                     break;
@@ -58,6 +59,7 @@ public class Presenter implements Observer {
                 }
                 
                 case RESET: {
+                	System.out.println("im in reset");
                 	startGame();
                 	break;
                 }
@@ -86,6 +88,7 @@ public class Presenter implements Observer {
     }
 
     public void startGame() {
+    	System.out.println("im starting game");
         m.initialize();
         ui.run();
     }
