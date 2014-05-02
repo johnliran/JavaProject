@@ -6,7 +6,6 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
@@ -19,13 +18,10 @@ public class WindowShell {
 	Shell shell;
 	Label score;
 	Board board;
-	public WindowShell(Display display, Shell shell, Board board) {
+	public WindowShell(String title,int width,int height,Display display, Shell shell, Board board) {
 		this.display = display;
 		this.shell = shell;
-
-		shell.setSize(400, 300);
-	    shell.setText("2048");
-		shell.setBackground(new Color(display, 187, 173, 160));
+		shell.setSize(width, height);
 	    shell.setLayout(new GridLayout(2, false));	    
         this.board = board;
 
@@ -84,8 +80,8 @@ public class WindowShell {
         Font font = score.getFont();
         score.setFont(new Font(display, font.getFontData()[0].getName(), 24, SWT.BOLD));
         score.setText(0 + "");
-		shell.setBackground(new Color(display, 187, 173, 160));
 		
+
 
 //
 //        ((Composite)board).setFocus();
