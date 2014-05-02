@@ -34,8 +34,14 @@ public class GameMazeView extends Observable implements View, Runnable {
 	    shell = new Shell(display);
 	    Label nullLabel = new Label(shell,SWT.FILL);
 	    board = new GameMazeBoard(shell, SWT.NO_BACKGROUND);
-        windowShell = new WindowShell(display, shell,(Board)board);		
-		board.addKeyListener(new KeyListener() {
+	    String title = "Maze";
+	    int width = 400;
+	    int height = 300;
+        windowShell = new WindowShell(title,width,height,display, shell,(Board)board);	
+        
+        shell.setBackground(new Color(display, 187, 173, 160));
+        
+        board.addKeyListener(new KeyListener() {
 			@Override
 			public void keyReleased(KeyEvent event) {
 			}

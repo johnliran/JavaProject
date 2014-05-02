@@ -27,7 +27,13 @@ public class Game2048View extends Observable implements View, Runnable {
 	    shell = new Shell(display);
 	    Label nullLabel = new Label(shell,SWT.FILL);
 	    board = new Game2048Board(shell, SWT.NO_BACKGROUND);
-        windowShell = new WindowShell(display, shell,(Board)board); 
+	    
+	    String title = "2048";
+	    int width = 400;
+	    int height = 300;
+        windowShell = new WindowShell(title,width,height,display, shell,(Board)board); 
+        shell.setBackground(new Color(display, 187, 173, 160));
+        
 		board.addKeyListener(new KeyListener() {
 			@Override
 			public void keyReleased(KeyEvent event) {
