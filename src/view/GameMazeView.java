@@ -11,9 +11,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
@@ -25,8 +23,8 @@ public class GameMazeView extends Observable implements View, Runnable {
     private final static int LOAD		= 3;
     private GameMazeBoard board;
 	private Display display;
+	private WindowShell windowShell;
 	private Label score;
-	
 	private Shell shell;
 	private int userCommand;
 	private boolean userNotified;
@@ -34,75 +32,9 @@ public class GameMazeView extends Observable implements View, Runnable {
 	private void initComponents() {
 		display = new Display();
 	    shell = new Shell(display);
-	    shell.setSize(400, 300);
-	    shell.setText("Maze");
-	    shell.setLayout(new GridLayout(2, false));
-
-	    Menu m = new Menu(shell, SWT.BAR);
-	    
-	    final MenuItem file = new MenuItem(m, SWT.CASCADE);
-	    file.setText("File");
-	    final Menu fileMenu = new Menu(shell, SWT.DROP_DOWN);
-	    file.setMenu(fileMenu);
-	    final MenuItem openItem = new MenuItem(fileMenu, SWT.PUSH);
-	    openItem.setText("Load");
-	    final MenuItem saveItem = new MenuItem(fileMenu, SWT.PUSH);
-	    saveItem.setText("Save");
-	    final MenuItem exitItem = new MenuItem(fileMenu, SWT.PUSH);
-	    exitItem.setText("Exit");
-	    
-	    final MenuItem edit = new MenuItem(m, SWT.CASCADE);
-	    edit.setText("Edit");
-	    final Menu editMenu = new Menu(shell, SWT.DROP_DOWN);
-	    edit.setMenu(editMenu);
-	    final MenuItem undoItem = new MenuItem(editMenu, SWT.PUSH);
-	    undoItem.setText("Undo");
-	    final MenuItem resetItem = new MenuItem(editMenu, SWT.PUSH);
-	    resetItem.setText("Reset");
-
-	    shell.setMenuBar(m);
-	    
-	    
-	    Button undoButton = new Button(shell, SWT.PUSH);
-        undoButton.setText("Undo");
-        undoButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
-        
-      //Define the Board Widget and initialize it:
-        board = new GameMazeBoard(shell, SWT.NO_BACKGROUND);
-        board.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 6));
-        
-        Button resetButton = new Button(shell, SWT.PUSH);
-        resetButton.setText("Reset");
-        resetButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
-        
-        Button loadButton = new Button(shell, SWT.PUSH);
-        loadButton.setText("Load");
-        loadButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
-        
-        Button saveButton = new Button(shell, SWT.PUSH);
-        saveButton.setText("Save");
-        saveButton.setBackground(new Color(display, 239,143,0));
-        saveButton.setForeground(new Color(display, 239,143,0));
-        saveButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, true, 1, 1));
-	    
-	    
-      
-
-      
-
-        //Set the styled label who contains the game score;
-        score = new Label(shell, SWT.BORDER);
-        score.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
-        score.setForeground(new Color(display, 119, 110, 101));
-        Font font = score.getFont();
-        score.setFont(new Font(display, font.getFontData()[0].getName(), 24, SWT.BOLD));
-        score.setText(0 + "");
-
-        board.setFocus();
-
-        
-		shell.setBackground(new Color(display, 187, 173, 160));
-		
+	    Label nullLabel = new Label(shell,SWT.FILL);
+	    board = new GameMazeBoard(shell, SWT.NO_BACKGROUND);
+        windowShell = new WindowShell(display, shell,(Board)board);		
 		board.addKeyListener(new KeyListener() {
 			@Override
 			public void keyReleased(KeyEvent event) {
@@ -170,7 +102,7 @@ public class GameMazeView extends Observable implements View, Runnable {
 
 	@Override
 	public void displayScore(int score) {
-		this.score.setText(score + "");
+		windowShell.setScore(score);
 	}
 
     @Override
