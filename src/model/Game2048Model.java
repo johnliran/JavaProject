@@ -15,6 +15,7 @@ public class Game2048Model extends Observable implements Model {
 	private boolean gameOver;
 	private Stack<int[][]> previousBoards;
 	private Stack<Integer> previousScores;
+    private Serializer s;
 
 	public Game2048Model() {
 		this.board = new int[BOARDSIZE][BOARDSIZE];
@@ -23,9 +24,10 @@ public class Game2048Model extends Observable implements Model {
 		this.previousScores = new Stack<Integer>();
 		this.gameWon = false;
 		this.gameOver = false;
+        this.s = new Serializer();
 	}
 
-	public void rotate(int direction) {
+    public void rotate(int direction) {
 		int[][] newBoard = new int[board.length][board.length];
 		switch (direction) {
 		case RIGHT: {
@@ -106,7 +108,7 @@ public class Game2048Model extends Observable implements Model {
 	@Override
 	public boolean moveUp(boolean simulate) {
 		if (!simulate) {
-			save();
+			backup();
 		}
 		rotate(LEFT);
 		boolean moved = move(simulate);
@@ -124,7 +126,7 @@ public class Game2048Model extends Observable implements Model {
 	@Override
 	public boolean moveDown(boolean simulate) {
 		if (!simulate) {
-			save();
+			backup();
 		}
 		rotate(RIGHT);
 		boolean moved = move(simulate);
@@ -142,7 +144,7 @@ public class Game2048Model extends Observable implements Model {
 	@Override
 	public boolean moveRight(boolean simulate) {
 		if (!simulate) {
-			save();
+			backup();
 		}
 		rotate(LEFT);
 		rotate(LEFT);
@@ -162,7 +164,7 @@ public class Game2048Model extends Observable implements Model {
 	@Override
 	public boolean moveLeft(boolean simulate) {
 		if (!simulate) {
-			save();
+			backup();
 		}
 		boolean moved = move(simulate);
 		if (!simulate && !moved) {
@@ -213,7 +215,7 @@ public class Game2048Model extends Observable implements Model {
 		}
 	}
 
-	public void save() {
+	public void backup() {
 		previousBoards.push(board);
 		previousScores.push(score);
 	}
@@ -274,7 +276,28 @@ public class Game2048Model extends Observable implements Model {
 		this.gameWon = gameWon;
 	}
 
-	@Override
+    @Override
+    public void saveGame(String xmlFileName) {
+        try {
+            s.serializeToXML(this,xmlFileName);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void loadGame(String xmlFileName) {
+        try {
+            setData(((Game2048Model) s.deserializeXML(xmlFileName)).getData());
+            setScore(((Game2048Model) s.deserializeXML(xmlFileName)).getScore());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        setChanged();
+        notifyObservers();
+    }
+
+    @Override
 	public boolean isGameOver() {
 		return gameOver;
 	}

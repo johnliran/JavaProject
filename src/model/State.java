@@ -1,10 +1,11 @@
 package model;
 
-/*import java.util.Comparator;*/
-
-public class State {//implements Comparable<State> {
-
-    Object state;
+public class State implements Comparable<State> {
+    private Object state;
+    private State  parentState;
+    private Action leadingAction;
+    private double f;
+    private double g;
 
     public Object getState() {
         return state;
@@ -18,35 +19,49 @@ public class State {//implements Comparable<State> {
         this.state = state;
     }
 
+    public double getF() {
+        return f;
+    }
+
+    public void setF(double f) {
+        this.f = f + g;
+    }
+
+    public double getG() {
+        return g;
+    }
+
+    public void setG(double g) {
+        this.g = g;
+    }
+
+    public State getParentState() {
+        return parentState;
+    }
+
+    public void setParentState(State parentState) {
+        this.parentState = parentState;
+    }
+
+    public Action getLeadingAction() {
+        return leadingAction;
+    }
+
+    public void setLeadingAction(Action leadingAction) {
+        this.leadingAction = leadingAction;
+    }
+
+    @Override
+    public int compareTo(State o) {
+        return (int) (f - o.f);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof State))
+            return false;
+
+        State other = (State) obj;
+        return this.state.equals(other.state);
+    }
 }
-
-
-
-
-
-
-/* @Override
-public boolean equals(Object eqobj){
-	if (!(eqobj instanceof State))
-		return false;
-	State obj = (State)(eqobj);
-	return mState.equals(obj.mState);
-}
-
-@Override
-public String toString(){
-	return "State is: " + mState;
-}
-
-@Override
-public int hashCode() {
-	return mState.toString().hashCode();
-
-}
-
-@Override
-public int compareTo(State o) {
-        return (int) (mF - o.mF);
-}
-
-	*/

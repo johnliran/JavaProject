@@ -6,8 +6,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
-public class GameMazeBoard extends Composite implements Board {
-    private final static int BOARDSIZE = 10;
+public class GameMazeBoard extends Composite {
+    private final static int BOARDSIZE = 15;
     private int[][] board;
     TileMaze[][] tiles;
 

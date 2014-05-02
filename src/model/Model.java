@@ -23,4 +23,8 @@ public interface Model {
     public boolean isGameOver();
     
     public void setGameWon(boolean gameWon);
+
+    public void saveGame(String xmlFileName);
+
+    public void loadGame(String xmlFileName);
 }
