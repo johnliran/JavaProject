@@ -9,11 +9,9 @@ import java.util.Observer;
 public class Presenter implements Observer {
     private View ui;
     private Model m;
-    private final static int RESET 		= 1;
-    private final static int SAVE 		= 2;
-    private final static int LOAD		= 3;
-    
-    
+    private final static int RESET= 1;
+    private final static int SAVE = 2;
+    private final static int LOAD = 3;
 
     @Override
     public void update(Observable observable, Object notification) {
@@ -55,6 +53,14 @@ public class Presenter implements Observer {
                 // For testing only; RESTORE
                 case SWT.SPACE: {
                     m.restore();
+                    //System.out.println("Saving ...");
+                    //m.saveGame("2048");
+                    //System.out.println("Loading ...");
+                    //m.loadGame("2048");
+                    //System.out.println("Saving ...");
+                    //m.saveGame("maze");
+                    //System.out.println("Loading ...");
+                    //m.loadGame("maze");
                     break;
                 }
                 

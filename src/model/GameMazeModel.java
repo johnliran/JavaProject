@@ -1,225 +1,248 @@
 package model;
 
-import model.State;
+import org.eclipse.swt.graphics.Point;
 
-import java.util.Arrays;
 import java.util.Observable;
 import java.util.Stack;
 
-import org.eclipse.swt.graphics.Point;
-
 public class GameMazeModel extends Observable implements Model {
-	private final int MOUSE = 1;
-	private final int WALL = -1;
-	private final int CHEESE = 2;
-	private final int BLANK = 0;
-	private int[][] initialMaze = {
-    		{ BLANK , WALL   ,  WALL , BLANK ,MOUSE, BLANK , BLANK   ,  WALL ,WALL ,BLANK},
-    		{ BLANK , BLANK   ,  WALL ,BLANK ,BLANK, BLANK , BLANK   ,  WALL ,WALL ,BLANK},
-    		{ BLANK , BLANK   ,  WALL ,BLANK ,BLANK, BLANK , BLANK   ,  WALL ,BLANK ,BLANK},
-    		{ BLANK , BLANK   ,  WALL ,BLANK ,BLANK, BLANK , WALL   ,  WALL ,WALL ,BLANK},
-    		{ BLANK , BLANK   ,  BLANK ,BLANK ,BLANK, BLANK , BLANK   ,  WALL ,WALL ,BLANK},
-    		{ BLANK , BLANK   ,  WALL ,BLANK ,BLANK, BLANK , BLANK   ,  WALL ,WALL ,BLANK},
-    		{ BLANK , BLANK   ,  WALL ,BLANK,BLANK, BLANK , BLANK   ,  WALL ,WALL ,BLANK},
-    		{ BLANK , BLANK   ,  WALL ,BLANK ,BLANK, BLANK , BLANK   ,  WALL ,WALL ,BLANK},
-    		{ BLANK , BLANK   ,  WALL ,BLANK,BLANK, BLANK , BLANK   ,  WALL ,WALL ,BLANK},
-    		{ CHEESE , WALL   ,  WALL ,BLANK,BLANK, BLANK , BLANK   ,  WALL ,WALL ,BLANK},
-
+    private final int MOUSE = 1;
+    private final int WALL = -1;
+    private final int CHEESE = 2;
+    private final int BLANK = 0;
+    private int[][] maze;
+    private State state;
+    private int score;
+    private boolean gameWon;
+    private boolean gameOver;
+    private Stack<int[][]> previousBoards;
+    private Stack<Integer> previousScores;
+    private Serializer s;
+    private int[][] initialMaze = {
+        {WALL , WALL , WALL , WALL , WALL , WALL , WALL , WALL , WALL , WALL , WALL , WALL , WALL , WALL , WALL} ,
+        {WALL , BLANK , BLANK , BLANK , WALL , BLANK , BLANK , BLANK , BLANK , BLANK , BLANK , BLANK , BLANK , BLANK , WALL} ,
+        {WALL , BLANK , WALL , BLANK , WALL , BLANK , WALL , WALL , BLANK , WALL , WALL , BLANK , WALL , BLANK , WALL} ,
+        {WALL , BLANK , WALL , BLANK , WALL , BLANK , BLANK , WALL , BLANK , WALL , BLANK , BLANK , WALL , BLANK , WALL} ,
+        {WALL , BLANK , WALL , WALL , WALL , WALL , WALL , WALL , BLANK , WALL , WALL , BLANK , WALL , WALL , WALL} ,
+        {WALL , BLANK , BLANK , BLANK , BLANK , BLANK , BLANK , BLANK , BLANK , BLANK , WALL , BLANK , WALL , BLANK , WALL} ,
+        {WALL , BLANK , WALL , BLANK , WALL , WALL , WALL , WALL , WALL , WALL , WALL , BLANK , WALL , BLANK , WALL} ,
+        {WALL , BLANK , WALL , BLANK , WALL , BLANK , BLANK , BLANK , BLANK , BLANK , WALL , BLANK , BLANK , BLANK , CHEESE} ,
+        {WALL , BLANK , WALL , WALL , WALL , BLANK , WALL , BLANK , WALL , BLANK , WALL , BLANK , WALL , BLANK , WALL} ,
+        {MOUSE , BLANK , BLANK , BLANK , WALL , BLANK , WALL , BLANK , WALL , BLANK , WALL , BLANK , WALL , BLANK , WALL} ,
+        {WALL , WALL , WALL , BLANK , WALL , BLANK , WALL , BLANK , WALL , BLANK , WALL , BLANK , WALL , BLANK , WALL} ,
+        {WALL , BLANK , BLANK , BLANK , WALL , BLANK , WALL , BLANK , WALL , BLANK , WALL , BLANK , WALL , BLANK , WALL} ,
+        {WALL , BLANK , WALL , WALL , WALL , WALL , WALL , BLANK , WALL , WALL , WALL , WALL , WALL , BLANK , WALL} ,
+        {WALL , BLANK , BLANK , BLANK , BLANK , BLANK , WALL , BLANK , BLANK , BLANK , BLANK , BLANK , BLANK , BLANK , WALL} ,
+        {WALL , WALL , WALL , WALL , WALL , WALL , WALL , WALL , WALL , WALL , WALL , WALL , WALL , WALL , WALL} ,
     };
-	private int[][] maze;
-	private State state;
-	private int score;
-	private boolean gameWon;
-	private boolean gameOver;
-	private Stack<int[][]> previousBoards;
-	private Stack<Integer> previousScores;
 
-	public GameMazeModel() {
-		maze = copyOf(initialMaze);
-		this.state = getStartState();
-		this.score = 0;
-		this.previousBoards = new Stack<int[][]>();
-		this.previousScores = new Stack<Integer>();
-		this.gameWon = false;
-		this.gameOver = false;
-	}
-	public void printBoard() {
-		   for(int i = 0; i < maze.length; i++)
-		   {
-		      for(int j = 0; j < maze[0].length; j++)
-		      {
-		         System.out.printf("%5d ", maze[i][j]);
-		      }
-		      System.out.println();
-		   }
-		   System.out.println("\n");
-			
-		}
 
-	public boolean move(boolean simulate) {
-		int[][] newBoard = new int[maze.length][maze[0].length];
-		boolean moved=true;
-			return moved;
-	}
+    public GameMazeModel() {
+        this.maze = copyOf(initialMaze);
+        this.state = getStartState();
+        this.score = 0;
+        this.previousBoards = new Stack<int[][]>();
+        this.previousScores = new Stack<Integer>();
+        this.gameWon = false;
+        this.gameOver = false;
+        this.s = new Serializer();
+    }
 
-	public void move(int row, int column) {
-		Point point = (Point)(state.getState());
-		int px = (int)point.x;
-		int py = (int)point.y;
-		State current = new State(new Point(px,py));	
-		px += row;
-		py += column;
-		
-		if (getPointValue(px, py) >= 0 ) {
-			state.setState( new Point(px,py));
-			if (getPointValue(px, py) == 2)
-				setGameWon(true);
-			setData(current, state);
-		}
-		
-	}
-	@Override
-	public boolean moveUp(boolean simulate) {
-		move(-1,0);
-		setChanged();
-		notifyObservers();
-		return true;
-	}
+    public void printBoard() {
+        for (int i = 0; i < maze.length; i++) {
+            for (int j = 0; j < maze[0].length; j++) {
+                System.out.printf("%5d ", maze[i][j]);
+            }
+            System.out.println();
+        }
+        System.out.println("\n");
 
-	@Override
-	public boolean moveDown(boolean simulate) {
-		move(1,0);
-		setChanged();
-		notifyObservers();
-		return true;
-		
-	}
+    }
 
-	@Override
-	public boolean moveRight(boolean simulate) {
-		move(0,1);
-		setChanged();
-		notifyObservers();
-		return true;
-	}
+    public void move(int row, int column) {
+        Point point = (Point) (state.getState());
+        int px = point.x;
+        int py = point.y;
+        State current = new State(new Point(px, py));
+        px += row;
+        py += column;
 
-	@Override
-	public boolean moveLeft(boolean simulate) {
-		move(0,-1);
-		setChanged();
-		notifyObservers();
-		return true;	
-		}
+        if (getPointValue(px, py) >= 0) {
+            state.setState(new Point(px, py));
+            if (getPointValue(px, py) == 2)
+                setGameWon(true);
+            setData(current, state);
+        }
 
-	@Override
-	public int[][] getData() {
-		return maze;
-	}
+    }
 
-	public void setData(State current, State goal) {
-		Point pCurrent =  (Point)(current.getState());
-		int cx = (int)pCurrent.x;
-		int cy = (int)pCurrent.y;
-		Point pGoal = (Point)(goal.getState());
-		int gx = (int)pGoal.x;
-		int gy = (int)pGoal.y;
-		maze[cx][cy] = 0;
-		maze[gx][gy] = 1;
-	}
+    @Override
+    public boolean moveUp(boolean simulate) {
+        move(-1, 0);
+        setChanged();
+        notifyObservers();
+        return true;
+    }
 
-	@Override
-	public void initialize() {
-		System.out.println("im initializing");
-		maze = copyOf(initialMaze);
-		this.state = getStartState();
-		this.score = 0;
-		this.previousBoards = new Stack<int[][]>();
-		this.previousScores = new Stack<Integer>();
-		this.gameWon = false;
-		this.gameOver = false;
-		printBoard();
-		setChanged();
-		notifyObservers();
-	}
+    @Override
+    public boolean moveDown(boolean simulate) {
+        move(1, 0);
+        setChanged();
+        notifyObservers();
+        return true;
 
-	@Override
-	public void restore() {
-		if (!previousBoards.isEmpty()) {
-		//	setData(previousBoards.pop());
-			setScore(previousScores.pop());
-			setChanged();
-			notifyObservers();
-		}
-	}
+    }
 
-	public void save() {
-		previousBoards.push(maze);
-		previousScores.push(score);
-	}
+    @Override
+    public boolean moveRight(boolean simulate) {
+        move(0, 1);
+        setChanged();
+        notifyObservers();
+        return true;
+    }
 
-	public void delete() {
-		previousBoards.pop();
-		previousScores.pop();
-	}
+    @Override
+    public boolean moveLeft(boolean simulate) {
+        move(0, -1);
+        setChanged();
+        notifyObservers();
+        return true;
+    }
 
-	@Override
-	public int getScore() {
-		return score;
-	}
+    @Override
+    public int[][] getData() {
+        return maze;
+    }
 
-	public void setScore(int score) {
-		this.score = score;
-	}
+    private void setData(int[][] data) {
+        this.maze = data;
+    }
 
-	@Override
-	public boolean isGameWon() {
-		return gameWon;
-	}
-	
-	@Override
-	public void setGameWon(boolean gameWon) {
-		this.gameWon = gameWon;
-		System.out.println("won");
-	}
+    public void setData(State current, State goal) {
+        Point pCurrent = (Point) (current.getState());
+        Point pGoal = (Point) (goal.getState());
+        int cx = pCurrent.x;
+        int cy = pCurrent.y;
+        int gx = pGoal.x;
+        int gy = pGoal.y;
+        maze[cx][cy] = 0;
+        maze[gx][gy] = 1;
+    }
 
-	@Override
-	public boolean isGameOver() {
-		return gameOver;
-	}
+    @Override
+    public void initialize() {
+        System.out.println("im initializing");
+        maze = copyOf(initialMaze);
+        this.state = getStartState();
+        this.score = 0;
+        this.previousBoards = new Stack<int[][]>();
+        this.previousScores = new Stack<Integer>();
+        this.gameWon = false;
+        this.gameOver = false;
+        printBoard();
+        setChanged();
+        notifyObservers();
+    }
 
-	public void setGameOver(boolean gameOver) {
-		this.gameOver = gameOver;
-	}
-    
-	public int getPointValue(int x, int y) {
+    @Override
+    public void restore() {
+        if (!previousBoards.isEmpty()) {
+            //	setData(previousBoards.pop());
+            setScore(previousScores.pop());
+            setChanged();
+            notifyObservers();
+        }
+    }
+
+    public void backup() {
+        previousBoards.push(maze);
+        previousScores.push(score);
+    }
+
+    public void delete() {
+        previousBoards.pop();
+        previousScores.pop();
+    }
+
+    @Override
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    @Override
+    public boolean isGameWon() {
+        return gameWon;
+    }
+
+    @Override
+    public void setGameWon(boolean gameWon) {
+        this.gameWon = gameWon;
+        System.out.println("won");
+    }
+
+    @Override
+    public void saveGame(String xmlFileName) {
+        try {
+            s.serializeToXML(this, xmlFileName);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void loadGame(String xmlFileName) {
+        try {
+            setData(((GameMazeModel) s.deserializeXML(xmlFileName)).getData());
+            setScore(((GameMazeModel) s.deserializeXML(xmlFileName)).getScore());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        setChanged();
+        notifyObservers();
+    }
+
+    @Override
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
+    public void setGameOver(boolean gameOver) {
+        this.gameOver = gameOver;
+    }
+
+    public int getPointValue(int x, int y) {
         if (x >= maze.length || x < 0 || y >= maze[0].length || y < 0) {
             return -1;
         }
-		return maze[x][y];
-	}
+        return maze[x][y];
+    }
 
-	public State getStartState() {
-		for (int x = 0; x < maze.length; x++) {
-			for (int y = 0; y < maze[0].length; y++) {
-				if (maze[x][y] == MOUSE)
-					return new State(new Point (x,y));
-			}
-		}
-		return null;
-	}
-	
-	private int[][] copyOf(int[][] array) {
-		int newArray[][] = new int[array.length][array[0].length];
-		for (int row = 0; row < array.length; row++) {
-			for (int column = 0; column < array.length; column++) {
-				newArray[row][column] = array[row][column];
-			}
-		}
-		return newArray;
-	}
+    public State getStartState() {
+        for (int x = 0; x < maze.length; x++) {
+            for (int y = 0; y < maze[0].length; y++) {
+                if (maze[x][y] == MOUSE)
+                    return new State(new Point(x, y));
+            }
+        }
+        return null;
+    }
+
+    private int[][] copyOf(int[][] array) {
+        int newArray[][] = new int[array.length][array[0].length];
+        for (int row = 0; row < array.length; row++) {
+            for (int column = 0; column < array.length; column++) {
+                newArray[row][column] = array[row][column];
+            }
+        }
+        return newArray;
+    }
 
 /*	public State getGoalState() {
-		State newState = new State();
+        State newState = new State();
 		for (int x = 0; x < mHeight; x++) {
 			for (int y = 0; y < mWidth; y++) {
 				if (maze[x][y] == CHEESE)
