@@ -1,4 +1,4 @@
-package model;
+package model.algorithms;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -13,7 +13,7 @@ public class AStar {
 
     public ArrayList<Action> search(State start, State goal) {
         HashSet<State> closedList = new HashSet<State>();
-        PriorityQueue<State> openList   = new PriorityQueue<State>();
+        PriorityQueue<State> openList = new PriorityQueue<State>();
         openList.add(start);
         start.setG(0);
         start.setF(domain.g(start, start) + domain.h(start, goal));

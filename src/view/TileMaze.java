@@ -6,6 +6,7 @@ import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontMetrics;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 
@@ -42,13 +43,16 @@ public class TileMaze extends Canvas {
                 setTileBackground(event);
                 event.gc.fillRectangle(0, 0, getSize().x, getSize().y);
 
-                //Set another font color for numbers higher than 8
-                if (value > 8)
-                    event.gc.setForeground(new Color(getDisplay(), 255, 255, 255));
+                // Mouse
+                if (value == 1) {
+                    Image mouse = new Image(getDisplay(), "images/mazeMouse.png");
+                    event.gc.drawImage(mouse, 0, 0, (mouse.getBounds().width), (mouse.getBounds().height), 0, 0, getSize().x, getSize().y);
+                }
 
-                //Set the text
-                if (value > 0) {
-                    event.gc.drawString(value + "", mX, mY);
+                // Cheese
+                if (value == 2) {
+                    Image cheese = new Image(getDisplay(), "images/mazeCheese.png");
+                    event.gc.drawImage(cheese, 0, 0, (cheese.getBounds().width), (cheese.getBounds().height), 0, 0, getSize().x, getSize().y);
                 }
             }
         });
@@ -56,20 +60,18 @@ public class TileMaze extends Canvas {
 
     public void setTileBackground(PaintEvent event) {
         switch (value) {
-        	case -1:
-            	event.gc.setBackground(new Color(getDisplay(), 111, 111, 111));
-            	break;
+            case -1:
+                event.gc.setBackground(new Color(getDisplay(), 111, 111, 111));
+                break;
 
             case 1:
-                event.gc.setBackground(new Color(getDisplay(), 150, 150, 150));
-                break;
-       
             case 2:
-                event.gc.setBackground(new Color(getDisplay(), 238, 228, 218));
+                event.gc.setBackground(new Color(getDisplay(), 150, 150, 150));
                 break;
 
             default:
-            	event.gc.setBackground(new Color(getDisplay(), 224, 215, 201));
+                event.gc.setBackground(new Color(getDisplay(), 224, 215, 201));
+                break;
         }
     }
 }

@@ -27,8 +27,8 @@ public class GameMazeBoard extends Composite implements Board {
 //        setLayout(new GridLayout(this.board.length, true));
         GridLayout layout = new GridLayout();
         layout.numColumns = BOARDSIZE;
-        layout.makeColumnsEqualWidth=true;
-        layout.horizontalSpacing=1;
+        layout.makeColumnsEqualWidth = true;
+        layout.horizontalSpacing = 1;
         layout.verticalSpacing = 1;
         setLayout(layout);
         tiles = new TileMaze[this.board.length][this.board.length];

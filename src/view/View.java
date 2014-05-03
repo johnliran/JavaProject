@@ -1,6 +1,6 @@
 package view;
 
-public interface View extends Runnable{
+public interface View extends Runnable {
 
     public void displayData(int[][] data);
 
@@ -11,10 +11,10 @@ public interface View extends Runnable{
     public void gameWon();
 
     public void gameOver();
-    
+
     public boolean isUserNotified();
-    
+
     public WindowShell getWindowShell();
-		
+
 
 }
