@@ -309,4 +309,28 @@ public class Game2048Model extends Observable implements Model {
     public void setGameOver(boolean gameOver) {
         this.gameOver = gameOver;
     }
+
+	@Override
+	public boolean moveUpRight(boolean simulate) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean moveUpLeft(boolean simulate) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean moveDownRight(boolean simulate) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean moveDownLeft(boolean simulate) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

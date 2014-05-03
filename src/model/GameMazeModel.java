@@ -15,6 +15,7 @@ public class GameMazeModel extends Observable implements Model {
     private int[][] maze;
     private State state;
     private int score;
+    private int numberOfMoves;
     private boolean gameWon;
     private boolean gameOver;
     private Stack<int[][]> previousBoards;
@@ -265,5 +266,49 @@ public class GameMazeModel extends Observable implements Model {
         ArrayList<Action> actions = as.search(this.getStartState(), this.getGoalState());
         System.out.println("NumberOfActions:" + actions.size());
     }
+
+	@Override
+	public boolean moveUpRight(boolean simulate) {
+		if (moveRight(false))
+    		moveUp(false);
+    	else {
+    		moveUp(false);
+    		moveRight(false);
+    	}         
+		return false;
+	}
+
+	@Override
+	public boolean moveUpLeft(boolean simulate) {
+		if (moveLeft(false))
+    		moveUp(false);
+    	else {
+    		moveUp(false);
+    		moveLeft(false);
+    	}  
+		return false;
+	}
+
+	@Override
+	public boolean moveDownRight(boolean simulate) {
+		if (moveRight(false))
+    		moveDown(false);
+    	else {
+    		moveDown(false);
+    		moveRight(false);
+    	}		
+		return false;
+	}
+
+	@Override
+	public boolean moveDownLeft(boolean simulate) {
+		if (moveLeft(false))
+    		moveDown(false);
+    	else {
+    		moveDown(false);
+    		moveLeft(false);
+    	}                
+		return false;
+	}
 
 }
