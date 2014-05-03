@@ -17,6 +17,7 @@ public class TileMaze extends Canvas {
     private final int MOUSE_DOWN = 3;
     private final int MOUSE_LEFT = 4;
     private final int CHEESE = 5;
+    private final int MOUSE_AND_CHEESE = 6;
 
 
     public void setValue(int value) {
@@ -73,6 +74,12 @@ public class TileMaze extends Canvas {
 	                    
 						break;
 					}
+					case MOUSE_AND_CHEESE: {
+	                    figure = new Image(getDisplay(), "images/mazeMouseAndCheese.png");
+	                    
+						break;
+					}
+					
 					 default:
 	                    figure = new Image(getDisplay(), "images/mazeMouse.png");
 	
@@ -90,9 +97,9 @@ public class TileMaze extends Canvas {
                 event.gc.setBackground(new Color(getDisplay(), 111, 111, 111));
                 break;
 
-            case 5:
-                event.gc.setBackground(new Color(getDisplay(), 150, 150, 150));
-                break;
+//            case 5:
+//                event.gc.setBackground(new Color(getDisplay(), 150, 150, 150));
+//                break;
 
             default:
                 event.gc.setBackground(new Color(getDisplay(), 224, 215, 201));

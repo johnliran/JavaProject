@@ -11,12 +11,13 @@ import java.util.Stack;
 public class GameMazeModel extends Observable implements Model {
     private final int MOUSE = 1;
     private final int WALL = -1;
-    private final int CHEESE = 5;
     private final int BLANK = 0;
     private final int MOUSE_RIGHT = 1;
     private final int MOUSE_UP = 2;
     private final int MOUSE_DOWN = 3;
     private final int MOUSE_LEFT = 4;
+    private final int CHEESE = 5;
+    private final int MOUSE_AND_CHEESE = 6;
     private int mouseDirection;
     private int[][] maze;
     private State state;
@@ -172,7 +173,10 @@ public class GameMazeModel extends Observable implements Model {
         int gx = pGoal.x;
         int gy = pGoal.y;
         maze[cx][cy] = 0;
-        maze[gx][gy] = mouseDirection;
+        if (getPointValue(gx, gy) == CHEESE)
+        	maze[gx][gy] = MOUSE_AND_CHEESE;
+        else
+        	maze[gx][gy] = mouseDirection;
     }
 
     @Override
