@@ -1,6 +1,5 @@
 package view;
 
+public interface Board {
 
-public interface Board  {
-	
 }

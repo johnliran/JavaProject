@@ -1,5 +1,8 @@
 package model;
 
+import model.algorithms.Model;
+import model.algorithms.Serializer;
+import model.algorithms.State;
 import org.eclipse.swt.graphics.Point;
 
 import java.util.Observable;
@@ -19,21 +22,21 @@ public class GameMazeModel extends Observable implements Model {
     private Stack<Integer> previousScores;
     private Serializer s;
     private int[][] initialMaze = {
-        {WALL , WALL , WALL , WALL , WALL , WALL , WALL , WALL , WALL , WALL , WALL , WALL , WALL , WALL , WALL} ,
-        {WALL , BLANK , BLANK , BLANK , WALL , BLANK , BLANK , BLANK , BLANK , BLANK , BLANK , BLANK , BLANK , BLANK , WALL} ,
-        {WALL , BLANK , WALL , BLANK , WALL , BLANK , WALL , WALL , BLANK , WALL , WALL , BLANK , WALL , BLANK , WALL} ,
-        {WALL , BLANK , WALL , BLANK , WALL , BLANK , BLANK , WALL , BLANK , WALL , BLANK , BLANK , WALL , BLANK , WALL} ,
-        {WALL , BLANK , WALL , WALL , WALL , WALL , WALL , WALL , BLANK , WALL , WALL , BLANK , WALL , WALL , WALL} ,
-        {WALL , BLANK , BLANK , BLANK , BLANK , BLANK , BLANK , BLANK , BLANK , BLANK , WALL , BLANK , WALL , BLANK , WALL} ,
-        {WALL , BLANK , WALL , BLANK , WALL , WALL , WALL , WALL , WALL , WALL , WALL , BLANK , WALL , BLANK , WALL} ,
-        {WALL , BLANK , WALL , BLANK , WALL , BLANK , BLANK , BLANK , BLANK , BLANK , WALL , BLANK , BLANK , BLANK , CHEESE} ,
-        {WALL , BLANK , WALL , WALL , WALL , BLANK , WALL , BLANK , WALL , BLANK , WALL , BLANK , WALL , BLANK , WALL} ,
-        {MOUSE , BLANK , BLANK , BLANK , WALL , BLANK , WALL , BLANK , WALL , BLANK , WALL , BLANK , WALL , BLANK , WALL} ,
-        {WALL , WALL , WALL , BLANK , WALL , BLANK , WALL , BLANK , WALL , BLANK , WALL , BLANK , WALL , BLANK , WALL} ,
-        {WALL , BLANK , BLANK , BLANK , WALL , BLANK , WALL , BLANK , WALL , BLANK , WALL , BLANK , WALL , BLANK , WALL} ,
-        {WALL , BLANK , WALL , WALL , WALL , WALL , WALL , BLANK , WALL , WALL , WALL , WALL , WALL , BLANK , WALL} ,
-        {WALL , BLANK , BLANK , BLANK , BLANK , BLANK , WALL , BLANK , BLANK , BLANK , BLANK , BLANK , BLANK , BLANK , WALL} ,
-        {WALL , WALL , WALL , WALL , WALL , WALL , WALL , WALL , WALL , WALL , WALL , WALL , WALL , WALL , WALL} ,
+            {WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL},
+            {WALL, BLANK, BLANK, BLANK, WALL, BLANK, BLANK, BLANK, BLANK, BLANK, BLANK, BLANK, BLANK, BLANK, WALL},
+            {WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL, WALL, BLANK, WALL, WALL, BLANK, WALL, BLANK, WALL},
+            {WALL, BLANK, WALL, BLANK, WALL, BLANK, BLANK, WALL, BLANK, WALL, BLANK, BLANK, WALL, BLANK, WALL},
+            {WALL, BLANK, WALL, WALL, WALL, WALL, WALL, WALL, BLANK, WALL, WALL, BLANK, WALL, WALL, WALL},
+            {WALL, BLANK, BLANK, BLANK, BLANK, BLANK, BLANK, BLANK, BLANK, BLANK, WALL, BLANK, WALL, BLANK, WALL},
+            {WALL, BLANK, WALL, BLANK, WALL, WALL, WALL, WALL, WALL, WALL, WALL, BLANK, WALL, BLANK, WALL},
+            {WALL, BLANK, WALL, BLANK, WALL, BLANK, BLANK, BLANK, BLANK, BLANK, WALL, BLANK, BLANK, BLANK, CHEESE},
+            {WALL, BLANK, WALL, WALL, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL},
+            {MOUSE, BLANK, BLANK, BLANK, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL},
+            {WALL, WALL, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL},
+            {WALL, BLANK, BLANK, BLANK, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL},
+            {WALL, BLANK, WALL, WALL, WALL, WALL, WALL, BLANK, WALL, WALL, WALL, WALL, WALL, BLANK, WALL},
+            {WALL, BLANK, BLANK, BLANK, BLANK, BLANK, WALL, BLANK, BLANK, BLANK, BLANK, BLANK, BLANK, BLANK, WALL},
+            {WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL},
     };
 
 
@@ -131,7 +134,6 @@ public class GameMazeModel extends Observable implements Model {
 
     @Override
     public void initialize() {
-        System.out.println("im initializing");
         maze = copyOf(initialMaze);
         this.state = getStartState();
         this.score = 0;
@@ -139,7 +141,6 @@ public class GameMazeModel extends Observable implements Model {
         this.previousScores = new Stack<Integer>();
         this.gameWon = false;
         this.gameOver = false;
-        printBoard();
         setChanged();
         notifyObservers();
     }
@@ -181,13 +182,11 @@ public class GameMazeModel extends Observable implements Model {
     @Override
     public void setGameWon(boolean gameWon) {
         this.gameWon = gameWon;
-        System.out.println("won");
     }
 
     @Override
     public void saveGame(String xmlFileName) {
         try {
-        	System.out.println(s + "," + xmlFileName);
             s.serializeToXML(initialMaze, xmlFileName);
         } catch (Exception e) {
             e.printStackTrace();
@@ -242,14 +241,15 @@ public class GameMazeModel extends Observable implements Model {
         return newArray;
     }
 
-/*	public State getGoalState() {
+    public State getGoalState() {
         State newState = new State();
-		for (int x = 0; x < mHeight; x++) {
-			for (int y = 0; y < mWidth; y++) {
-				if (maze[x][y] == CHEESE)
-					newState.setmState(new Point (x,y));
-			}
-		}
-		return newState;
-	}*/
+        for (int x = 0; x < maze.length; x++) {
+            for (int y = 0; y < maze[0].length; y++) {
+                if (maze[x][y] == CHEESE)
+                    newState.setState(new Point(x, y));
+            }
+        }
+        return newState;
+    }
+
 }

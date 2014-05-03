@@ -1,4 +1,4 @@
-package model;
+package model.algorithms;
 
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;

@@ -1,8 +1,8 @@
-package model;
+package model.algorithms;
 
 public class State implements Comparable<State> {
     private Object state;
-    private State  parentState;
+    private State parentState;
     private Action leadingAction;
     private double f;
     private double g;
@@ -17,6 +17,9 @@ public class State implements Comparable<State> {
 
     public State(Object state) {
         this.state = state;
+    }
+
+    public State() {
     }
 
     public double getF() {
@@ -57,11 +60,11 @@ public class State implements Comparable<State> {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof State))
+    public boolean equals(Object object) {
+        if (!(object instanceof State))
             return false;
 
-        State other = (State) obj;
+        State other = (State) object;
         return this.state.equals(other.state);
     }
 }

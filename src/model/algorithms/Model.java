@@ -1,4 +1,4 @@
-package model;
+package model.algorithms;
 
 public interface Model {
 
@@ -21,7 +21,7 @@ public interface Model {
     public boolean isGameWon();
 
     public boolean isGameOver();
-    
+
     public void setGameWon(boolean gameWon);
 
     public void saveGame(String xmlFileName);
