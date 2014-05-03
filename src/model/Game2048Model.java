@@ -279,6 +279,7 @@ public class Game2048Model extends Observable implements Model {
     @Override
     public void saveGame(String xmlFileName) {
         try {
+        	System.out.println(this);
             s.serializeToXML(this,xmlFileName);
         } catch (Exception e) {
             e.printStackTrace();

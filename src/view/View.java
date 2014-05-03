@@ -13,6 +13,8 @@ public interface View extends Runnable{
     public void gameOver();
     
     public boolean isUserNotified();
+    
+    public WindowShell getWindowShell();
 		
 
 }

@@ -187,7 +187,8 @@ public class GameMazeModel extends Observable implements Model {
     @Override
     public void saveGame(String xmlFileName) {
         try {
-            s.serializeToXML(this, xmlFileName);
+        	System.out.println(s + "," + xmlFileName);
+            s.serializeToXML(initialMaze, xmlFileName);
         } catch (Exception e) {
             e.printStackTrace();
         }
