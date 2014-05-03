@@ -62,7 +62,7 @@ public class GameMazeModel extends Observable implements Model {
 
     }
 
-    public void move(int row, int column) {
+    public boolean move(int row, int column) {
         Point point = (Point) (state.getState());
         int px = point.x;
         int py = point.y;
@@ -75,42 +75,50 @@ public class GameMazeModel extends Observable implements Model {
             if (getPointValue(px, py) == 2)
                 setGameWon(true);
             setData(current, state);
+            return true;
         }
+        return false;
 
     }
 
     @Override
     public boolean moveUp(boolean simulate) {
-        move(-1, 0);
+        boolean moved;
+    	moved = move(-1, 0);
         setChanged();
         notifyObservers();
-        return true;
+        return moved;
     }
 
     @Override
     public boolean moveDown(boolean simulate) {
-        move(1, 0);
+    	boolean moved;
+    	moved = move(1, 0);
         setChanged();
         notifyObservers();
-        return true;
+        return moved;
 
     }
 
     @Override
     public boolean moveRight(boolean simulate) {
-        move(0, 1);
-        setChanged();
+    	boolean moved;
+    	moved = move(0,1);
+    	setChanged();
         notifyObservers();
-        return true;
+        return moved;
     }
 
     @Override
     public boolean moveLeft(boolean simulate) {
-        move(0, -1);
+    	boolean moved;
+    	moved = move(0, -1);
         setChanged();
         notifyObservers();
-        return true;
+        return moved;
     }
+    
+
 
     @Override
     public int[][] getData() {
@@ -257,4 +265,5 @@ public class GameMazeModel extends Observable implements Model {
         ArrayList<Action> actions = as.search(this.getStartState(), this.getGoalState());
         System.out.println("NumberOfActions:" + actions.size());
     }
+
 }
