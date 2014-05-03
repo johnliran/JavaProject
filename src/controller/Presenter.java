@@ -56,17 +56,25 @@ public class Presenter implements Observer {
         }
         if (observable instanceof WindowShell) {
             switch (ui.getWindowShell().getUserCommand()) {
-                case UNDO:
+                case UNDO: {
                     m.restore();
                     break;
+                }
 
-                case SAVE:
-                    m.saveGame("test");
+                case SAVE: {
+                	m.saveGame("test");
                     break;
-
-                case LOAD:
+                }
+                case LOAD: {
                     m.loadGame("test");
                     break;
+                }
+                    
+                case RESET: {
+                	startGame();
+                	break;
+                }
+                	
 
                 default:
                     break;

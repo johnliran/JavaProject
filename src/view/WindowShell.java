@@ -1,13 +1,23 @@
 package view;
 
+import java.util.Observable;
+
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.*;
-
-import java.util.Observable;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.Shell;
 
 public class WindowShell extends Observable {
     private final static int RESET = 1;
@@ -42,12 +52,31 @@ public class WindowShell extends Observable {
 
         final MenuItem edit = new MenuItem(m, SWT.CASCADE);
         edit.setText("Edit");
+        
         final Menu editMenu = new Menu(shell, SWT.DROP_DOWN);
         edit.setMenu(editMenu);
         final MenuItem undoItem = new MenuItem(editMenu, SWT.PUSH);
         undoItem.setText("Undo");
+        undoItem.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+            	 userCommand = UNDO;
+                 setChanged();
+                 notifyObservers();
+            }
+        });
+
         final MenuItem resetItem = new MenuItem(editMenu, SWT.PUSH);
         resetItem.setText("Reset");
+        resetItem.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+            	 userCommand = RESET;
+                 setChanged();
+                 notifyObservers();
+            }
+        });
+        
 
         shell.setMenuBar(m);
 
@@ -77,6 +106,18 @@ public class WindowShell extends Observable {
         Button resetButton = new Button(shell, SWT.PUSH);
         resetButton.setText("Reset");
         resetButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
+        resetButton.addListener(SWT.Selection, new Listener() {
+            public void handleEvent(Event e) {
+                switch (e.type) {
+                    case SWT.Selection: {
+                        userCommand = RESET;
+                        setChanged();
+                        notifyObservers();
+                        break;
+                    }
+                }
+            }
+        });
 
         Button loadButton = new Button(shell, SWT.PUSH);
         loadButton.setText("Load");
