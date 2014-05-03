@@ -1,10 +1,9 @@
 package model;
 
-import model.algorithms.Model;
-import model.algorithms.Serializer;
-import model.algorithms.State;
+import model.algorithms.*;
 import org.eclipse.swt.graphics.Point;
 
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Stack;
 
@@ -49,6 +48,7 @@ public class GameMazeModel extends Observable implements Model {
         this.gameWon = false;
         this.gameOver = false;
         this.s = new Serializer();
+        solveGame();
     }
 
     public void printBoard() {
@@ -252,4 +252,9 @@ public class GameMazeModel extends Observable implements Model {
         return newState;
     }
 
+    private void solveGame() {
+        AStar as = new AStar(new GameMazeDomain(this));
+        ArrayList<Action> actions = as.search(this.getStartState(), this.getGoalState());
+        System.out.println("NumberOfActions:" + actions.size());
+    }
 }
