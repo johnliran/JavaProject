@@ -1,15 +1,19 @@
 package view;
 
+import java.util.Observable;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
-import java.util.Observable;
+import com.apple.crypto.provider.KeychainStore;
 
 public class GameMazeView extends Observable implements View, Runnable {
     private final static int RESET = 1;
@@ -22,7 +26,8 @@ public class GameMazeView extends Observable implements View, Runnable {
     private Shell shell;
     private int userCommand;
     private boolean userNotified;
-
+    private int horizontal =0;
+    private int vertical =0;
     private void initComponents() {
         display = new Display();
         shell = new Shell(display);
@@ -36,15 +41,54 @@ public class GameMazeView extends Observable implements View, Runnable {
         board.addKeyListener(new KeyListener() {
             @Override
             public void keyReleased(KeyEvent event) {
+            	switch (event.keyCode) {
+                case SWT.ARROW_LEFT:  
+                    horizontal++; // will make horizontal == 0 if RIGHT was already pressed  
+                    break;  
+                case SWT.ARROW_RIGHT:  
+                    horizontal--;  
+                    break;  
+                case SWT.ARROW_UP:  
+                    vertical++;  
+                    break;  
+                case SWT.ARROW_DOWN:  
+                    vertical--;  
+                    break; 
+
+				default:
+					break;
+				}
             }
 
             @Override
             public void keyPressed(KeyEvent event) {
-                userCommand = event.keyCode;
-                setChanged();
-                notifyObservers();
+            switch (event.keyCode) {
+            case SWT.ARROW_LEFT:  
+                horizontal--; // will make horizontal == 1 if RIGHT was already pressed  
+                break;  
+            case SWT.ARROW_RIGHT:  
+                horizontal++;  
+                break;  
+            case SWT.ARROW_UP:  
+                vertical--;  
+                break;  
+            case SWT.ARROW_DOWN:  
+                vertical++;  
+                break;  
 
             }
+            if (vertical > 0 && horizontal > 0)
+            	System.out.println("down and right");
+            if (vertical > 0 && horizontal < 0)
+            	System.out.println("down and left");
+            if (vertical < 0 && horizontal > 0)
+            	System.out.println("up and right");
+            if (vertical < 0 && horizontal < 0)
+            	System.out.println("up and left");
+            }
+             
+            	
+
 
 //			
 //
@@ -62,6 +106,7 @@ public class GameMazeView extends Observable implements View, Runnable {
 //				}
 //			}*/
         });
+        
         shell.open();
     }
 
