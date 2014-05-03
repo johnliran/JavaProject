@@ -54,22 +54,11 @@ public class Presenter implements Observer {
                     break;
                 
                 case RIGHT_DOWN: {
-                	if (m.moveRight(false))
-                		m.moveDown(false);
-                	else {
-                		m.moveDown(false);
-                		m.moveRight(false);
-                	}
-                	
+                	m.moveDownRight(false);
                 	break;
                 }
                 case RIGHT_UP: {
-                	if (m.moveRight(false))
-                		m.moveUp(false);
-                	else {
-                		m.moveUp(false);
-                		m.moveRight(false);
-                	}                	
+                	m.moveUpRight(false);
                 	break;
                 }
                 case LEFT:
@@ -77,21 +66,11 @@ public class Presenter implements Observer {
                     break;
                 
                 case LEFT_DOWN: {
-                	if (m.moveLeft(false))
-                		m.moveDown(false);
-                	else {
-                		m.moveDown(false);
-                		m.moveLeft(false);
-                	}                	
+                	m.moveDownLeft(false);
                 	break;
                 }
                 case LEFT_UP: {
-                	if (m.moveLeft(false))
-                		m.moveUp(false);
-                	else {
-                		m.moveUp(false);
-                		m.moveLeft(false);
-                	}                	
+                	m.moveUpLeft(false);
                 	break;
                 }
 
