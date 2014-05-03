@@ -7,13 +7,12 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
+
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
-import com.apple.crypto.provider.KeychainStore;
+
 
 public class GameMazeView extends Observable implements View, Runnable {
     private final static int RESET = 1;
@@ -22,12 +21,10 @@ public class GameMazeView extends Observable implements View, Runnable {
     private GameMazeBoard board;
     private Display display;
     private WindowShell windowShell;
-    private Label score;
     private Shell shell;
     private int userCommand;
     private boolean userNotified;
-    private int horizontal =0;
-    private int vertical =0;
+
     private void initComponents() {
         display = new Display();
         shell = new Shell(display);
@@ -39,8 +36,11 @@ public class GameMazeView extends Observable implements View, Runnable {
         windowShell = new WindowShell(title, width, height, display, shell, (Board) board);
         shell.setBackground(new Color(display, 187, 173, 160));
         board.addKeyListener(new KeyListener() {
+            private int horizontal =0;
+            private int vertical =0;
             @Override
             public void keyReleased(KeyEvent event) {
+            	
             	switch (event.keyCode) {
                 case SWT.ARROW_LEFT:  
                     horizontal++; // will make horizontal == 0 if RIGHT was already pressed  
@@ -75,8 +75,21 @@ public class GameMazeView extends Observable implements View, Runnable {
             case SWT.ARROW_DOWN:  
                 vertical++;  
                 break;  
+                
+            	
+                
 
             }
+            System.out.println(vertical +" " + horizontal);
+            if (vertical > 0 && horizontal == 0)
+            	System.out.println("Down");
+            if (vertical < 0 && horizontal == 0)
+            	System.out.println("Up");
+            if (vertical == 0 && horizontal > 0)
+            	System.out.println("Right");
+            if (vertical == 0 && horizontal < 0)
+            	System.out.println("Left");
+            
             if (vertical > 0 && horizontal > 0)
             	System.out.println("down and right");
             if (vertical > 0 && horizontal < 0)
@@ -86,6 +99,8 @@ public class GameMazeView extends Observable implements View, Runnable {
             if (vertical < 0 && horizontal < 0)
             	System.out.println("up and left");
             }
+            
+            
              
             	
 
@@ -105,7 +120,9 @@ public class GameMazeView extends Observable implements View, Runnable {
 //					notifyObservers();
 //				}
 //			}*/
+       
         });
+        
         
         shell.open();
     }
