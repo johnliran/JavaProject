@@ -12,6 +12,11 @@ import org.eclipse.swt.widgets.Composite;
 
 public class TileMaze extends Canvas {
     private int value;
+    private final int MOUSE_RIGHT = 1;
+    private final int MOUSE_UP = 2;
+    private final int MOUSE_DOWN = 3;
+    private final int MOUSE_LEFT = 4;
+    private final int CHEESE = 5;
 
 
     public void setValue(int value) {
@@ -42,17 +47,38 @@ public class TileMaze extends Canvas {
                 //Set the color and Draw the RoundedRectangle shape  (passes the event in order to change the event's specific color)
                 setTileBackground(event);
                 event.gc.fillRectangle(0, 0, getSize().x, getSize().y);
+                if (value > 0) {
+	                Image figure;
+	
+	                switch (value) {
+					case MOUSE_RIGHT: {
+	                    figure = new Image(getDisplay(), "images/mazeMouse_right.png");
 
-                // Mouse
-                if (value == 1) {
-                    Image mouse = new Image(getDisplay(), "images/mazeMouse.png");
-                    event.gc.drawImage(mouse, 0, 0, (mouse.getBounds().width), (mouse.getBounds().height), 0, 0, getSize().x, getSize().y);
-                }
-
-                // Cheese
-                if (value == 2) {
-                    Image cheese = new Image(getDisplay(), "images/mazeCheese.png");
-                    event.gc.drawImage(cheese, 0, 0, (cheese.getBounds().width), (cheese.getBounds().height), 0, 0, getSize().x, getSize().y);
+						break;
+					}
+					case MOUSE_UP: {
+	                    figure = new Image(getDisplay(), "images/mazeMouse_up.png");
+						break;
+					}
+					case MOUSE_LEFT: {
+	                    figure = new Image(getDisplay(), "images/mazeMouse_left.png");
+						break;
+					}
+					case MOUSE_DOWN: {
+	                    figure = new Image(getDisplay(), "images/mazeMouse_down.png");
+						break;
+					}
+					case CHEESE: {
+	                    figure = new Image(getDisplay(), "images/mazeCheese.png");
+	                    
+						break;
+					}
+					 default:
+	                    figure = new Image(getDisplay(), "images/mazeMouse.png");
+	
+					}
+				
+	                event.gc.drawImage(figure, 0, 0, (figure.getBounds().width), (figure.getBounds().height), 0, 0, getSize().x, getSize().y);
                 }
             }
         });
@@ -64,8 +90,7 @@ public class TileMaze extends Canvas {
                 event.gc.setBackground(new Color(getDisplay(), 111, 111, 111));
                 break;
 
-            case 1:
-            case 2:
+            case 5:
                 event.gc.setBackground(new Color(getDisplay(), 150, 150, 150));
                 break;
 

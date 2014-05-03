@@ -11,8 +11,13 @@ import java.util.Stack;
 public class GameMazeModel extends Observable implements Model {
     private final int MOUSE = 1;
     private final int WALL = -1;
-    private final int CHEESE = 2;
+    private final int CHEESE = 5;
     private final int BLANK = 0;
+    private final int MOUSE_RIGHT = 1;
+    private final int MOUSE_UP = 2;
+    private final int MOUSE_DOWN = 3;
+    private final int MOUSE_LEFT = 4;
+    private int mouseDirection;
     private int[][] maze;
     private State state;
     private int score;
@@ -46,6 +51,7 @@ public class GameMazeModel extends Observable implements Model {
         this.maze = copyOf(initialMaze);
         this.state = getStartState();
         this.score = 0;
+        mouseDirection = MOUSE_RIGHT;
         this.numberOfMoves = 0;
         this.previousBoards = new Stack<int[][]>();
         this.previousScores = new Stack<Integer>();
@@ -79,13 +85,12 @@ public class GameMazeModel extends Observable implements Model {
             	state.setState(new Point(px, py));
             	numberOfMoves++;
             	score +=10;
-            	if (getPointValue(px, py) == 2){
+            	if (getPointValue(px, py) == CHEESE){
             		if (numberOfMoves == minNumberOfMoves)
             			setGameWon(true);
             		else
             			setGameOver(true);
-            	}
-                    
+            	}        
                 setData(current, state);
             }
             return true;
@@ -98,7 +103,8 @@ public class GameMazeModel extends Observable implements Model {
     @Override
     public boolean moveUp(boolean simulate) {
         boolean moved;
-    	moved = move(-1, 0, simulate);
+        mouseDirection = MOUSE_UP;
+        moved = move(-1, 0, simulate);
 //    	if (moved && !simulate) {
 //    		score +=10;
 //    	}
@@ -110,6 +116,7 @@ public class GameMazeModel extends Observable implements Model {
     @Override
     public boolean moveDown(boolean simulate) {
     	boolean moved;
+    	mouseDirection = MOUSE_DOWN;
     	moved = move(1, 0 , simulate);
 //    	if (moved && !simulate) {
 //    		score +=10;
@@ -123,6 +130,7 @@ public class GameMazeModel extends Observable implements Model {
     @Override
     public boolean moveRight(boolean simulate) {
     	boolean moved;
+    	mouseDirection = MOUSE_RIGHT;
     	moved = move(0,1, simulate);
 //    	if (moved && !simulate) {
 //    		score +=10;
@@ -135,6 +143,7 @@ public class GameMazeModel extends Observable implements Model {
     @Override
     public boolean moveLeft(boolean simulate) {
     	boolean moved;
+    	mouseDirection = MOUSE_LEFT;
     	moved = move(0, -1, simulate);
 //    	if (moved && !simulate) {
 //    		score +=10;
@@ -163,7 +172,7 @@ public class GameMazeModel extends Observable implements Model {
         int gx = pGoal.x;
         int gy = pGoal.y;
         maze[cx][cy] = 0;
-        maze[gx][gy] = 1;
+        maze[gx][gy] = mouseDirection;
     }
 
     @Override
