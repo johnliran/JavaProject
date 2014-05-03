@@ -78,6 +78,7 @@ public class GameMazeModel extends Observable implements Model {
             if (!simulate) {
             	state.setState(new Point(px, py));
             	numberOfMoves++;
+            	score +=10;
             	if (getPointValue(px, py) == 2){
             		if (numberOfMoves == minNumberOfMoves)
             			setGameWon(true);
@@ -98,9 +99,9 @@ public class GameMazeModel extends Observable implements Model {
     public boolean moveUp(boolean simulate) {
         boolean moved;
     	moved = move(-1, 0, simulate);
-    	if (moved && !simulate) {
-    		score +=10;
-    	}
+//    	if (moved && !simulate) {
+//    		score +=10;
+//    	}
         setChanged();
         notifyObservers();
         return moved;
@@ -110,9 +111,9 @@ public class GameMazeModel extends Observable implements Model {
     public boolean moveDown(boolean simulate) {
     	boolean moved;
     	moved = move(1, 0 , simulate);
-    	if (moved && !simulate) {
-    		score +=10;
-    	}
+//    	if (moved && !simulate) {
+//    		score +=10;
+//    	}
         setChanged();
         notifyObservers();
         return moved;
@@ -123,9 +124,9 @@ public class GameMazeModel extends Observable implements Model {
     public boolean moveRight(boolean simulate) {
     	boolean moved;
     	moved = move(0,1, simulate);
-    	if (moved && !simulate) {
-    		score +=10;
-    	}
+//    	if (moved && !simulate) {
+//    		score +=10;
+//    	}
     	setChanged();
         notifyObservers();
         return moved;
@@ -135,9 +136,9 @@ public class GameMazeModel extends Observable implements Model {
     public boolean moveLeft(boolean simulate) {
     	boolean moved;
     	moved = move(0, -1, simulate);
-    	if (moved && !simulate) {
-    		score +=10;
-    	}
+//    	if (moved && !simulate) {
+//    		score +=10;
+//    	}
         setChanged();
         notifyObservers();
         return moved;
