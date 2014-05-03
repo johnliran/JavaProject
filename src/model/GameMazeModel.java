@@ -1,6 +1,7 @@
 package model;
 
 import model.algorithms.*;
+
 import org.eclipse.swt.graphics.Point;
 
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ public class GameMazeModel extends Observable implements Model {
     private State state;
     private int score;
     private int numberOfMoves;
+    private int minNumberOfMoves;
     private boolean gameWon;
     private boolean gameOver;
     private Stack<int[][]> previousBoards;
@@ -44,6 +46,7 @@ public class GameMazeModel extends Observable implements Model {
         this.maze = copyOf(initialMaze);
         this.state = getStartState();
         this.score = 0;
+        this.numberOfMoves = 0;
         this.previousBoards = new Stack<int[][]>();
         this.previousScores = new Stack<Integer>();
         this.gameWon = false;
@@ -63,7 +66,7 @@ public class GameMazeModel extends Observable implements Model {
 
     }
 
-    public boolean move(int row, int column) {
+    public boolean move(int row, int column,boolean simulate) {
         Point point = (Point) (state.getState());
         int px = point.x;
         int py = point.y;
@@ -72,11 +75,20 @@ public class GameMazeModel extends Observable implements Model {
         py += column;
 
         if (getPointValue(px, py) >= 0) {
-            state.setState(new Point(px, py));
-            if (getPointValue(px, py) == 2)
-                setGameWon(true);
-            setData(current, state);
+            if (!simulate) {
+            	state.setState(new Point(px, py));
+            	numberOfMoves++;
+            	if (getPointValue(px, py) == 2){
+            		if (numberOfMoves == minNumberOfMoves)
+            			setGameWon(true);
+            		else
+            			setGameOver(true);
+            	}
+                    
+                setData(current, state);
+            }
             return true;
+            
         }
         return false;
 
@@ -85,7 +97,10 @@ public class GameMazeModel extends Observable implements Model {
     @Override
     public boolean moveUp(boolean simulate) {
         boolean moved;
-    	moved = move(-1, 0);
+    	moved = move(-1, 0, simulate);
+    	if (moved && !simulate) {
+    		score +=10;
+    	}
         setChanged();
         notifyObservers();
         return moved;
@@ -94,7 +109,10 @@ public class GameMazeModel extends Observable implements Model {
     @Override
     public boolean moveDown(boolean simulate) {
     	boolean moved;
-    	moved = move(1, 0);
+    	moved = move(1, 0 , simulate);
+    	if (moved && !simulate) {
+    		score +=10;
+    	}
         setChanged();
         notifyObservers();
         return moved;
@@ -104,7 +122,10 @@ public class GameMazeModel extends Observable implements Model {
     @Override
     public boolean moveRight(boolean simulate) {
     	boolean moved;
-    	moved = move(0,1);
+    	moved = move(0,1, simulate);
+    	if (moved && !simulate) {
+    		score +=10;
+    	}
     	setChanged();
         notifyObservers();
         return moved;
@@ -113,7 +134,10 @@ public class GameMazeModel extends Observable implements Model {
     @Override
     public boolean moveLeft(boolean simulate) {
     	boolean moved;
-    	moved = move(0, -1);
+    	moved = move(0, -1, simulate);
+    	if (moved && !simulate) {
+    		score +=10;
+    	}
         setChanged();
         notifyObservers();
         return moved;
@@ -146,6 +170,7 @@ public class GameMazeModel extends Observable implements Model {
         maze = copyOf(initialMaze);
         this.state = getStartState();
         this.score = 0;
+        this.numberOfMoves = 0;
         this.previousBoards = new Stack<int[][]>();
         this.previousScores = new Stack<Integer>();
         this.gameWon = false;
@@ -264,51 +289,87 @@ public class GameMazeModel extends Observable implements Model {
     private void solveGame() {
         AStar as = new AStar(new GameMazeDomain(this));
         ArrayList<Action> actions = as.search(this.getStartState(), this.getGoalState());
-        System.out.println("NumberOfActions:" + actions.size());
+        minNumberOfMoves = actions.size();
     }
 
 	@Override
 	public boolean moveUpRight(boolean simulate) {
-		if (moveRight(false))
-    		moveUp(false);
+		boolean moved = moveRight(true);
+		score -= 5;
+		numberOfMoves--;
+		if (moved) {
+			moved = moveRight(false) && moveUp(false);
+		}
     	else {
-    		moveUp(false);
-    		moveRight(false);
+    		moved = moveUp(false) && moveRight(false);
     	}         
-		return false;
+		if (!moved) {
+			score += 5;
+			numberOfMoves++;
+		}
+		setChanged();
+        notifyObservers();
+		return moved;
 	}
 
 	@Override
 	public boolean moveUpLeft(boolean simulate) {
-		if (moveLeft(false))
-    		moveUp(false);
+		boolean moved = moveLeft(true);
+		score -= 5;
+		numberOfMoves--;
+		if (moved) {
+			moved = moveLeft(false) && moveUp(false);
+		}
     	else {
-    		moveUp(false);
-    		moveLeft(false);
-    	}  
-		return false;
+    		moved = moveUp(false) && moveLeft(false);
+    	}         
+		if (!moved) {
+			score += 5;
+			numberOfMoves++;
+		}
+		setChanged();
+        notifyObservers();
+		return moved;
 	}
 
 	@Override
 	public boolean moveDownRight(boolean simulate) {
-		if (moveRight(false))
-    		moveDown(false);
+		boolean moved = moveRight(true);
+		score -= 5;
+		numberOfMoves--;
+		if (moved) {
+			moved = moveRight(false) && moveDown(false);
+		}
     	else {
-    		moveDown(false);
-    		moveRight(false);
-    	}		
-		return false;
+    		moved = moveDown(false) && moveRight(false);
+    	}         
+		if (!moved) {
+			score += 5;
+			numberOfMoves++;
+		}
+		setChanged();
+        notifyObservers();
+		return moved;
 	}
 
 	@Override
 	public boolean moveDownLeft(boolean simulate) {
-		if (moveLeft(false))
-    		moveDown(false);
+		boolean moved = moveLeft(true);
+		score -= 5;
+		numberOfMoves--;
+		if (moved) {
+			moved = moveLeft(false) && moveDown(false);
+		}
     	else {
-    		moveDown(false);
-    		moveLeft(false);
-    	}                
-		return false;
+    		moved = moveDown(false) && moveLeft(false);
+    	}       
+		if (moved) {
+			score += 5;
+			numberOfMoves++;
+		}
+		setChanged();
+        notifyObservers();
+		return moved;
 	}
 
 }
