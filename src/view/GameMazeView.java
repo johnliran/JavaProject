@@ -163,4 +163,9 @@ public class GameMazeView extends Observable implements View, Runnable {
 	public boolean isUserNotified() {
 		return userNotified;
 	}
+    
+    @Override
+	public WindowShell getWindowShell() {
+		return windowShell;
+	}
 }

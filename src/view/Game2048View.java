@@ -11,13 +11,15 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
+import controller.Presenter;
+
 public class Game2048View extends Observable implements View, Runnable {
 	private final static int RESET 		= 1;
     private final static int SAVE 		= 2;
     private final static int LOAD		= 3;
     private Game2048Board board;
 	private Display display;
-	private WindowShell windowShell;
+	public WindowShell windowShell;
 	private Shell shell;
 	private int userCommand;
 	private boolean userNotified;
@@ -32,8 +34,10 @@ public class Game2048View extends Observable implements View, Runnable {
 	    int width = 400;
 	    int height = 300;
         windowShell = new WindowShell(title,width,height,display, shell,(Board)board); 
-        shell.setBackground(new Color(display, 187, 173, 160));
         
+        shell.setBackground(new Color(display, 187, 173, 160));
+		System.out.println("my view number of observers" + countObservers());
+
 		board.addKeyListener(new KeyListener() {
 			@Override
 			public void keyReleased(KeyEvent event) {
@@ -149,5 +153,10 @@ public class Game2048View extends Observable implements View, Runnable {
     @Override
 	public boolean isUserNotified() {
 		return userNotified;
+	}
+    
+    @Override
+	public WindowShell getWindowShell() {
+		return windowShell;
 	}
 }

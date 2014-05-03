@@ -1,8 +1,11 @@
 package controller;
 
 import view.View;
+import view.WindowShell;
 import model.Model;
+
 import org.eclipse.swt.SWT;
+
 import java.util.Observable;
 import java.util.Observer;
 
@@ -12,6 +15,8 @@ public class Presenter implements Observer {
     private final static int RESET= 1;
     private final static int SAVE = 2;
     private final static int LOAD = 3;
+    private final static int UNDO = 4;
+    
 
     @Override
     public void update(Observable observable, Object notification) {
@@ -52,15 +57,15 @@ public class Presenter implements Observer {
 
                 // For testing only; RESTORE
                 case SWT.SPACE: {
-                    m.restore();
-                    //System.out.println("Saving ...");
-                    //m.saveGame("2048");
-                    //System.out.println("Loading ...");
-                    //m.loadGame("2048");
-                    //System.out.println("Saving ...");
-                    //m.saveGame("maze");
-                    //System.out.println("Loading ...");
-                    //m.loadGame("maze");
+//                    m.restore();
+//                    System.out.println("Saving ...");
+//                    m.saveGame("2048.txt");
+//                    System.out.println("Loading ...");
+//                    m.loadGame("2048.txt");
+                    System.out.println("Saving ...");
+                    m.saveGame("maze.txt");
+                    System.out.println("Loading ...");
+                    m.loadGame("maze.txt");
                     break;
                 }
                 
@@ -85,7 +90,26 @@ public class Presenter implements Observer {
                 default:
                     break;
             }
+
         }
+    	if (observable instanceof WindowShell){
+    		switch (ui.getWindowShell().getUserCommand()) {
+			case UNDO: {
+				m.restore();
+				break;
+			}
+			case SAVE:
+				break;
+			
+			case LOAD:
+				break;
+				
+			default:
+				break;
+			}
+    		
+    	}
+        
     }
 
     public Presenter(Model m, View ui) {

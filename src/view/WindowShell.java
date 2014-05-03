@@ -1,5 +1,7 @@
 package view;
 
+import java.util.Observable;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -8,16 +10,23 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 
-public class WindowShell {
+public class WindowShell extends Observable {
+	private final static int RESET 		= 1;
+    private final static int SAVE 		= 2;
+    private final static int LOAD		= 3;
+    private final static int UNDO 		= 4;
 	Display display;
 	Shell shell;
 	Label score;
 	Board board;
+	int userCommand;
 	public WindowShell(String title,int width,int height,Display display, Shell shell, Board board) {
 		this.display = display;
 		this.shell = shell;
@@ -54,6 +63,19 @@ public class WindowShell {
         undoButton.setText("Undo");
         undoButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
         
+        undoButton.addListener(SWT.Selection, new Listener() {
+            public void handleEvent(Event e) {
+              switch (e.type) {
+              case SWT.Selection:{
+            	userCommand = UNDO;
+                setChanged();
+                notifyObservers();
+                break;
+              }
+              }
+            }
+          });
+        
       //Define the Board Widget and initialize it:
 
         ((Composite)board).setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 6));
@@ -80,8 +102,9 @@ public class WindowShell {
         Font font = score.getFont();
         score.setFont(new Font(display, font.getFontData()[0].getName(), 24, SWT.BOLD));
         score.setText(0 + "");
+        
+	 
 		
-
 
 //
 //        ((Composite)board).setFocus();
@@ -95,6 +118,11 @@ public class WindowShell {
 	public Board  getBoard() {
 		return this.board;
 	}
-	
+
+	public int getUserCommand() {
+		return userCommand;
+	}
+
+
 
 }
