@@ -1,6 +1,8 @@
 package view;
 
 import java.util.Observable;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
@@ -8,7 +10,6 @@ import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
@@ -18,12 +19,23 @@ public class GameMazeView extends Observable implements View, Runnable {
     private final static int RESET = 1;
     private final static int SAVE = 2;
     private final static int LOAD = 3;
+    private final static int RIGHT      = 10;
+    private final static int RIGHT_UP   = 11;
+    private final static int RIGHT_DOWN = 12;
+    private final static int LEFT       = 15;
+    private final static int LEFT_UP    = 16;
+    private final static int LEFT_DOWN  = 17;
+    private final static int UP		    = 20;
+    private final static int DOWN 		= 21;
+    
     private GameMazeBoard board;
     private Display display;
     private WindowShell windowShell;
     private Shell shell;
     private int userCommand;
     private boolean userNotified;
+    boolean keyFlag ;
+    int lastKeyCode;
 
     private void initComponents() {
         display = new Display();
@@ -35,99 +47,85 @@ public class GameMazeView extends Observable implements View, Runnable {
         int height = 600;
         windowShell = new WindowShell(title, width, height, display, shell, (Board) board);
         shell.setBackground(new Color(display, 187, 173, 160));
-        board.addKeyListener(new KeyListener() {
-            private int horizontal =0;
-            private int vertical =0;
-            @Override
-            public void keyReleased(KeyEvent event) {
-            	
-            	switch (event.keyCode) {
-                case SWT.ARROW_LEFT:  
-                    horizontal++; // will make horizontal == 0 if RIGHT was already pressed  
-                    break;  
-                case SWT.ARROW_RIGHT:  
-                    horizontal--;  
-                    break;  
-                case SWT.ARROW_UP:  
-                    vertical++;  
-                    break;  
-                case SWT.ARROW_DOWN:  
-                    vertical--;  
-                    break; 
-
-				default:
-					break;
-				}
-            }
-
-            @Override
-            public void keyPressed(KeyEvent event) {
-            switch (event.keyCode) {
-            case SWT.ARROW_LEFT:  
-                horizontal--; // will make horizontal == 1 if RIGHT was already pressed  
-                break;  
-            case SWT.ARROW_RIGHT:  
-                horizontal++;  
-                break;  
-            case SWT.ARROW_UP:  
-                vertical--;  
-                break;  
-            case SWT.ARROW_DOWN:  
-                vertical++;  
-                break;  
-                
-            	
-                
-
-            }
-            System.out.println(vertical +" " + horizontal);
-            if (vertical > 0 && horizontal == 0)
-            	System.out.println("Down");
-            if (vertical < 0 && horizontal == 0)
-            	System.out.println("Up");
-            if (vertical == 0 && horizontal > 0)
-            	System.out.println("Right");
-            if (vertical == 0 && horizontal < 0)
-            	System.out.println("Left");
-            
-            if (vertical > 0 && horizontal > 0)
-            	System.out.println("down and right");
-            if (vertical > 0 && horizontal < 0)
-            	System.out.println("down and left");
-            if (vertical < 0 && horizontal > 0)
-            	System.out.println("up and right");
-            if (vertical < 0 && horizontal < 0)
-            	System.out.println("up and left");
-            }
-            
-            
-             
-            	
-
-
-//			
-//
-//            // Commented until we will have a buttons listener
-//
-//            /* @Override
-//			public void keyPressed(KeyEvent event) {
-//				if ((event.keyCode == SWT.ARROW_DOWN) ||
-//				    (event.keyCode == SWT.ARROW_LEFT) ||
-//					(event.keyCode == SWT.ARROW_UP)   ||
-//					(event.keyCode == SWT.ARROW_RIGHT)) {
-//					userCommand = event.keyCode;
-//					setChanged();
-//					notifyObservers();
-//				}
-//			}*/
-       
-        });
-        
+        initKeyboardListener();
         
         shell.open();
     }
+    
+    
 
-    @Override
+    private void initKeyboardListener() {
+    	board.addKeyListener(new KeyListener() {
+            @Override
+            public void keyPressed(final KeyEvent event) {
+                if (keyFlag == false) {
+                	keyFlag = true;
+                	lastKeyCode = event.keyCode;
+                    Timer timer = new Timer();
+                    timer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            int current=0 ,last=0;
+                            if (keyFlag == false && lastKeyCode != event.keyCode) 
+                                    {
+                                         current = event.keyCode;
+                                         last = lastKeyCode;
+                                    }
+                            else
+                            {
+                                keyFlag = false;
+                                userCommand = event.keyCode;
+
+                            }
+
+                            if (current!=0 || last!=0)
+                            {
+                            	if ((current == SWT.ARROW_UP && last == SWT.ARROW_RIGHT) || last == SWT.ARROW_UP && current == SWT.ARROW_RIGHT )
+                                	userCommand = RIGHT_UP;
+                                if ((current == SWT.ARROW_UP && last == SWT.ARROW_LEFT) || last == SWT.ARROW_UP && current == SWT.ARROW_LEFT )
+                                	userCommand = LEFT_UP;
+                            	if ((current == SWT.ARROW_DOWN && last == SWT.ARROW_RIGHT) || last == SWT.ARROW_DOWN && current == SWT.ARROW_RIGHT )
+                                	userCommand = RIGHT_DOWN;
+                                if ((current == SWT.ARROW_DOWN && last == SWT.ARROW_LEFT) || last == SWT.ARROW_DOWN && current == SWT.ARROW_LEFT )
+                                	userCommand = LEFT_DOWN;
+                                
+                            }
+                                
+                            else
+                            {
+                                if (event.keyCode == SWT.ARROW_UP)
+                                	userCommand = UP;
+                                if (event.keyCode == SWT.ARROW_DOWN)
+                                    userCommand = DOWN;
+                                if (event.keyCode == SWT.ARROW_RIGHT)
+                                	userCommand = RIGHT;
+                                if (event.keyCode == SWT.ARROW_LEFT)
+                                	userCommand = LEFT;
+                            }
+                            display.asyncExec(new Runnable() {
+
+                                @Override
+                                public void run() {
+                                    setChanged();
+                                    notifyObservers();
+                                }
+                            });
+
+                        }
+                    }, 100); // End timer.schedule
+                } else {
+                    keyFlag = false;
+                    lastKeyCode = event.keyCode;
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+            }
+        });	
+	}
+
+	@Override
     public void run() {
         while (!shell.isDisposed()) {
             if (!display.readAndDispatch()) {

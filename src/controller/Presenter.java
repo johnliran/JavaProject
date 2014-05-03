@@ -15,6 +15,17 @@ public class Presenter implements Observer {
     private final static int SAVE = 2;
     private final static int LOAD = 3;
     private final static int UNDO = 4;
+    private final static int RIGHT      = 10;
+    private final static int RIGHT_UP   = 11;
+    private final static int RIGHT_DOWN = 12;
+    private final static int LEFT       = 15;
+    private final static int LEFT_UP    = 16;
+    private final static int LEFT_DOWN  = 17;
+    private final static int UP		    = 20;
+    private final static int DOWN 		= 21;
+    
+    
+    
 
     @Override
     public void update(Observable observable, Object notification) {
@@ -29,21 +40,60 @@ public class Presenter implements Observer {
         }
         if (observable == ui) {
             switch (ui.getUserCommand()) {
-                case SWT.ARROW_UP:
+                case UP: {
                     m.moveUp(false);
                     break;
+                }
 
-                case SWT.ARROW_DOWN:
+                case DOWN:
                     m.moveDown(false);
                     break;
 
-                case SWT.ARROW_RIGHT:
+                case RIGHT:
                     m.moveRight(false);
                     break;
-
-                case SWT.ARROW_LEFT:
+                
+                case RIGHT_DOWN: {
+                	if (m.moveRight(false))
+                		m.moveDown(false);
+                	else {
+                		m.moveDown(false);
+                		m.moveRight(false);
+                	}
+                	
+                	break;
+                }
+                case RIGHT_UP: {
+                	if (m.moveRight(false))
+                		m.moveUp(false);
+                	else {
+                		m.moveUp(false);
+                		m.moveRight(false);
+                	}                	
+                	break;
+                }
+                case LEFT:
                     m.moveLeft(false);
                     break;
+                
+                case LEFT_DOWN: {
+                	if (m.moveLeft(false))
+                		m.moveDown(false);
+                	else {
+                		m.moveDown(false);
+                		m.moveLeft(false);
+                	}                	
+                	break;
+                }
+                case LEFT_UP: {
+                	if (m.moveLeft(false))
+                		m.moveUp(false);
+                	else {
+                		m.moveUp(false);
+                		m.moveLeft(false);
+                	}                	
+                	break;
+                }
 
                 case RESET:
                     startGame();
