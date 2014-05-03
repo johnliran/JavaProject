@@ -11,6 +11,7 @@ public class GameMazeMain {
         Presenter p = new Presenter(m, ui);
         m.addObserver(p);
         ui.addObserver(p);
+        ui.getWindowShell().addObserver(p);
         p.startGame();
     }
 }
