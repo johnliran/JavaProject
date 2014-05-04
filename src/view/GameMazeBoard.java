@@ -13,7 +13,7 @@ public class GameMazeBoard extends Composite implements Board {
     public void setBoardData(int[][] board) {
         this.board = board;
         for (int row = 0; row < this.board.length; row++) {
-            for (int column = 0; column < this.board.length; column++) {
+            for (int column = 0; column < this.board[0].length; column++) {
                 tiles[row][column].setValue(this.board[row][column]);
             }
         }
@@ -30,9 +30,9 @@ public class GameMazeBoard extends Composite implements Board {
         layout.horizontalSpacing = 1;
         layout.verticalSpacing = 1;
         setLayout(layout);
-        tiles = new TileMaze[this.board.length][this.board.length];
+        tiles = new TileMaze[this.board.length][this.board[0].length];
         for (int row = 0; row < this.board.length; row++) {
-            for (int column = 0; column < this.board.length; column++) {
+            for (int column = 0; column < this.board[0].length; column++) {
                 tiles[row][column] = new TileMaze(this, SWT.NO_BACKGROUND);
                 tiles[row][column].setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
                 tiles[row][column].setValue(this.board[row][column]);
