@@ -1,13 +1,13 @@
 package controller;
 
-import model.Game2048Model;
-import view.Game2048View;
+import model.GameMazeModel;
+import view.GameMazeView;
 
-public class Game2048Main {
+public class GameMazeMain {
 
     public static void main(String[] args) {
-        Game2048Model m = new Game2048Model();
-        Game2048View ui = new Game2048View();
+        GameMazeModel m = new GameMazeModel();
+        GameMazeView ui = new GameMazeView();
         Presenter p = new Presenter(m, ui);
         m.addObserver(p);
         ui.addObserver(p);

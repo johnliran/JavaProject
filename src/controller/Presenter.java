@@ -1,80 +1,112 @@
 package controller;
 
-import view.View;
-import model.Model;
+import model.algorithms.Model;
 import org.eclipse.swt.SWT;
+import view.View;
+import view.WindowShell;
+
 import java.util.Observable;
 import java.util.Observer;
 
 public class Presenter implements Observer {
     private View ui;
     private Model m;
-    private final static int RESET 		= 1;
-    private final static int SAVE 		= 2;
-    private final static int LOAD		= 3;
+    private final static int RESET = 1;
+    private final static int SAVE = 2;
+    private final static int LOAD = 3;
+    private final static int UNDO = 4;
+    private final static int RIGHT      = 10;
+    private final static int RIGHT_UP   = 11;
+    private final static int RIGHT_DOWN = 12;
+    private final static int LEFT       = 15;
+    private final static int LEFT_UP    = 16;
+    private final static int LEFT_DOWN  = 17;
+    private final static int UP		    = 20;
+    private final static int DOWN 		= 21;
+    
     
     
 
     @Override
     public void update(Observable observable, Object notification) {
         if (observable == m) {
+            ui.displayScore(((Model) observable).getScore());
+            ui.displayData(((Model) observable).getData());
             if (((Model) observable).isGameOver()) {
                 ui.gameOver();
             } else if (((Model) observable).isGameWon() && !(ui.isUserNotified())) {
                 ui.gameWon();
             }
-            ui.displayScore(((Model) observable).getScore());
-            ui.displayData(((Model) observable).getData());
         }
         if (observable == ui) {
             switch (ui.getUserCommand()) {
-                case SWT.ARROW_UP: {
+                case UP: {
                     m.moveUp(false);
                     break;
                 }
 
-                case SWT.ARROW_DOWN: {
+                case DOWN:
                     m.moveDown(false);
                     break;
-                }
 
-                case SWT.ARROW_RIGHT: {
+                case RIGHT:
                     m.moveRight(false);
                     break;
+                
+                case RIGHT_DOWN: {
+                	m.moveDownRight(false);
+                	break;
                 }
-
-                case SWT.ARROW_LEFT: {
+                case RIGHT_UP: {
+                	m.moveUpRight(false);
+                	break;
+                }
+                case LEFT:
                     m.moveLeft(false);
                     break;
+                
+                case LEFT_DOWN: {
+                	m.moveDownLeft(false);
+                	break;
+                }
+                case LEFT_UP: {
+                	m.moveUpLeft(false);
+                	break;
                 }
 
-                // For testing only; RESTORE
-                case SWT.SPACE: {
-                    m.restore();
+                case RESET:
+                    startGame();
                     break;
-                }
-                
-                case RESET: {
-                	m.initialize();
-                	break;
-                }
-                
-                case SAVE: {
-                	
-                	break;
-                }
-                
-                case LOAD: {
-                	
-                	break;
-                }
-                
-
 
                 default:
                     break;
             }
+
         }
+        if (observable instanceof WindowShell) {
+            switch (ui.getWindowShell().getUserCommand()) {
+                case UNDO:
+                    m.restore();
+                    break;
+
+                case SAVE:
+                    m.saveGame((String) notification);
+                    break;
+
+                case LOAD:
+                    m.loadGame((String) notification);
+                    break;
+
+                case RESET:
+                    startGame();
+                    break;
+
+                default:
+                    break;
+            }
+
+        }
+
     }
 
     public Presenter(Model m, View ui) {
@@ -84,5 +116,6 @@ public class Presenter implements Observer {
 
     public void startGame() {
         m.initialize();
+        ui.run();
     }
 }

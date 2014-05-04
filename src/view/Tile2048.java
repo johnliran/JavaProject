@@ -9,7 +9,7 @@ import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 
-public class Tile extends Canvas {
+public class Tile2048 extends Canvas {
     private int value;
 
 
@@ -18,7 +18,7 @@ public class Tile extends Canvas {
         redraw();
     }
 
-    public Tile(Composite parent, int style) {
+    public Tile2048(Composite parent, int style) {
         super(parent, style);
         Font font = getFont();
         setFont(new Font(getDisplay(), font.getFontData()[0].getName(), 16, SWT.BOLD));
