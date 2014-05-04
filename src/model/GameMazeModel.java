@@ -282,7 +282,7 @@ public class GameMazeModel extends Observable implements Model {
     private int[][] copyOf(int[][] array) {
         int newArray[][] = new int[array.length][array[0].length];
         for (int row = 0; row < array.length; row++) {
-            for (int column = 0; column < array.length; column++) {
+            for (int column = 0; column < array[0].length; column++) {
                 newArray[row][column] = array[row][column];
             }
         }
