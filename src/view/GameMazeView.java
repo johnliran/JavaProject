@@ -41,7 +41,7 @@ public class GameMazeView extends Observable implements View, Runnable {
         display = new Display();
         shell = new Shell(display);
         Label nullLabel = new Label(shell, SWT.FILL);
-        board = new GameMazeBoard(shell, SWT.NO_BACKGROUND);
+        board = new GameMazeBoard(shell, SWT.NO_BACKGROUND,15,15);
         String title = "Maze";
         int width = 800;
         int height = 600;

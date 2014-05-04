@@ -7,7 +7,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
 public class GameMazeBoard extends Composite implements Board {
-    private final static int BOARDSIZE = 15;
     private int[][] board;
     TileMaze[][] tiles;
 
@@ -20,14 +19,14 @@ public class GameMazeBoard extends Composite implements Board {
         }
     }
 
-    public GameMazeBoard(Composite parent, int style) {
+    public GameMazeBoard(Composite parent, int style, int height, int width) {
         super(parent, style);
-        this.board = new int[BOARDSIZE][BOARDSIZE];
+        this.board = new int[height][width];
         setBackground(new Color(getDisplay(), 187, 173, 160));
 //        setLayout(new GridLayout(this.board.length, true));
         GridLayout layout = new GridLayout();
-        layout.numColumns = BOARDSIZE;
-        layout.makeColumnsEqualWidth = true;
+        layout.numColumns = width;
+        layout.makeColumnsEqualWidth = false;
         layout.horizontalSpacing = 1;
         layout.verticalSpacing = 1;
         setLayout(layout);
