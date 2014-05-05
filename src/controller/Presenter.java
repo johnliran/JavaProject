@@ -1,7 +1,6 @@
 package controller;
 
 import model.algorithms.Model;
-import org.eclipse.swt.SWT;
 import view.View;
 import view.WindowShell;
 
@@ -15,17 +14,14 @@ public class Presenter implements Observer {
     private final static int SAVE = 2;
     private final static int LOAD = 3;
     private final static int UNDO = 4;
-    private final static int RIGHT      = 10;
-    private final static int RIGHT_UP   = 11;
+    private final static int RIGHT = 10;
+    private final static int RIGHT_UP = 11;
     private final static int RIGHT_DOWN = 12;
-    private final static int LEFT       = 15;
-    private final static int LEFT_UP    = 16;
-    private final static int LEFT_DOWN  = 17;
-    private final static int UP		    = 20;
-    private final static int DOWN 		= 21;
-    
-    
-    
+    private final static int LEFT = 15;
+    private final static int LEFT_UP = 16;
+    private final static int LEFT_DOWN = 17;
+    private final static int UP = 20;
+    private final static int DOWN = 21;
 
     @Override
     public void update(Observable observable, Object notification) {
@@ -40,10 +36,9 @@ public class Presenter implements Observer {
         }
         if (observable == ui) {
             switch (ui.getUserCommand()) {
-                case UP: {
+                case UP:
                     m.moveUp(false);
                     break;
-                }
 
                 case DOWN:
                     m.moveDown(false);
@@ -52,27 +47,26 @@ public class Presenter implements Observer {
                 case RIGHT:
                     m.moveRight(false);
                     break;
-                
-                case RIGHT_DOWN: {
-                	m.moveDownRight(false);
-                	break;
-                }
-                case RIGHT_UP: {
-                	m.moveUpRight(false);
-                	break;
-                }
+
+                case RIGHT_DOWN:
+                    m.moveDownRight(false);
+                    break;
+
+                case RIGHT_UP:
+                    m.moveUpRight(false);
+                    break;
+
                 case LEFT:
                     m.moveLeft(false);
                     break;
-                
-                case LEFT_DOWN: {
-                	m.moveDownLeft(false);
-                	break;
-                }
-                case LEFT_UP: {
-                	m.moveUpLeft(false);
-                	break;
-                }
+
+                case LEFT_DOWN:
+                    m.moveDownLeft(false);
+                    break;
+
+                case LEFT_UP:
+                    m.moveUpLeft(false);
+                    break;
 
                 case RESET:
                     startGame();
@@ -81,7 +75,6 @@ public class Presenter implements Observer {
                 default:
                     break;
             }
-
         }
         if (observable instanceof WindowShell) {
             switch (ui.getWindowShell().getUserCommand()) {
@@ -104,9 +97,7 @@ public class Presenter implements Observer {
                 default:
                     break;
             }
-
         }
-
     }
 
     public Presenter(Model m, View ui) {

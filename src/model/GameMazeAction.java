@@ -13,10 +13,12 @@ public class GameMazeAction implements Action {
         this.dy = dy;
     }
 
+    @Override
     public int getDx() {
         return dx;
     }
 
+    @Override
     public int getDy() {
         return dy;
     }

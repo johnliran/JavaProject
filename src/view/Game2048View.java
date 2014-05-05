@@ -12,13 +12,13 @@ import org.eclipse.swt.widgets.Shell;
 import java.util.Observable;
 
 public class Game2048View extends Observable implements View, Runnable {
-    private final static int RESET 	= 1;
-    private final static int SAVE 	= 2;
-    private final static int LOAD 	= 3;
-    private final static int RIGHT	= 10;
-    private final static int LEFT 	= 15;
-    private final static int UP 	= 20;
-    private final static int DOWN 	= 21;
+    private final static int RESET = 1;
+    private final static int SAVE = 2;
+    private final static int LOAD = 3;
+    private final static int RIGHT = 10;
+    private final static int LEFT = 15;
+    private final static int UP = 20;
+    private final static int DOWN = 21;
     private Game2048Board board;
     private Display display;
     public WindowShell windowShell;
@@ -38,12 +38,11 @@ public class Game2048View extends Observable implements View, Runnable {
         windowShell = new WindowShell(title, width, height, display, shell, (Board) board);
 
         shell.setBackground(new Color(display, 187, 173, 160));
-        System.out.println("my view number of observers" + countObservers());
         initKeyboardListener();
         shell.open();
     }
 
-   private void initKeyboardListener() {
+    private void initKeyboardListener() {
         board.addKeyListener(new KeyListener() {
             @Override
             public void keyReleased(KeyEvent event) {
@@ -51,20 +50,21 @@ public class Game2048View extends Observable implements View, Runnable {
 
             @Override
             public void keyPressed(KeyEvent event) {
-            	  if (event.keyCode == SWT.ARROW_UP)
-                  	userCommand = UP;
-                  if (event.keyCode == SWT.ARROW_DOWN)
-                      userCommand = DOWN;
-                  if (event.keyCode == SWT.ARROW_RIGHT)
-                  	userCommand = RIGHT;
-                  if (event.keyCode == SWT.ARROW_LEFT)
-                  	userCommand = LEFT;
+                if (event.keyCode == SWT.ARROW_UP)
+                    userCommand = UP;
+                if (event.keyCode == SWT.ARROW_DOWN)
+                    userCommand = DOWN;
+                if (event.keyCode == SWT.ARROW_RIGHT)
+                    userCommand = RIGHT;
+                if (event.keyCode == SWT.ARROW_LEFT)
+                    userCommand = LEFT;
                 setChanged();
                 notifyObservers();
 
             }
         });
     }
+
     @Override
     public void run() {
         while (!shell.isDisposed()) {

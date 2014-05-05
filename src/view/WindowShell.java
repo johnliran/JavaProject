@@ -27,16 +27,16 @@ public class WindowShell extends Observable {
         file.setText("File");
         final Menu fileMenu = new Menu(shell, SWT.DROP_DOWN);
         file.setMenu(fileMenu);
-
+        final String[] filterExtensions = {"xml"};
         final MenuItem loadItem = new MenuItem(fileMenu, SWT.PUSH);
         final FileDialog loadDialog = new FileDialog(shell, SWT.OPEN);
         loadItem.setText("Load");
         loadItem.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent event) {
-                loadDialog.open();
-                if (loadDialog.getFileName().length() > 0) {
-                    String loadFrom = loadDialog.getFilterPath() + "/" + loadDialog.getFileName();
+                loadDialog.setFilterExtensions(filterExtensions);
+                String loadFrom = loadDialog.open();
+                if (loadFrom != null && loadFrom.length() > 0) {
                     userCommand = LOAD;
                     setChanged();
                     notifyObservers(loadFrom);
@@ -50,9 +50,9 @@ public class WindowShell extends Observable {
         saveItem.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent event) {
-                saveDialog.open();
-                if (saveDialog.getFileName().length() > 0) {
-                    String saveTo = saveDialog.getFilterPath() + "/" + saveDialog.getFileName();
+                saveDialog.setFilterExtensions(filterExtensions);
+                String saveTo = saveDialog.open();
+                if (saveTo != null && saveTo.length() > 0) {
                     userCommand = SAVE;
                     setChanged();
                     notifyObservers(saveTo);
@@ -131,9 +131,9 @@ public class WindowShell extends Observable {
             public void handleEvent(Event event) {
                 switch (event.type) {
                     case SWT.Selection: {
-                        loadDialog.open();
-                        if (loadDialog.getFileName().length() > 0) {
-                            String loadFrom = loadDialog.getFilterPath() + "/" + loadDialog.getFileName();
+                        loadDialog.setFilterExtensions(filterExtensions);
+                        String loadFrom = loadDialog.open();
+                        if (loadFrom != null && loadFrom.length() > 0) {
                             userCommand = LOAD;
                             setChanged();
                             notifyObservers(loadFrom);
@@ -152,9 +152,9 @@ public class WindowShell extends Observable {
             public void handleEvent(Event event) {
                 switch (event.type) {
                     case SWT.Selection: {
-                        saveDialog.open();
-                        if (saveDialog.getFileName().length() > 0) {
-                            String saveTo = saveDialog.getFilterPath() + "/" + saveDialog.getFileName();
+                        saveDialog.setFilterExtensions(filterExtensions);
+                        String saveTo = saveDialog.open();
+                        if (saveTo != null && saveTo.length() > 0) {
                             userCommand = SAVE;
                             setChanged();
                             notifyObservers(saveTo);

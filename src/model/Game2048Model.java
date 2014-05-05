@@ -22,11 +22,8 @@ public class Game2048Model extends Observable implements Model {
 
     public Game2048Model() {
         this.board = new int[BOARDSIZE][BOARDSIZE];
-        this.score = 0;
         this.previousBoards = new Stack<int[][]>();
         this.previousScores = new Stack<Integer>();
-        this.gameWon = false;
-        this.gameOver = false;
         this.s = new Serializer();
     }
 
@@ -192,8 +189,8 @@ public class Game2048Model extends Observable implements Model {
     @Override
     public void initialize() {
         this.score = 0;
-        this.previousBoards = new Stack<int[][]>();
-        this.previousScores = new Stack<Integer>();
+        this.previousBoards.clear();
+        this.previousScores.clear();
         this.gameWon = false;
         this.gameOver = false;
 
@@ -233,7 +230,9 @@ public class Game2048Model extends Observable implements Model {
         for (int row = 0; row < board.length; row++) {
             for (int column = 0; column < board.length; column++) {
                 if (board[row][column] == 0) {
-                    freeStates.add(new State(new Point(row, column)));
+                    State free = new State();
+                    free.setState(new Point(row, column));
+                    freeStates.add(free);
                 }
             }
         }
@@ -310,27 +309,27 @@ public class Game2048Model extends Observable implements Model {
         this.gameOver = gameOver;
     }
 
-	@Override
-	public boolean moveUpRight(boolean simulate) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    @Override
+    public boolean moveUpRight(boolean simulate) {
+        // TODO Auto-generated method stub
+        return false;
+    }
 
-	@Override
-	public boolean moveUpLeft(boolean simulate) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    @Override
+    public boolean moveUpLeft(boolean simulate) {
+        // TODO Auto-generated method stub
+        return false;
+    }
 
-	@Override
-	public boolean moveDownRight(boolean simulate) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    @Override
+    public boolean moveDownRight(boolean simulate) {
+        // TODO Auto-generated method stub
+        return false;
+    }
 
-	@Override
-	public boolean moveDownLeft(boolean simulate) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    @Override
+    public boolean moveDownLeft(boolean simulate) {
+        // TODO Auto-generated method stub
+        return false;
+    }
 }

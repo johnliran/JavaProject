@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class GameMazeDomain implements Domain {
     private final static int DIAGONAL_MOVEMENT_SCORE = 15;
-    private final static int DIRECT_MOVEMENT_SCORE = 10;
+    private final static int STRAIGHT_MOVEMENT_SCORE = 10;
     private GameMazeModel maze;
 
     public GameMazeDomain(GameMazeModel maze) {
@@ -40,7 +40,7 @@ public class GameMazeDomain implements Domain {
         Point pFrom = (Point) from.getState();
         Point pTo = (Point) to.getState();
         if ((pTo.x - pFrom.x) == 0 || (pTo.y - pFrom.y) == 0) {
-            return DIRECT_MOVEMENT_SCORE;
+            return STRAIGHT_MOVEMENT_SCORE;
         }
         return DIAGONAL_MOVEMENT_SCORE;
     }
