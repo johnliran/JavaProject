@@ -5,7 +5,6 @@ import org.eclipse.swt.graphics.Point;
 
 import java.util.ArrayList;
 import java.util.Observable;
-import java.util.Stack;
 
 public class GameMazeModel extends Observable implements Model {
     private final static int WALL = -1;
@@ -26,7 +25,6 @@ public class GameMazeModel extends Observable implements Model {
     private int minimalNumberOfMoves;
     private boolean gameWon;
     private boolean gameOver;
-    private Stack<Integer> previousScores;
     private Serializer s;
     private int[][] initialMaze = {
             {WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL},
@@ -57,6 +55,7 @@ public class GameMazeModel extends Observable implements Model {
         int y = ((Point) (state.getState())).y;
         MazeState current = new MazeState();
         current.setState(new Point(x, y));
+        mouseDirection = maze[((Point) (state.getState())).x][((Point) (state.getState())).y];
         if (getPointValue((x + dx), (y + dy)) >= BLANK) {
             if (!simulate) {
                 // Backup the current state
@@ -205,9 +204,8 @@ public class GameMazeModel extends Observable implements Model {
     @Override
     public void initialize() {
         this.maze = copyOf(initialMaze);
-        this.state = (MazeState) getStartState();
+        this.state = getStartState();
         this.minimalNumberOfMoves = numberOfMovesToSolveGame();
-        this.mouseDirection = maze[((Point) (state.getState())).x][((Point) (state.getState())).y];
         this.numberOfMoves = 0;
         this.score = 0;
         this.gameWon = false;
@@ -300,7 +298,7 @@ public class GameMazeModel extends Observable implements Model {
         return newArray;
     }
 
-    public State getStartState() {
+    public MazeState getStartState() {
         for (int row = 0; row < maze.length; row++) {
             for (int column = 0; column < maze[0].length; column++) {
                 if (maze[row][column] > 0 && maze[row][column] != CHEESE) {
@@ -313,7 +311,7 @@ public class GameMazeModel extends Observable implements Model {
         return null;
     }
 
-    public State getGoalState() {
+    public MazeState getGoalState() {
         for (int row = 0; row < maze.length; row++) {
             for (int column = 0; column < maze[0].length; column++) {
                 if (maze[row][column] == CHEESE) {
