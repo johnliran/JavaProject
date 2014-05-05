@@ -8,7 +8,6 @@ import java.util.Observable;
 import java.util.Stack;
 
 public class GameMazeModel extends Observable implements Model {
-    private final static int MOUSE = 1;
     private final static int WALL = -1;
     private final static int BLANK = 0;
     private final static int MOUSE_UP = 1;
@@ -39,7 +38,7 @@ public class GameMazeModel extends Observable implements Model {
             {WALL, BLANK, WALL, BLANK, WALL, WALL, WALL, WALL, WALL, WALL, WALL, BLANK, WALL, BLANK, WALL},
             {WALL, BLANK, WALL, BLANK, WALL, BLANK, BLANK, BLANK, BLANK, BLANK, WALL, BLANK, BLANK, BLANK, CHEESE},
             {WALL, BLANK, WALL, WALL, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL},
-            {MOUSE, BLANK, BLANK, BLANK, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL},
+            {MOUSE_RIGHT, BLANK, BLANK, BLANK, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL},
             {WALL, WALL, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL},
             {WALL, BLANK, BLANK, BLANK, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL},
             {WALL, BLANK, WALL, WALL, WALL, WALL, WALL, BLANK, WALL, WALL, WALL, WALL, WALL, BLANK, WALL},
@@ -207,13 +206,11 @@ public class GameMazeModel extends Observable implements Model {
     public void initialize() {
         this.maze = copyOf(initialMaze);
         this.state = getStartState();
-        this.score = 0;
-        this.numberOfMoves = 0;
         this.minimalNumberOfMoves = numberOfMovesToSolveGame();
+        this.numberOfMoves = 0;
+        this.score = 0;
         this.gameWon = false;
         this.gameOver = false;
-        this.mouseDirection = MOUSE_RIGHT;
-        updateMaze(state, state);
         setChanged();
         notifyObservers();
     }
@@ -255,7 +252,7 @@ public class GameMazeModel extends Observable implements Model {
     @Override
     public void saveGame(String xmlFileName) {
         try {
-            s.serializeToXML(initialMaze, xmlFileName);
+            s.serializeToXML(this, xmlFileName);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -266,6 +263,8 @@ public class GameMazeModel extends Observable implements Model {
         try {
             setData(((GameMazeModel) s.deserializeXML(xmlFileName)).getData());
             setScore(((GameMazeModel) s.deserializeXML(xmlFileName)).getScore());
+            updateMaze(state, getStartState());
+            state.setState(getStartState().getState());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -302,7 +301,7 @@ public class GameMazeModel extends Observable implements Model {
     public State getStartState() {
         for (int row = 0; row < maze.length; row++) {
             for (int column = 0; column < maze[0].length; column++) {
-                if (maze[row][column] == MOUSE) {
+                if (maze[row][column] > 0 && maze[row][column] != CHEESE) {
                     State start = new State();
                     start.setState(new Point(row, column));
                     return start;
