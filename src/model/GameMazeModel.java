@@ -20,7 +20,7 @@ public class GameMazeModel extends Observable implements Model {
     private final static int STRAIGHT_MOVEMENT_SCORE = 10;
     private int mouseDirection;
     private int[][] maze;
-    private State state;
+    private MazeState state;
     private int score;
     private int numberOfMoves;
     private int minimalNumberOfMoves;
@@ -46,25 +46,25 @@ public class GameMazeModel extends Observable implements Model {
             {WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL},
     };
 
-
     public GameMazeModel() {
         this.maze = new int[initialMaze.length][initialMaze[0].length];
-        this.state = new State();
+        this.state = new MazeState();
         this.s = new Serializer();
     }
 
     public boolean move(int dx, int dy, boolean simulate) {
         int x = ((Point) (state.getState())).x;
         int y = ((Point) (state.getState())).y;
-        State current = new State();
+        MazeState current = new MazeState();
         current.setState(new Point(x, y));
         if (getPointValue((x + dx), (y + dy)) >= BLANK) {
             if (!simulate) {
                 // Backup the current state
-                State newState = new State();
+                MazeState newState = new MazeState();
                 newState.setState(new Point((x + dx), (y + dy)));
                 newState.setParentState(state);
                 newState.setLeadingAction(new GameMazeAction(dx, dy));
+                newState.setMouseDirection(mouseDirection);
                 state = newState;
                 numberOfMoves++;
                 if (getPointValue((x + dx), (y + dy)) == CHEESE) {
@@ -205,8 +205,9 @@ public class GameMazeModel extends Observable implements Model {
     @Override
     public void initialize() {
         this.maze = copyOf(initialMaze);
-        this.state = getStartState();
+        this.state = (MazeState) getStartState();
         this.minimalNumberOfMoves = numberOfMovesToSolveGame();
+        this.mouseDirection = maze[((Point) (state.getState())).x][((Point) (state.getState())).y];
         this.numberOfMoves = 0;
         this.score = 0;
         this.gameWon = false;
@@ -218,13 +219,14 @@ public class GameMazeModel extends Observable implements Model {
     @Override
     public void restore() {
         if (state.getParentState() != null) {
-            updateMaze(state, state.getParentState());
             if (state.getLeadingAction().getDx() != 0 && state.getLeadingAction().getDy() != 0) {
                 score -= DIAGONAL_MOVEMENT_SCORE;
             } else {
                 score -= STRAIGHT_MOVEMENT_SCORE;
             }
-            state = state.getParentState();
+            mouseDirection = state.getMouseDirection();
+            updateMaze(state, state.getParentState());
+            state = (MazeState) state.getParentState();
             setChanged();
             notifyObservers();
         }
@@ -302,7 +304,7 @@ public class GameMazeModel extends Observable implements Model {
         for (int row = 0; row < maze.length; row++) {
             for (int column = 0; column < maze[0].length; column++) {
                 if (maze[row][column] > 0 && maze[row][column] != CHEESE) {
-                    State start = new State();
+                    MazeState start = new MazeState();
                     start.setState(new Point(row, column));
                     return start;
                 }
@@ -315,7 +317,7 @@ public class GameMazeModel extends Observable implements Model {
         for (int row = 0; row < maze.length; row++) {
             for (int column = 0; column < maze[0].length; column++) {
                 if (maze[row][column] == CHEESE) {
-                    State goal = new State();
+                    MazeState goal = new MazeState();
                     goal.setState(new Point(row, column));
                     return goal;
                 }
