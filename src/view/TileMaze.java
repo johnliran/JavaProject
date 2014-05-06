@@ -1,5 +1,6 @@
 package view;
 
+import controller.Constants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
@@ -10,15 +11,8 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 
-public class TileMaze extends Canvas {
+public class TileMaze extends Canvas implements Constants {
     private int value;
-    private final int MOUSE_RIGHT = 1;
-    private final int MOUSE_UP = 2;
-    private final int MOUSE_DOWN = 3;
-    private final int MOUSE_LEFT = 4;
-    private final int CHEESE = 5;
-    private final int MOUSE_AND_CHEESE = 6;
-
 
     public void setValue(int value) {
         this.value = value;
@@ -49,43 +43,37 @@ public class TileMaze extends Canvas {
                 setTileBackground(event);
                 event.gc.fillRectangle(0, 0, getSize().x, getSize().y);
                 if (value > 0) {
-	                Image figure;
-	
-	                switch (value) {
-					case MOUSE_RIGHT: {
-	                    figure = new Image(getDisplay(), "images/mazeMouse_right.png");
+                    Image figure;
+                    switch (value) {
+                        case MOUSE_RIGHT:
+                            figure = new Image(getDisplay(), "images/mazeMouse_right.png");
+                            break;
 
-						break;
-					}
-					case MOUSE_UP: {
-	                    figure = new Image(getDisplay(), "images/mazeMouse_up.png");
-						break;
-					}
-					case MOUSE_LEFT: {
-	                    figure = new Image(getDisplay(), "images/mazeMouse_left.png");
-						break;
-					}
-					case MOUSE_DOWN: {
-	                    figure = new Image(getDisplay(), "images/mazeMouse_down.png");
-						break;
-					}
-					case CHEESE: {
-	                    figure = new Image(getDisplay(), "images/mazeCheese.png");
-	                    
-						break;
-					}
-					case MOUSE_AND_CHEESE: {
-	                    figure = new Image(getDisplay(), "images/mazeMouseAndCheese.png");
-	                    
-						break;
-					}
-					
-					 default:
-	                    figure = new Image(getDisplay(), "images/mazeMouse.png");
-	
-					}
-				
-	                event.gc.drawImage(figure, 0, 0, (figure.getBounds().width), (figure.getBounds().height), 0, 0, getSize().x, getSize().y);
+                        case MOUSE_UP:
+                            figure = new Image(getDisplay(), "images/mazeMouse_up.png");
+                            break;
+
+                        case MOUSE_LEFT:
+                            figure = new Image(getDisplay(), "images/mazeMouse_left.png");
+                            break;
+
+                        case MOUSE_DOWN:
+                            figure = new Image(getDisplay(), "images/mazeMouse_down.png");
+                            break;
+
+                        case CHEESE:
+                            figure = new Image(getDisplay(), "images/mazeCheese.png");
+                            break;
+
+                        case MOUSE_AND_CHEESE:
+                            figure = new Image(getDisplay(), "images/mazeMouseAndCheese.png");
+                            break;
+
+                        default:
+                            figure = new Image(getDisplay(), "images/mazeMouse.png");
+
+                    }
+                    event.gc.drawImage(figure, 0, 0, (figure.getBounds().width), (figure.getBounds().height), 0, 0, getSize().x, getSize().y);
                 }
             }
         });
@@ -96,10 +84,6 @@ public class TileMaze extends Canvas {
             case -1:
                 event.gc.setBackground(new Color(getDisplay(), 111, 111, 111));
                 break;
-
-//            case 5:
-//                event.gc.setBackground(new Color(getDisplay(), 150, 150, 150));
-//                break;
 
             default:
                 event.gc.setBackground(new Color(getDisplay(), 224, 215, 201));

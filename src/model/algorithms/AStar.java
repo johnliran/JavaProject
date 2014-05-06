@@ -1,41 +1,42 @@
 package model.algorithms;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.PriorityQueue;
 
-public class AStar {
+public class AStar extends AbsSearcher {
     private Domain domain;
+    private Distance g;
+    private Distance h;
 
-    public AStar(Domain domain) {
+    public AStar(Domain domain, Distance g, Distance h) {
         this.domain = domain;
+        this.g = g;
+        this.h = g;
     }
 
+    @Override
     public ArrayList<Action> search(State start, State goal) {
-        HashSet<State> closedList = new HashSet<State>();
-        PriorityQueue<State> openList = new PriorityQueue<State>();
-        openList.add(start);
+        addToOpenList(start);
         start.setG(0);
-        start.setF(domain.g(start, start) + domain.h(start, goal));
-        while (!openList.isEmpty()) {
-            State q = openList.poll();
+        start.setF(g.getDistance(start, start) + h.getDistance(start, goal));
+        while (!openListIsEmpty()) {
+            State q = pollFromOpenList();
             if (q.equals(goal)) {
                 return reconstructPath(q);
             }
-            closedList.add(q);
+            addToClosedList(q);
             for (Action action : domain.getActions(q)) {
                 State qTag = action.doAction(q);
-                double tentativeGscore = q.getG() + domain.g(q, qTag);
-                if (closedList.contains(qTag) && tentativeGscore >= qTag.getG()) {
+                double tentativeGscore = q.getG() + g.getDistance(q, qTag);
+                if (closedListContains(qTag) && tentativeGscore >= qTag.getG()) {
                     continue;
                 }
-                if (!openList.contains(qTag) || tentativeGscore < qTag.getG()) {
+                if (!openListContains(qTag) || tentativeGscore < qTag.getG()) {
                     qTag.setParentState(q);
                     qTag.setLeadingAction(action);
                     qTag.setG(tentativeGscore);
-                    qTag.setF(domain.h(qTag, goal));
-                    if (!openList.contains(qTag)) {
-                        openList.add(qTag);
+                    qTag.setF(h.getDistance(qTag, goal));
+                    if (!openListContains(qTag)) {
+                        addToOpenList(qTag);
                     }
                 }
             }
@@ -50,5 +51,22 @@ public class AStar {
             current = current.getParentState();
         }
         return actions;
+    }
+
+
+    public Distance getG() {
+        return g;
+    }
+
+    public void setG(Distance g) {
+        this.g = g;
+    }
+
+    public Distance getH() {
+        return h;
+    }
+
+    public void setH(Distance h) {
+        this.h = h;
     }
 }

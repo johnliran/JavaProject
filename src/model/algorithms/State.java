@@ -15,13 +15,6 @@ public class State implements Comparable<State> {
         this.state = state;
     }
 
-    public State(Object state) {
-        this.state = state;
-    }
-
-    public State() {
-    }
-
     public double getF() {
         return f;
     }
