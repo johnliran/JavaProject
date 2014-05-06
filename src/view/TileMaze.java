@@ -11,6 +11,9 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 
+/**
+ *
+ */
 public class TileMaze extends Canvas implements Constants {
     private int value;
 

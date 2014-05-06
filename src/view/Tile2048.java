@@ -10,6 +10,9 @@ import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 
+/**
+ *
+ */
 public class Tile2048 extends Canvas implements Constants {
     private int value;
 

@@ -7,6 +7,9 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
+/**
+ *
+ */
 public class Game2048Board extends Composite implements Board, Constants {
     private int[][] board;
     Tile2048[][] tiles;

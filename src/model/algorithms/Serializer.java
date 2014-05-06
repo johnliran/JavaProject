@@ -5,6 +5,9 @@ import java.beans.XMLEncoder;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
+/**
+ *
+ */
 public class Serializer {
     public static void serializeToXML(Object objectToSerialize, String xmlFileName) throws Exception {
         FileOutputStream os = new FileOutputStream(xmlFileName);

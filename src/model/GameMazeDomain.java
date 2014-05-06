@@ -7,6 +7,9 @@ import org.eclipse.swt.graphics.Point;
 
 import java.util.ArrayList;
 
+/**
+ *
+ */
 public class GameMazeDomain implements Domain {
     private GameMazeModel maze;
 
@@ -14,6 +17,10 @@ public class GameMazeDomain implements Domain {
         this.maze = maze;
     }
 
+    /**
+     * @param state
+     * @return
+     */
     @Override
     public ArrayList<Action> getActions(State state) {
         Point point = (Point) state.getState();

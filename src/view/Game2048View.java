@@ -12,6 +12,9 @@ import org.eclipse.swt.widgets.Shell;
 
 import java.util.Observable;
 
+/**
+ *
+ */
 public class Game2048View extends Observable implements View, Runnable, Constants {
     private Game2048Board board;
     private Display display;
@@ -66,9 +69,11 @@ public class Game2048View extends Observable implements View, Runnable, Constant
             }
         }
         display.dispose();
-
     }
 
+    /**
+     * @param data
+     */
     @Override
     public void displayData(int[][] data) {
         board.setBoardData(data);
@@ -80,6 +85,9 @@ public class Game2048View extends Observable implements View, Runnable, Constant
         });
     }
 
+    /**
+     * @return
+     */
     @Override
     public int getUserCommand() {
         return userCommand;
@@ -90,11 +98,17 @@ public class Game2048View extends Observable implements View, Runnable, Constant
         userNotified = false;
     }
 
+    /**
+     * @param score
+     */
     @Override
     public void displayScore(int score) {
         windowShell.setScore(score);
     }
 
+    /**
+     *
+     */
     @Override
     public void gameWon() {
         userNotified = true;
@@ -116,6 +130,9 @@ public class Game2048View extends Observable implements View, Runnable, Constant
         }
     }
 
+    /**
+     *
+     */
     @Override
     public void gameOver() {
         int style = SWT.ICON_WORKING | SWT.YES | SWT.NO;
@@ -140,6 +157,9 @@ public class Game2048View extends Observable implements View, Runnable, Constant
 
     }
 
+    /**
+     * @return
+     */
     @Override
     public boolean isUserNotified() {
         return userNotified;

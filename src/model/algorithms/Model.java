@@ -1,5 +1,8 @@
 package model.algorithms;
 
+/**
+ *
+ */
 public interface Model {
 
     public void initialize();
