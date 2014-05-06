@@ -6,14 +6,14 @@ import model.algorithms.State;
 import org.eclipse.swt.graphics.Point;
 
 /**
- *
+ * Distance G
  */
 public class GameMazeDistanceG implements Distance, Constants {
 
     /**
-     * @param from
-     * @param to
-     * @return
+     * @param from Start position
+     * @param to   Enf position
+     * @return Movement score
      */
     @Override
     public double getDistance(State from, State to) {

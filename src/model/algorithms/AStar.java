@@ -3,7 +3,7 @@ package model.algorithms;
 import java.util.ArrayList;
 
 /**
- *
+ * A* Algorithm
  */
 public class AStar extends AbsSearcher {
     private Domain domain;
@@ -17,9 +17,9 @@ public class AStar extends AbsSearcher {
     }
 
     /**
-     * @param start
-     * @param goal
-     * @return
+     * @param start Start position
+     * @param goal  Goal position
+     * @return List of actions carried out in order to reach the goal
      */
     @Override
     public ArrayList<Action> search(State start, State goal) {

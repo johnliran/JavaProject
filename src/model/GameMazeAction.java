@@ -5,7 +5,7 @@ import model.algorithms.State;
 import org.eclipse.swt.graphics.Point;
 
 /**
- *
+ * Holds X and Y coordinates
  */
 public class GameMazeAction implements Action {
     private int dx;
@@ -27,8 +27,8 @@ public class GameMazeAction implements Action {
     }
 
     /**
-     * @param state
-     * @return
+     * @param state Current state (current coordinates)
+     * @return New state (new coordinates)
      */
     @Override
     public State doAction(State state) {

@@ -3,7 +3,7 @@ package model.algorithms;
 import java.util.ArrayList;
 
 /**
- *
+ * Searcher
  */
 public interface Searcher {
 

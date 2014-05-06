@@ -1,7 +1,7 @@
 package controller;
 
 /**
- *
+ * Holds General, Maze and 2048 Constants
  */
 public interface Constants {
 

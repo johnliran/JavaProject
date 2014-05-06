@@ -7,7 +7,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
 /**
- *
+ * Maze Board
  */
 public class GameMazeBoard extends Composite implements Board {
     private int[][] board;

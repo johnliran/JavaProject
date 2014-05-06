@@ -11,7 +11,7 @@ import org.eclipse.swt.widgets.*;
 import java.util.Observable;
 
 /**
- *
+ * Generic Window Shell
  */
 public class WindowShell extends Observable implements Constants {
     private Label score;

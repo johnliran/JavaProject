@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.PriorityQueue;
 
 /**
- *
+ * Abstract Searcher
  */
 public abstract class AbsSearcher implements Searcher {
 
@@ -49,7 +49,7 @@ public abstract class AbsSearcher implements Searcher {
     }
 
     /**
-     * @return
+     * @return Number of evaluated states
      */
     @Override
     public int getNumOfEvaluatedStates() {
