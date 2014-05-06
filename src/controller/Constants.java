@@ -36,4 +36,5 @@ public interface Constants {
 
     public final static int BOARDSIZE = 4;
     public final static int TARGETSCORE = 2048;
+    public final static int TILE_FONT_SIZE = 16;
 }
