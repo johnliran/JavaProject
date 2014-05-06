@@ -1,5 +1,8 @@
 package model.algorithms;
 
+/**
+ *
+ */
 public class State implements Comparable<State> {
     private Object state;
     private State parentState;

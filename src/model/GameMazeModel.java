@@ -7,6 +7,9 @@ import org.eclipse.swt.graphics.Point;
 import java.util.ArrayList;
 import java.util.Observable;
 
+/**
+ *
+ */
 public class GameMazeModel extends Observable implements Model, Constants {
     private int mouseDirection;
     private int[][] maze;
@@ -16,7 +19,6 @@ public class GameMazeModel extends Observable implements Model, Constants {
     private int minimalNumberOfMoves;
     private boolean gameWon;
     private boolean gameOver;
-    //private Serializer s;
     private int[][] initialMaze = {
             {WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL},
             {WALL, BLANK, BLANK, BLANK, WALL, BLANK, BLANK, BLANK, BLANK, BLANK, BLANK, BLANK, BLANK, BLANK, WALL},
@@ -69,6 +71,10 @@ public class GameMazeModel extends Observable implements Model, Constants {
         return false;
     }
 
+    /**
+     * @param simulate
+     * @return
+     */
     @Override
     public boolean moveUp(boolean simulate) {
         boolean moved = move(-1, 0, simulate);
@@ -82,6 +88,10 @@ public class GameMazeModel extends Observable implements Model, Constants {
         return moved;
     }
 
+    /**
+     * @param simulate
+     * @return
+     */
     @Override
     public boolean moveDown(boolean simulate) {
         boolean moved = move(1, 0, simulate);
@@ -95,6 +105,10 @@ public class GameMazeModel extends Observable implements Model, Constants {
         return moved;
     }
 
+    /**
+     * @param simulate
+     * @return
+     */
     @Override
     public boolean moveRight(boolean simulate) {
         boolean moved = move(0, 1, simulate);
@@ -108,6 +122,10 @@ public class GameMazeModel extends Observable implements Model, Constants {
         return moved;
     }
 
+    /**
+     * @param simulate
+     * @return
+     */
     @Override
     public boolean moveLeft(boolean simulate) {
         boolean moved = move(0, -1, simulate);
@@ -121,6 +139,10 @@ public class GameMazeModel extends Observable implements Model, Constants {
         return moved;
     }
 
+    /**
+     * @param simulate
+     * @return
+     */
     @Override
     public boolean moveUpRight(boolean simulate) {
         boolean moved = move(-1, 1, simulate);
@@ -134,6 +156,10 @@ public class GameMazeModel extends Observable implements Model, Constants {
         return moved;
     }
 
+    /**
+     * @param simulate
+     * @return
+     */
     @Override
     public boolean moveUpLeft(boolean simulate) {
         boolean moved = move(-1, -1, simulate);
@@ -147,6 +173,10 @@ public class GameMazeModel extends Observable implements Model, Constants {
         return moved;
     }
 
+    /**
+     * @param simulate
+     * @return
+     */
     @Override
     public boolean moveDownRight(boolean simulate) {
         boolean moved = move(1, 1, simulate);
@@ -160,6 +190,10 @@ public class GameMazeModel extends Observable implements Model, Constants {
         return moved;
     }
 
+    /**
+     * @param simulate
+     * @return
+     */
     @Override
     public boolean moveDownLeft(boolean simulate) {
         boolean moved = move(1, -1, simulate);
@@ -173,6 +207,9 @@ public class GameMazeModel extends Observable implements Model, Constants {
         return moved;
     }
 
+    /**
+     * @return
+     */
     @Override
     public int[][] getData() {
         return maze;
@@ -191,6 +228,9 @@ public class GameMazeModel extends Observable implements Model, Constants {
         }
     }
 
+    /**
+     *
+     */
     @Override
     public void initialize() {
         this.maze = copyOf(initialMaze);
@@ -204,6 +244,9 @@ public class GameMazeModel extends Observable implements Model, Constants {
         notifyObservers();
     }
 
+    /**
+     *
+     */
     @Override
     public void restore() {
         if (state.getParentState() != null) {
@@ -220,6 +263,9 @@ public class GameMazeModel extends Observable implements Model, Constants {
         }
     }
 
+    /**
+     * @return
+     */
     @Override
     public int getScore() {
         return score;
@@ -229,16 +275,25 @@ public class GameMazeModel extends Observable implements Model, Constants {
         this.score = score;
     }
 
+    /**
+     * @return
+     */
     @Override
     public boolean isGameWon() {
         return gameWon;
     }
 
+    /**
+     * @param gameWon
+     */
     @Override
     public void setGameWon(boolean gameWon) {
         this.gameWon = gameWon;
     }
 
+    /**
+     * @param xmlFileName
+     */
     @Override
     public void saveGame(String xmlFileName) {
         try {
@@ -248,6 +303,9 @@ public class GameMazeModel extends Observable implements Model, Constants {
         }
     }
 
+    /**
+     * @param xmlFileName
+     */
     @Override
     public void loadGame(String xmlFileName) {
         try {
@@ -262,6 +320,9 @@ public class GameMazeModel extends Observable implements Model, Constants {
         notifyObservers();
     }
 
+    /**
+     * @return
+     */
     @Override
     public boolean isGameOver() {
         return gameOver;

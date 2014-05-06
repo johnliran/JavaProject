@@ -2,6 +2,9 @@ package model.algorithms;
 
 import java.util.ArrayList;
 
+/**
+ *
+ */
 public class AStar extends AbsSearcher {
     private Domain domain;
     private Distance g;
@@ -13,6 +16,11 @@ public class AStar extends AbsSearcher {
         this.h = g;
     }
 
+    /**
+     * @param start
+     * @param goal
+     * @return
+     */
     @Override
     public ArrayList<Action> search(State start, State goal) {
         addToOpenList(start);

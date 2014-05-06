@@ -8,6 +8,9 @@ import org.eclipse.swt.graphics.Point;
 
 import java.util.*;
 
+/**
+ *
+ */
 public class Game2048Model extends Observable implements Model, Constants {
     private int[][] board;
     private int score;
@@ -100,6 +103,10 @@ public class Game2048Model extends Observable implements Model, Constants {
         return moved;
     }
 
+    /**
+     * @param simulate
+     * @return
+     */
     @Override
     public boolean moveUp(boolean simulate) {
         if (!simulate) {
@@ -118,6 +125,10 @@ public class Game2048Model extends Observable implements Model, Constants {
         return moved;
     }
 
+    /**
+     * @param simulate
+     * @return
+     */
     @Override
     public boolean moveDown(boolean simulate) {
         if (!simulate) {
@@ -136,6 +147,10 @@ public class Game2048Model extends Observable implements Model, Constants {
         return moved;
     }
 
+    /**
+     * @param simulate
+     * @return
+     */
     @Override
     public boolean moveRight(boolean simulate) {
         if (!simulate) {
@@ -156,6 +171,10 @@ public class Game2048Model extends Observable implements Model, Constants {
         return moved;
     }
 
+    /**
+     * @param simulate
+     * @return
+     */
     @Override
     public boolean moveLeft(boolean simulate) {
         if (!simulate) {
@@ -172,6 +191,9 @@ public class Game2048Model extends Observable implements Model, Constants {
         return moved;
     }
 
+    /**
+     * @return
+     */
     @Override
     public int[][] getData() {
         return board;
@@ -181,6 +203,9 @@ public class Game2048Model extends Observable implements Model, Constants {
         this.board = data;
     }
 
+    /**
+     *
+     */
     @Override
     public void initialize() {
         this.score = 0;
@@ -200,6 +225,9 @@ public class Game2048Model extends Observable implements Model, Constants {
         notifyObservers();
     }
 
+    /**
+     *
+     */
     @Override
     public void restore() {
         if (!previousBoards.isEmpty()) {
@@ -255,25 +283,40 @@ public class Game2048Model extends Observable implements Model, Constants {
         }
     }
 
+    /**
+     * @return
+     */
     @Override
     public int getScore() {
         return score;
     }
 
+    /**
+     * @param score
+     */
     public void setScore(int score) {
         this.score = score;
     }
 
+    /**
+     * @return
+     */
     @Override
     public boolean isGameWon() {
         return gameWon;
     }
 
+    /**
+     * @param gameWon
+     */
     @Override
     public void setGameWon(boolean gameWon) {
         this.gameWon = gameWon;
     }
 
+    /**
+     * @param xmlFileName
+     */
     @Override
     public void saveGame(String xmlFileName) {
         try {
@@ -283,6 +326,9 @@ public class Game2048Model extends Observable implements Model, Constants {
         }
     }
 
+    /**
+     * @param xmlFileName
+     */
     @Override
     public void loadGame(String xmlFileName) {
         try {
@@ -295,6 +341,9 @@ public class Game2048Model extends Observable implements Model, Constants {
         notifyObservers();
     }
 
+    /**
+     * @return
+     */
     @Override
     public boolean isGameOver() {
         return gameOver;
@@ -304,21 +353,37 @@ public class Game2048Model extends Observable implements Model, Constants {
         this.gameOver = gameOver;
     }
 
+    /**
+     * @param simulate
+     * @return
+     */
     @Override
     public boolean moveUpRight(boolean simulate) {
         return false;
     }
 
+    /**
+     * @param simulate
+     * @return
+     */
     @Override
     public boolean moveUpLeft(boolean simulate) {
         return false;
     }
 
+    /**
+     * @param simulate
+     * @return
+     */
     @Override
     public boolean moveDownRight(boolean simulate) {
         return false;
     }
 
+    /**
+     * @param simulate
+     * @return
+     */
     @Override
     public boolean moveDownLeft(boolean simulate) {
         return false;

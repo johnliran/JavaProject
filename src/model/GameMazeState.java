@@ -2,6 +2,9 @@ package model;
 
 import model.algorithms.State;
 
+/**
+ *
+ */
 public class GameMazeState extends State {
     private int mouseDirection;
 

@@ -1,5 +1,8 @@
 package controller;
 
+/**
+ *
+ */
 public interface Constants {
 
     /* General Constants */
@@ -18,6 +21,7 @@ public interface Constants {
     public final static int DOWN = 21;
     public final static int DIAGONAL_MOVEMENT_SCORE = 15;
     public final static int STRAIGHT_MOVEMENT_SCORE = 10;
+    public final static int SCORE_FONT_SIZE = 24;
 
     /* GameMaze Constants */
 
@@ -29,7 +33,6 @@ public interface Constants {
     public final static int MOUSE_LEFT = 10;
     public final static int CHEESE = 12;
     public final static int MOUSE_AND_CHEESE = 14;
-    public final static int SCORE_FONT_SIZE = 24;
     public final static String[] filterExtensions = {"xml"};
 
     /* Game2048 Constants */
