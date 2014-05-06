@@ -10,13 +10,13 @@ import java.util.Observable;
 public class GameMazeModel extends Observable implements Model, Constants {
     private int mouseDirection;
     private int[][] maze;
-    private MazeState state;
+    private GameMazeState state;
     private int score;
     private int numberOfMoves;
     private int minimalNumberOfMoves;
     private boolean gameWon;
     private boolean gameOver;
-    private Serializer s;
+    //private Serializer s;
     private int[][] initialMaze = {
             {WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL},
             {WALL, BLANK, BLANK, BLANK, WALL, BLANK, BLANK, BLANK, BLANK, BLANK, BLANK, BLANK, BLANK, BLANK, WALL},
@@ -37,20 +37,19 @@ public class GameMazeModel extends Observable implements Model, Constants {
 
     public GameMazeModel() {
         this.maze = new int[initialMaze.length][initialMaze[0].length];
-        this.state = new MazeState();
-        this.s = new Serializer();
+        this.state = new GameMazeState();
     }
 
     public boolean move(int dx, int dy, boolean simulate) {
         int x = ((Point) (state.getState())).x;
         int y = ((Point) (state.getState())).y;
-        MazeState current = new MazeState();
+        GameMazeState current = new GameMazeState();
         current.setState(new Point(x, y));
         mouseDirection = maze[((Point) (state.getState())).x][((Point) (state.getState())).y];
         if (getPointValue((x + dx), (y + dy)) >= BLANK) {
             if (!simulate) {
                 // Backup the current state
-                MazeState newState = new MazeState();
+                GameMazeState newState = new GameMazeState();
                 newState.setState(new Point((x + dx), (y + dy)));
                 newState.setParentState(state);
                 newState.setLeadingAction(new GameMazeAction(dx, dy));
@@ -215,7 +214,7 @@ public class GameMazeModel extends Observable implements Model, Constants {
             }
             mouseDirection = state.getMouseDirection();
             updateMaze(state, state.getParentState());
-            state = (MazeState) state.getParentState();
+            state = (GameMazeState) state.getParentState();
             setChanged();
             notifyObservers();
         }
@@ -243,7 +242,7 @@ public class GameMazeModel extends Observable implements Model, Constants {
     @Override
     public void saveGame(String xmlFileName) {
         try {
-            s.serializeToXML(this, xmlFileName);
+            Serializer.serializeToXML(this, xmlFileName);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -252,8 +251,8 @@ public class GameMazeModel extends Observable implements Model, Constants {
     @Override
     public void loadGame(String xmlFileName) {
         try {
-            setData(((GameMazeModel) s.deserializeXML(xmlFileName)).getData());
-            setScore(((GameMazeModel) s.deserializeXML(xmlFileName)).getScore());
+            setData(((GameMazeModel) Serializer.deserializeXML(xmlFileName)).getData());
+            setScore(((GameMazeModel) Serializer.deserializeXML(xmlFileName)).getScore());
             updateMaze(state, getStartState());
             state.setState(getStartState().getState());
         } catch (Exception e) {
@@ -289,11 +288,11 @@ public class GameMazeModel extends Observable implements Model, Constants {
         return newArray;
     }
 
-    public MazeState getStartState() {
+    public GameMazeState getStartState() {
         for (int row = 0; row < maze.length; row++) {
             for (int column = 0; column < maze[0].length; column++) {
                 if (maze[row][column] > 0 && maze[row][column] != CHEESE) {
-                    MazeState start = new MazeState();
+                    GameMazeState start = new GameMazeState();
                     start.setState(new Point(row, column));
                     return start;
                 }
@@ -302,11 +301,11 @@ public class GameMazeModel extends Observable implements Model, Constants {
         return null;
     }
 
-    public MazeState getGoalState() {
+    public GameMazeState getGoalState() {
         for (int row = 0; row < maze.length; row++) {
             for (int column = 0; column < maze[0].length; column++) {
                 if (maze[row][column] == CHEESE) {
-                    MazeState goal = new MazeState();
+                    GameMazeState goal = new GameMazeState();
                     goal.setState(new Point(row, column));
                     return goal;
                 }
