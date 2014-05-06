@@ -16,7 +16,7 @@ public class GameMazeModel extends Observable implements Model, Constants {
     private int minimalNumberOfMoves;
     private boolean gameWon;
     private boolean gameOver;
-    private Serializer s;
+    //private Serializer s;
     private int[][] initialMaze = {
             {WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL},
             {WALL, BLANK, BLANK, BLANK, WALL, BLANK, BLANK, BLANK, BLANK, BLANK, BLANK, BLANK, BLANK, BLANK, WALL},
@@ -38,7 +38,6 @@ public class GameMazeModel extends Observable implements Model, Constants {
     public GameMazeModel() {
         this.maze = new int[initialMaze.length][initialMaze[0].length];
         this.state = new GameMazeState();
-        this.s = new Serializer();
     }
 
     public boolean move(int dx, int dy, boolean simulate) {
@@ -243,7 +242,7 @@ public class GameMazeModel extends Observable implements Model, Constants {
     @Override
     public void saveGame(String xmlFileName) {
         try {
-            s.serializeToXML(this, xmlFileName);
+            Serializer.serializeToXML(this, xmlFileName);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -252,8 +251,8 @@ public class GameMazeModel extends Observable implements Model, Constants {
     @Override
     public void loadGame(String xmlFileName) {
         try {
-            setData(((GameMazeModel) s.deserializeXML(xmlFileName)).getData());
-            setScore(((GameMazeModel) s.deserializeXML(xmlFileName)).getScore());
+            setData(((GameMazeModel) Serializer.deserializeXML(xmlFileName)).getData());
+            setScore(((GameMazeModel) Serializer.deserializeXML(xmlFileName)).getScore());
             updateMaze(state, getStartState());
             state.setState(getStartState().getState());
         } catch (Exception e) {

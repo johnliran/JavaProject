@@ -54,7 +54,6 @@ public class Game2048View extends Observable implements View, Runnable, Constant
                     userCommand = LEFT;
                 setChanged();
                 notifyObservers();
-
             }
         });
     }

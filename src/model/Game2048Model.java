@@ -15,13 +15,11 @@ public class Game2048Model extends Observable implements Model, Constants {
     private boolean gameOver;
     private Stack<int[][]> previousBoards;
     private Stack<Integer> previousScores;
-    private Serializer s;
 
     public Game2048Model() {
         this.board = new int[BOARDSIZE][BOARDSIZE];
         this.previousBoards = new Stack<int[][]>();
         this.previousScores = new Stack<Integer>();
-        this.s = new Serializer();
     }
 
     public void rotate(int direction) {
@@ -53,17 +51,17 @@ public class Game2048Model extends Observable implements Model, Constants {
 
     public boolean move(boolean simulate) {
         int[][] newBoard = new int[board.length][board.length];
-        //We use linkedlist to organize all the cells which have numbers
+        // We use linkedlist to organize all the cells which have numbers
         LinkedList<Integer> numbers = new LinkedList<Integer>();
         boolean moved = false;
         boolean seenZero;
-        //Get over all the board and take out the numbers into List.
+        // Get over all the board and take out the numbers into List
         for (int row = 0; row < newBoard.length; row++) {
             seenZero = false;
             for (int column = 0; column < newBoard.length; column++) {
                 if (board[row][column] != 0) {
                     numbers.add(board[row][column]);
-                    //After putting the numbers into the stack,We can override and pad the line with 0;
+                    // After putting the numbers into the stack,We can override and pad the line with 0
                     if (!simulate) {
                         newBoard[row][column] = 0;
                     }
@@ -74,7 +72,7 @@ public class Game2048Model extends Observable implements Model, Constants {
                     seenZero = true;
                 }
             }
-            //Merge if there are equal numbers
+            // Merge if there are equal numbers
             for (int column = 0; column < newBoard.length && !numbers.isEmpty(); column++) {
                 int numberToCheck = numbers.poll();
                 if (!numbers.isEmpty()) {
@@ -279,7 +277,7 @@ public class Game2048Model extends Observable implements Model, Constants {
     @Override
     public void saveGame(String xmlFileName) {
         try {
-            s.serializeToXML(this, xmlFileName);
+            Serializer.serializeToXML(this, xmlFileName);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -288,8 +286,8 @@ public class Game2048Model extends Observable implements Model, Constants {
     @Override
     public void loadGame(String xmlFileName) {
         try {
-            setData(((Game2048Model) s.deserializeXML(xmlFileName)).getData());
-            setScore(((Game2048Model) s.deserializeXML(xmlFileName)).getScore());
+            setData(((Game2048Model) Serializer.deserializeXML(xmlFileName)).getData());
+            setScore(((Game2048Model) Serializer.deserializeXML(xmlFileName)).getScore());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -308,25 +306,21 @@ public class Game2048Model extends Observable implements Model, Constants {
 
     @Override
     public boolean moveUpRight(boolean simulate) {
-        // TODO Auto-generated method stub
         return false;
     }
 
     @Override
     public boolean moveUpLeft(boolean simulate) {
-        // TODO Auto-generated method stub
         return false;
     }
 
     @Override
     public boolean moveDownRight(boolean simulate) {
-        // TODO Auto-generated method stub
         return false;
     }
 
     @Override
     public boolean moveDownLeft(boolean simulate) {
-        // TODO Auto-generated method stub
         return false;
     }
 }
