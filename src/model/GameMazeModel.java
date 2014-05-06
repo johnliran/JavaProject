@@ -1,33 +1,21 @@
 package model;
 
+import controller.Constants;
 import model.algorithms.*;
-
 import org.eclipse.swt.graphics.Point;
 
 import java.util.ArrayList;
 import java.util.Observable;
-import java.util.Stack;
 
-public class GameMazeModel extends Observable implements Model {
-    private final int MOUSE = 1;
-    private final int WALL = -1;
-    private final int BLANK = 0;
-    private final int MOUSE_RIGHT = 1;
-    private final int MOUSE_UP = 2;
-    private final int MOUSE_DOWN = 3;
-    private final int MOUSE_LEFT = 4;
-    private final int CHEESE = 5;
-    private final int MOUSE_AND_CHEESE = 6;
+public class GameMazeModel extends Observable implements Model, Constants {
     private int mouseDirection;
     private int[][] maze;
-    private State state;
+    private MazeState state;
     private int score;
     private int numberOfMoves;
-    private int minNumberOfMoves;
+    private int minimalNumberOfMoves;
     private boolean gameWon;
     private boolean gameOver;
-    private Stack<int[][]> previousBoards;
-    private Stack<Integer> previousScores;
     private Serializer s;
     private int[][] initialMaze = {
             {WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL},
@@ -39,7 +27,7 @@ public class GameMazeModel extends Observable implements Model {
             {WALL, BLANK, WALL, BLANK, WALL, WALL, WALL, WALL, WALL, WALL, WALL, BLANK, WALL, BLANK, WALL},
             {WALL, BLANK, WALL, BLANK, WALL, BLANK, BLANK, BLANK, BLANK, BLANK, WALL, BLANK, BLANK, BLANK, CHEESE},
             {WALL, BLANK, WALL, WALL, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL},
-            {MOUSE, BLANK, BLANK, BLANK, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL},
+            {MOUSE_RIGHT, BLANK, BLANK, BLANK, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL},
             {WALL, WALL, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL},
             {WALL, BLANK, BLANK, BLANK, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL},
             {WALL, BLANK, WALL, WALL, WALL, WALL, WALL, BLANK, WALL, WALL, WALL, WALL, WALL, BLANK, WALL},
@@ -47,146 +35,170 @@ public class GameMazeModel extends Observable implements Model {
             {WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL},
     };
 
-
     public GameMazeModel() {
-        this.maze = copyOf(initialMaze);
-        this.state = getStartState();
-        this.score = 0;
-        mouseDirection = MOUSE_RIGHT;
-        this.numberOfMoves = 0;
-        this.previousBoards = new Stack<int[][]>();
-        this.previousScores = new Stack<Integer>();
-        this.gameWon = false;
-        this.gameOver = false;
+        this.maze = new int[initialMaze.length][initialMaze[0].length];
+        this.state = new MazeState();
         this.s = new Serializer();
-        solveGame();
     }
 
-    public void printBoard() {
-        for (int i = 0; i < maze.length; i++) {
-            for (int j = 0; j < maze[0].length; j++) {
-                System.out.printf("%5d ", maze[i][j]);
-            }
-            System.out.println();
-        }
-        System.out.println("\n");
-
-    }
-
-    public boolean move(int row, int column,boolean simulate) {
-        Point point = (Point) (state.getState());
-        int px = point.x;
-        int py = point.y;
-        State current = new State(new Point(px, py));
-        px += row;
-        py += column;
-
-        if (getPointValue(px, py) >= 0) {
+    public boolean move(int dx, int dy, boolean simulate) {
+        int x = ((Point) (state.getState())).x;
+        int y = ((Point) (state.getState())).y;
+        MazeState current = new MazeState();
+        current.setState(new Point(x, y));
+        mouseDirection = maze[((Point) (state.getState())).x][((Point) (state.getState())).y];
+        if (getPointValue((x + dx), (y + dy)) >= BLANK) {
             if (!simulate) {
-            	state.setState(new Point(px, py));
-            	numberOfMoves++;
-            	score +=10;
-            	if (getPointValue(px, py) == CHEESE){
-            		if (numberOfMoves == minNumberOfMoves)
-            			setGameWon(true);
-            		else
-            			setGameOver(true);
-            	}        
-                setData(current, state);
+                // Backup the current state
+                MazeState newState = new MazeState();
+                newState.setState(new Point((x + dx), (y + dy)));
+                newState.setParentState(state);
+                newState.setLeadingAction(new GameMazeAction(dx, dy));
+                newState.setMouseDirection(mouseDirection);
+                state = newState;
+                numberOfMoves++;
+                if (getPointValue((x + dx), (y + dy)) == CHEESE) {
+                    if (numberOfMoves == minimalNumberOfMoves) {
+                        setGameWon(true);
+                    } else {
+                        setGameOver(true);
+                    }
+                }
             }
             return true;
-            
         }
         return false;
-
     }
 
     @Override
     public boolean moveUp(boolean simulate) {
-        boolean moved;
-        mouseDirection = MOUSE_UP;
-        moved = move(-1, 0, simulate);
-//    	if (moved && !simulate) {
-//    		score +=10;
-//    	}
-        setChanged();
-        notifyObservers();
+        boolean moved = move(-1, 0, simulate);
+        if (moved && !simulate) {
+            score += STRAIGHT_MOVEMENT_SCORE;
+            nextStraightDirection(MOUSE_UP);
+            updateMaze(state.getParentState(), state);
+            setChanged();
+            notifyObservers();
+        }
         return moved;
     }
 
     @Override
     public boolean moveDown(boolean simulate) {
-    	boolean moved;
-    	mouseDirection = MOUSE_DOWN;
-    	moved = move(1, 0 , simulate);
-//    	if (moved && !simulate) {
-//    		score +=10;
-//    	}
-        setChanged();
-        notifyObservers();
+        boolean moved = move(1, 0, simulate);
+        if (moved && !simulate) {
+            score += STRAIGHT_MOVEMENT_SCORE;
+            nextStraightDirection(MOUSE_DOWN);
+            updateMaze(state.getParentState(), state);
+            setChanged();
+            notifyObservers();
+        }
         return moved;
-
     }
 
     @Override
     public boolean moveRight(boolean simulate) {
-    	boolean moved;
-    	mouseDirection = MOUSE_RIGHT;
-    	moved = move(0,1, simulate);
-//    	if (moved && !simulate) {
-//    		score +=10;
-//    	}
-    	setChanged();
-        notifyObservers();
+        boolean moved = move(0, 1, simulate);
+        if (moved && !simulate) {
+            score += STRAIGHT_MOVEMENT_SCORE;
+            nextStraightDirection(MOUSE_RIGHT);
+            updateMaze(state.getParentState(), state);
+            setChanged();
+            notifyObservers();
+        }
         return moved;
     }
 
     @Override
     public boolean moveLeft(boolean simulate) {
-    	boolean moved;
-    	mouseDirection = MOUSE_LEFT;
-    	moved = move(0, -1, simulate);
-//    	if (moved && !simulate) {
-//    		score +=10;
-//    	}
-        setChanged();
-        notifyObservers();
+        boolean moved = move(0, -1, simulate);
+        if (moved && !simulate) {
+            score += STRAIGHT_MOVEMENT_SCORE;
+            nextStraightDirection(MOUSE_LEFT);
+            updateMaze(state.getParentState(), state);
+            setChanged();
+            notifyObservers();
+        }
         return moved;
     }
-    
 
+    @Override
+    public boolean moveUpRight(boolean simulate) {
+        boolean moved = move(-1, 1, simulate);
+        if (moved && !simulate) {
+            score += DIAGONAL_MOVEMENT_SCORE;
+            nextDiagonalDirection(MOUSE_UP + MOUSE_RIGHT);
+            updateMaze(state.getParentState(), state);
+            setChanged();
+            notifyObservers();
+        }
+        return moved;
+    }
+
+    @Override
+    public boolean moveUpLeft(boolean simulate) {
+        boolean moved = move(-1, -1, simulate);
+        if (moved && !simulate) {
+            score += DIAGONAL_MOVEMENT_SCORE;
+            nextDiagonalDirection(MOUSE_UP + MOUSE_LEFT);
+            updateMaze(state.getParentState(), state);
+            setChanged();
+            notifyObservers();
+        }
+        return moved;
+    }
+
+    @Override
+    public boolean moveDownRight(boolean simulate) {
+        boolean moved = move(1, 1, simulate);
+        if (moved && !simulate) {
+            score += DIAGONAL_MOVEMENT_SCORE;
+            nextDiagonalDirection(MOUSE_DOWN + MOUSE_RIGHT);
+            updateMaze(state.getParentState(), state);
+            setChanged();
+            notifyObservers();
+        }
+        return moved;
+    }
+
+    @Override
+    public boolean moveDownLeft(boolean simulate) {
+        boolean moved = move(1, -1, simulate);
+        if (moved && !simulate) {
+            score += DIAGONAL_MOVEMENT_SCORE;
+            nextDiagonalDirection(MOUSE_DOWN + MOUSE_LEFT);
+            updateMaze(state.getParentState(), state);
+            setChanged();
+            notifyObservers();
+        }
+        return moved;
+    }
 
     @Override
     public int[][] getData() {
         return maze;
     }
 
-    private void setData(int[][] data) {
+    public void setData(int[][] data) {
         this.maze = data;
     }
 
-    public void setData(State current, State goal) {
-        Point pCurrent = (Point) (current.getState());
-        Point pGoal = (Point) (goal.getState());
-        int cx = pCurrent.x;
-        int cy = pCurrent.y;
-        int gx = pGoal.x;
-        int gy = pGoal.y;
-        maze[cx][cy] = 0;
-        if (getPointValue(gx, gy) == CHEESE)
-        	maze[gx][gy] = MOUSE_AND_CHEESE;
-        else
-        	maze[gx][gy] = mouseDirection;
+    public void updateMaze(State current, State goal) {
+        maze[((Point) (current.getState())).x][((Point) (current.getState())).y] = BLANK;
+        if (maze[((Point) (goal.getState())).x][((Point) (goal.getState())).y] == CHEESE) {
+            maze[((Point) (goal.getState())).x][((Point) (goal.getState())).y] = MOUSE_AND_CHEESE;
+        } else {
+            maze[((Point) (goal.getState())).x][((Point) (goal.getState())).y] = mouseDirection;
+        }
     }
 
     @Override
     public void initialize() {
-        maze = copyOf(initialMaze);
+        this.maze = copyOf(initialMaze);
         this.state = getStartState();
-        this.score = 0;
+        this.minimalNumberOfMoves = numberOfMovesToSolveGame();
         this.numberOfMoves = 0;
-        this.previousBoards = new Stack<int[][]>();
-        this.previousScores = new Stack<Integer>();
+        this.score = 0;
         this.gameWon = false;
         this.gameOver = false;
         setChanged();
@@ -195,22 +207,18 @@ public class GameMazeModel extends Observable implements Model {
 
     @Override
     public void restore() {
-        if (!previousBoards.isEmpty()) {
-            //	setData(previousBoards.pop());
-            setScore(previousScores.pop());
+        if (state.getParentState() != null) {
+            if (state.getLeadingAction().getDx() != 0 && state.getLeadingAction().getDy() != 0) {
+                score -= DIAGONAL_MOVEMENT_SCORE;
+            } else {
+                score -= STRAIGHT_MOVEMENT_SCORE;
+            }
+            mouseDirection = state.getMouseDirection();
+            updateMaze(state, state.getParentState());
+            state = (MazeState) state.getParentState();
             setChanged();
             notifyObservers();
         }
-    }
-
-    public void backup() {
-        previousBoards.push(maze);
-        previousScores.push(score);
-    }
-
-    public void delete() {
-        previousBoards.pop();
-        previousScores.pop();
     }
 
     @Override
@@ -235,7 +243,7 @@ public class GameMazeModel extends Observable implements Model {
     @Override
     public void saveGame(String xmlFileName) {
         try {
-            s.serializeToXML(initialMaze, xmlFileName);
+            s.serializeToXML(this, xmlFileName);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -246,6 +254,8 @@ public class GameMazeModel extends Observable implements Model {
         try {
             setData(((GameMazeModel) s.deserializeXML(xmlFileName)).getData());
             setScore(((GameMazeModel) s.deserializeXML(xmlFileName)).getScore());
+            updateMaze(state, getStartState());
+            state.setState(getStartState().getState());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -269,16 +279,6 @@ public class GameMazeModel extends Observable implements Model {
         return maze[x][y];
     }
 
-    public State getStartState() {
-        for (int x = 0; x < maze.length; x++) {
-            for (int y = 0; y < maze[0].length; y++) {
-                if (maze[x][y] == MOUSE)
-                    return new State(new Point(x, y));
-            }
-        }
-        return null;
-    }
-
     private int[][] copyOf(int[][] array) {
         int newArray[][] = new int[array.length][array[0].length];
         for (int row = 0; row < array.length; row++) {
@@ -289,101 +289,101 @@ public class GameMazeModel extends Observable implements Model {
         return newArray;
     }
 
-    public State getGoalState() {
-        State newState = new State();
-        for (int x = 0; x < maze.length; x++) {
-            for (int y = 0; y < maze[0].length; y++) {
-                if (maze[x][y] == CHEESE)
-                    newState.setState(new Point(x, y));
+    public MazeState getStartState() {
+        for (int row = 0; row < maze.length; row++) {
+            for (int column = 0; column < maze[0].length; column++) {
+                if (maze[row][column] > 0 && maze[row][column] != CHEESE) {
+                    MazeState start = new MazeState();
+                    start.setState(new Point(row, column));
+                    return start;
+                }
             }
         }
-        return newState;
+        return null;
     }
 
-    private void solveGame() {
-        AStar as = new AStar(new GameMazeDomain(this));
+    public MazeState getGoalState() {
+        for (int row = 0; row < maze.length; row++) {
+            for (int column = 0; column < maze[0].length; column++) {
+                if (maze[row][column] == CHEESE) {
+                    MazeState goal = new MazeState();
+                    goal.setState(new Point(row, column));
+                    return goal;
+                }
+            }
+        }
+        return null;
+    }
+
+    private int numberOfMovesToSolveGame() {
+        AStar as = new AStar(new GameMazeDomain(this), new GameMazeDistanceG(), new GameMazeDistanceH());
         ArrayList<Action> actions = as.search(this.getStartState(), this.getGoalState());
-        minNumberOfMoves = actions.size();
+        return actions.size();
     }
 
-	@Override
-	public boolean moveUpRight(boolean simulate) {
-		boolean moved = moveRight(true);
-		score -= 5;
-		numberOfMoves--;
-		if (moved) {
-			moved = moveRight(false) && moveUp(false);
-		}
-    	else {
-    		moved = moveUp(false) && moveRight(false);
-    	}         
-		if (!moved) {
-			score += 5;
-			numberOfMoves++;
-		}
-		setChanged();
-        notifyObservers();
-		return moved;
-	}
+    // Define the next direction based on the next possible movement
+    private void nextStraightDirection(int mouseDirection) {
+        switch (mouseDirection) {
+            case MOUSE_UP:
+                if (moveUp(true))
+                    this.mouseDirection = MOUSE_UP;
+                else
+                    this.mouseDirection = MOUSE_DOWN;
+                break;
 
-	@Override
-	public boolean moveUpLeft(boolean simulate) {
-		boolean moved = moveLeft(true);
-		score -= 5;
-		numberOfMoves--;
-		if (moved) {
-			moved = moveLeft(false) && moveUp(false);
-		}
-    	else {
-    		moved = moveUp(false) && moveLeft(false);
-    	}         
-		if (!moved) {
-			score += 5;
-			numberOfMoves++;
-		}
-		setChanged();
-        notifyObservers();
-		return moved;
-	}
+            case MOUSE_DOWN:
+                if (moveDown(true))
+                    this.mouseDirection = MOUSE_DOWN;
+                else
+                    this.mouseDirection = MOUSE_UP;
+                break;
 
-	@Override
-	public boolean moveDownRight(boolean simulate) {
-		boolean moved = moveRight(true);
-		score -= 5;
-		numberOfMoves--;
-		if (moved) {
-			moved = moveRight(false) && moveDown(false);
-		}
-    	else {
-    		moved = moveDown(false) && moveRight(false);
-    	}         
-		if (!moved) {
-			score += 5;
-			numberOfMoves++;
-		}
-		setChanged();
-        notifyObservers();
-		return moved;
-	}
+            case MOUSE_RIGHT:
+                if (moveRight(true))
+                    this.mouseDirection = MOUSE_RIGHT;
+                else
+                    this.mouseDirection = MOUSE_LEFT;
+                break;
 
-	@Override
-	public boolean moveDownLeft(boolean simulate) {
-		boolean moved = moveLeft(true);
-		score -= 5;
-		numberOfMoves--;
-		if (moved) {
-			moved = moveLeft(false) && moveDown(false);
-		}
-    	else {
-    		moved = moveDown(false) && moveLeft(false);
-    	}       
-		if (moved) {
-			score += 5;
-			numberOfMoves++;
-		}
-		setChanged();
-        notifyObservers();
-		return moved;
-	}
+            case MOUSE_LEFT:
+                if (moveLeft(true))
+                    this.mouseDirection = MOUSE_LEFT;
+                else
+                    this.mouseDirection = MOUSE_RIGHT;
+                break;
+        }
+    }
 
+    // Define the next direction based on the next possible movement
+    private void nextDiagonalDirection(int mouseDirection) {
+        switch (mouseDirection) {
+            case (MOUSE_UP + MOUSE_RIGHT):
+                if (moveUp(true))
+                    this.mouseDirection = MOUSE_UP;
+                else
+                    this.mouseDirection = MOUSE_RIGHT;
+                break;
+
+            case (MOUSE_UP + MOUSE_LEFT):
+                if (moveUp(true))
+                    this.mouseDirection = MOUSE_UP;
+                else
+                    this.mouseDirection = MOUSE_LEFT;
+                break;
+
+            case (MOUSE_DOWN + MOUSE_RIGHT):
+                if (moveDown(true))
+                    this.mouseDirection = MOUSE_DOWN;
+                else
+                    this.mouseDirection = MOUSE_RIGHT;
+                break;
+
+            case (MOUSE_DOWN + MOUSE_LEFT):
+                if (moveDown(true))
+                    this.mouseDirection = MOUSE_DOWN;
+                else
+                    this.mouseDirection = MOUSE_LEFT;
+                break;
+        }
+    }
 }

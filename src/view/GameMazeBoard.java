@@ -23,7 +23,6 @@ public class GameMazeBoard extends Composite implements Board {
         super(parent, style);
         this.board = new int[height][width];
         setBackground(new Color(getDisplay(), 187, 173, 160));
-//        setLayout(new GridLayout(this.board.length, true));
         GridLayout layout = new GridLayout();
         layout.numColumns = width;
         layout.makeColumnsEqualWidth = false;
