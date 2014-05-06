@@ -2,7 +2,7 @@ package model;
 
 import model.algorithms.State;
 
-public class MazeState extends State {
+public class GameMazeState extends State {
     private int mouseDirection;
 
     public int getMouseDirection() {
