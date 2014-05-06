@@ -1,22 +1,13 @@
 package model;
 
+import controller.Constants;
 import model.algorithms.*;
 import org.eclipse.swt.graphics.Point;
 
 import java.util.ArrayList;
 import java.util.Observable;
 
-public class GameMazeModel extends Observable implements Model {
-    private final static int WALL = -1;
-    private final static int BLANK = 0;
-    private final static int MOUSE_UP = 1;
-    private final static int MOUSE_DOWN = 2;
-    private final static int MOUSE_RIGHT = 8;
-    private final static int MOUSE_LEFT = 10;
-    private final static int CHEESE = 12;
-    private final static int MOUSE_AND_CHEESE = 14;
-    private final static int DIAGONAL_MOVEMENT_SCORE = 15;
-    private final static int STRAIGHT_MOVEMENT_SCORE = 10;
+public class GameMazeModel extends Observable implements Model, Constants {
     private int mouseDirection;
     private int[][] maze;
     private MazeState state;
@@ -325,7 +316,7 @@ public class GameMazeModel extends Observable implements Model {
     }
 
     private int numberOfMovesToSolveGame() {
-        AStar as = new AStar(new GameMazeDomain(this));
+        AStar as = new AStar(new GameMazeDomain(this), new GameMazeDistanceG(), new GameMazeDistanceH());
         ArrayList<Action> actions = as.search(this.getStartState(), this.getGoalState());
         return actions.size();
     }

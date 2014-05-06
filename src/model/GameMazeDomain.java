@@ -8,8 +8,6 @@ import org.eclipse.swt.graphics.Point;
 import java.util.ArrayList;
 
 public class GameMazeDomain implements Domain {
-    private final static int DIAGONAL_MOVEMENT_SCORE = 15;
-    private final static int STRAIGHT_MOVEMENT_SCORE = 10;
     private GameMazeModel maze;
 
     public GameMazeDomain(GameMazeModel maze) {
@@ -33,23 +31,6 @@ public class GameMazeDomain implements Domain {
             }
         }
         return actions;
-    }
-
-    @Override
-    public double g(State from, State to) {
-        Point pFrom = (Point) from.getState();
-        Point pTo = (Point) to.getState();
-        if ((pTo.x - pFrom.x) == 0 || (pTo.y - pFrom.y) == 0) {
-            return STRAIGHT_MOVEMENT_SCORE;
-        }
-        return DIAGONAL_MOVEMENT_SCORE;
-    }
-
-    @Override
-    public double h(State state, State goal) {
-        Point pFrom = (Point) state.getState();
-        Point pTo = (Point) goal.getState();
-        return Math.abs(pTo.x - pFrom.x) + Math.abs(pTo.y - pFrom.y);
     }
 }
 

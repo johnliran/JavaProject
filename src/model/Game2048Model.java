@@ -1,5 +1,6 @@
 package model;
 
+import controller.Constants;
 import model.algorithms.Model;
 import model.algorithms.Serializer;
 import model.algorithms.State;
@@ -7,11 +8,7 @@ import org.eclipse.swt.graphics.Point;
 
 import java.util.*;
 
-public class Game2048Model extends Observable implements Model {
-    private final static int BOARDSIZE = 4;
-    private final static int TARGETSCORE = 32;
-    private final static int RIGHT = 1;
-    private final static int LEFT = 2;
+public class Game2048Model extends Observable implements Model, Constants {
     private int[][] board;
     private int score;
     private boolean gameWon;

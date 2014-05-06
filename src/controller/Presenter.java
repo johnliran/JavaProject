@@ -7,21 +7,9 @@ import view.WindowShell;
 import java.util.Observable;
 import java.util.Observer;
 
-public class Presenter implements Observer {
+public class Presenter implements Observer, Constants {
     private View ui;
     private Model m;
-    private final static int RESET = 1;
-    private final static int SAVE = 2;
-    private final static int LOAD = 3;
-    private final static int UNDO = 4;
-    private final static int RIGHT = 10;
-    private final static int RIGHT_UP = 11;
-    private final static int RIGHT_DOWN = 12;
-    private final static int LEFT = 15;
-    private final static int LEFT_UP = 16;
-    private final static int LEFT_DOWN = 17;
-    private final static int UP = 20;
-    private final static int DOWN = 21;
 
     @Override
     public void update(Observable observable, Object notification) {

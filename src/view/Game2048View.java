@@ -1,5 +1,6 @@
 package view;
 
+import controller.Constants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -11,14 +12,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import java.util.Observable;
 
-public class Game2048View extends Observable implements View, Runnable {
-    private final static int RESET = 1;
-    private final static int SAVE = 2;
-    private final static int LOAD = 3;
-    private final static int RIGHT = 10;
-    private final static int LEFT = 15;
-    private final static int UP = 20;
-    private final static int DOWN = 21;
+public class Game2048View extends Observable implements View, Runnable, Constants {
     private Game2048Board board;
     private Display display;
     public WindowShell windowShell;

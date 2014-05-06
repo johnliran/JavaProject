@@ -1,5 +1,6 @@
 package view;
 
+import controller.Constants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
@@ -10,14 +11,8 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 
-public class TileMaze extends Canvas {
+public class TileMaze extends Canvas implements Constants {
     private int value;
-    private final static int MOUSE_UP = 1;
-    private final static int MOUSE_DOWN = 2;
-    private final static int MOUSE_RIGHT = 8;
-    private final static int MOUSE_LEFT = 10;
-    private final static int CHEESE = 12;
-    private final static int MOUSE_AND_CHEESE = 14;
 
     public void setValue(int value) {
         this.value = value;
