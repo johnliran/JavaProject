@@ -7,10 +7,17 @@ import view.WindowShell;
 import java.util.Observable;
 import java.util.Observer;
 
+/**
+ *
+ */
 public class Presenter implements Observer, Constants {
     private View ui;
     private Model m;
 
+    /**
+     * @param observable
+     * @param notification
+     */
     @Override
     public void update(Observable observable, Object notification) {
         if (observable == m) {

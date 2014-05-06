@@ -14,6 +14,9 @@ import java.util.Observable;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ *
+ */
 public class GameMazeView extends Observable implements View, Runnable, Constants {
     private boolean keyFlag;
     private int lastKeyCode;
@@ -116,6 +119,9 @@ public class GameMazeView extends Observable implements View, Runnable, Constant
         display.dispose();
     }
 
+    /**
+     * @param data
+     */
     @Override
     public void displayData(int[][] data) {
         board.setBoardData(data);
@@ -127,16 +133,25 @@ public class GameMazeView extends Observable implements View, Runnable, Constant
         });
     }
 
+    /**
+     * @return
+     */
     @Override
     public int getUserCommand() {
         return userCommand;
     }
 
+    /**
+     * @param score
+     */
     @Override
     public void displayScore(int score) {
         windowShell.setScore(score);
     }
 
+    /**
+     *
+     */
     @Override
     public void gameWon() {
         userNotified = true;
@@ -159,6 +174,9 @@ public class GameMazeView extends Observable implements View, Runnable, Constant
         }
     }
 
+    /**
+     *
+     */
     @Override
     public void gameOver() {
         int style = SWT.ICON_WORKING | SWT.YES | SWT.NO;
@@ -181,6 +199,9 @@ public class GameMazeView extends Observable implements View, Runnable, Constant
         }
     }
 
+    /**
+     * @return
+     */
     @Override
     public boolean isUserNotified() {
         return userNotified;

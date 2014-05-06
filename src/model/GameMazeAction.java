@@ -4,6 +4,9 @@ import model.algorithms.Action;
 import model.algorithms.State;
 import org.eclipse.swt.graphics.Point;
 
+/**
+ *
+ */
 public class GameMazeAction implements Action {
     private int dx;
     private int dy;
@@ -23,6 +26,10 @@ public class GameMazeAction implements Action {
         return dy;
     }
 
+    /**
+     * @param state
+     * @return
+     */
     @Override
     public State doAction(State state) {
         Point point = (Point) state.getState();

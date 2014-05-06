@@ -6,6 +6,9 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
+/**
+ *
+ */
 public class GameMazeBoard extends Composite implements Board {
     private int[][] board;
     TileMaze[][] tiles;

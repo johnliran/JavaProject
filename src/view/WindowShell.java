@@ -10,6 +10,9 @@ import org.eclipse.swt.widgets.*;
 
 import java.util.Observable;
 
+/**
+ *
+ */
 public class WindowShell extends Observable implements Constants {
     private Label score;
     private int userCommand;

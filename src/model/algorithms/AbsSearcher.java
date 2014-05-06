@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.PriorityQueue;
 
+/**
+ *
+ */
 public abstract class AbsSearcher implements Searcher {
 
     private int NumOfEvaluatedStates;
@@ -45,6 +48,9 @@ public abstract class AbsSearcher implements Searcher {
         return this.closedList.contains(state);
     }
 
+    /**
+     * @return
+     */
     @Override
     public int getNumOfEvaluatedStates() {
         return this.NumOfEvaluatedStates;
