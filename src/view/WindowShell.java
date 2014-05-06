@@ -24,11 +24,11 @@ public class WindowShell extends Observable implements Constants {
         shell.setBackground(new Color(display, 187, 173, 160));
         shell.setBackgroundMode(SWT.INHERIT_DEFAULT);
         ((Composite) board).setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 6));
-        initMenuBar(display, shell);
-        initButtons(display, shell);
+        initMenuBar(display, shell, board);
+        initButtons(display, shell, board);
     }
 
-    private void initMenuBar(Display display, Shell shell) {
+    private void initMenuBar(Display display, Shell shell, Board board) {
         Menu menuBar = new Menu(shell, SWT.BAR);
         Menu fileMenu = new Menu(menuBar);
         Menu editMenu = new Menu(menuBar);
@@ -58,14 +58,14 @@ public class WindowShell extends Observable implements Constants {
 
         shell.setMenuBar(menuBar);
 
-        undoItem.addListener(SWT.Selection, undoListener(shell));
-        saveItem.addListener(SWT.Selection, saveListener(shell));
-        loadItem.addListener(SWT.Selection, loadListener(shell));
-        resetItem.addListener(SWT.Selection, resetListener(shell));
+        undoItem.addListener(SWT.Selection, undoListener(shell, board));
+        saveItem.addListener(SWT.Selection, saveListener(shell, board));
+        loadItem.addListener(SWT.Selection, loadListener(shell, board));
+        resetItem.addListener(SWT.Selection, resetListener(shell, board));
         exitItem.addListener(SWT.Selection, exitListener(display));
     }
 
-    private void initButtons(Display display, Shell shell) {
+    private void initButtons(Display display, Shell shell, Board board) {
         Button undoButton = new Button(shell, SWT.PUSH);
         undoButton.setText("Undo");
         undoButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
@@ -89,24 +89,25 @@ public class WindowShell extends Observable implements Constants {
         score.setFont(new Font(display, font.getFontData()[0].getName(), SCORE_FONT_SIZE, SWT.BOLD));
         score.setText(0 + "     ");
 
-        undoButton.addListener(SWT.Selection, undoListener(shell));
-        saveButton.addListener(SWT.Selection, saveListener(shell));
-        loadButton.addListener(SWT.Selection, loadListener(shell));
-        resetButton.addListener(SWT.Selection, resetListener(shell));
+        undoButton.addListener(SWT.Selection, undoListener(shell, board));
+        saveButton.addListener(SWT.Selection, saveListener(shell, board));
+        loadButton.addListener(SWT.Selection, loadListener(shell, board));
+        resetButton.addListener(SWT.Selection, resetListener(shell, board));
     }
 
-    private Listener undoListener(final Shell shell) {
+    private Listener undoListener(final Shell shell, final Board board) {
         return new Listener() {
             @Override
             public void handleEvent(Event event) {
                 userCommand = UNDO;
                 setChanged();
                 notifyObservers();
+                ((Composite) board).forceFocus();
             }
         };
     }
 
-    private Listener saveListener(final Shell shell) {
+    private Listener saveListener(final Shell shell, final Board board) {
         return new Listener() {
             @Override
             public void handleEvent(Event event) {
@@ -117,12 +118,13 @@ public class WindowShell extends Observable implements Constants {
                     userCommand = SAVE;
                     setChanged();
                     notifyObservers(saveTo);
+                    ((Composite) board).forceFocus();
                 }
             }
         };
     }
 
-    private Listener loadListener(final Shell shell) {
+    private Listener loadListener(final Shell shell, final Board board) {
         return new Listener() {
             @Override
             public void handleEvent(Event event) {
@@ -133,18 +135,20 @@ public class WindowShell extends Observable implements Constants {
                     userCommand = LOAD;
                     setChanged();
                     notifyObservers(loadFrom);
+                    ((Composite) board).forceFocus();
                 }
             }
         };
     }
 
-    private Listener resetListener(final Shell shell) {
+    private Listener resetListener(final Shell shell, final Board board) {
         return new Listener() {
             @Override
             public void handleEvent(Event event) {
                 userCommand = RESET;
                 setChanged();
                 notifyObservers();
+                ((Composite) board).forceFocus();
             }
         };
     }
