@@ -4,7 +4,6 @@ import controller.Constants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
@@ -36,12 +35,11 @@ public class GameMazeView extends Observable implements View, Runnable, Constant
         display = new Display();
         shell = new Shell(display);
         Label nullLabel = new Label(shell, SWT.FILL);
-        board = new GameMazeBoard(shell, SWT.NO_BACKGROUND, 15, 15);
+        board = new GameMazeBoard(shell, SWT.NONE, 15, 15);
         String title = "Maze";
         int width = 800;
         int height = 600;
-        windowShell = new WindowShell(title, width, height, display, shell, (Board) board);
-        shell.setBackground(new Color(display, 187, 173, 160));
+        windowShell = new WindowShell(title, width, height, display, shell, board);
         initKeyboardListener();
         shell.open();
     }
