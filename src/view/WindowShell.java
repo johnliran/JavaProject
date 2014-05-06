@@ -18,17 +18,17 @@ public class WindowShell extends Observable implements Constants {
     private int userCommand;
 
     public WindowShell(String title, int width, int height, Display display, Shell shell, Board board) {
+        shell.setText(title);
         shell.setSize(width, height);
         shell.setLayout(new GridLayout(2, false));
+        shell.setBackground(new Color(display, 187, 173, 160));
+        shell.setBackgroundMode(SWT.INHERIT_DEFAULT);
         ((Composite) board).setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 6));
         initMenuBar(display, shell);
         initButtons(display, shell);
     }
 
     private void initMenuBar(Display display, Shell shell) {
-        final FileDialog saveDialog = new FileDialog(shell, SWT.SAVE);
-        final FileDialog loadDialog = new FileDialog(shell, SWT.OPEN);
-
         Menu menuBar = new Menu(shell, SWT.BAR);
         Menu fileMenu = new Menu(menuBar);
         Menu editMenu = new Menu(menuBar);
@@ -58,17 +58,14 @@ public class WindowShell extends Observable implements Constants {
 
         shell.setMenuBar(menuBar);
 
-        undoItem.addListener(SWT.Selection, undoListener());
-        saveItem.addListener(SWT.Selection, saveListener(saveDialog));
-        loadItem.addListener(SWT.Selection, loadListener(loadDialog));
-        resetItem.addListener(SWT.Selection, resetListener());
+        undoItem.addListener(SWT.Selection, undoListener(shell));
+        saveItem.addListener(SWT.Selection, saveListener(shell));
+        loadItem.addListener(SWT.Selection, loadListener(shell));
+        resetItem.addListener(SWT.Selection, resetListener(shell));
         exitItem.addListener(SWT.Selection, exitListener(display));
     }
 
     private void initButtons(Display display, Shell shell) {
-        final FileDialog saveDialog = new FileDialog(shell, SWT.SAVE);
-        final FileDialog loadDialog = new FileDialog(shell, SWT.OPEN);
-
         Button undoButton = new Button(shell, SWT.PUSH);
         undoButton.setText("Undo");
         undoButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
@@ -85,20 +82,20 @@ public class WindowShell extends Observable implements Constants {
         saveButton.setText("Save");
         saveButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
 
-        score = new Label(shell, SWT.BORDER);
+        score = new Label(shell, SWT.NONE);
         score.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
         score.setForeground(new Color(display, 119, 110, 101));
         Font font = score.getFont();
         score.setFont(new Font(display, font.getFontData()[0].getName(), SCORE_FONT_SIZE, SWT.BOLD));
-        score.setText(0 + "");
+        score.setText(0 + "     ");
 
-        undoButton.addListener(SWT.Selection, undoListener());
-        saveButton.addListener(SWT.Selection, saveListener(saveDialog));
-        loadButton.addListener(SWT.Selection, loadListener(loadDialog));
-        resetButton.addListener(SWT.Selection, resetListener());
+        undoButton.addListener(SWT.Selection, undoListener(shell));
+        saveButton.addListener(SWT.Selection, saveListener(shell));
+        loadButton.addListener(SWT.Selection, loadListener(shell));
+        resetButton.addListener(SWT.Selection, resetListener(shell));
     }
 
-    private Listener undoListener() {
+    private Listener undoListener(final Shell shell) {
         return new Listener() {
             @Override
             public void handleEvent(Event event) {
@@ -109,10 +106,11 @@ public class WindowShell extends Observable implements Constants {
         };
     }
 
-    private Listener saveListener(final FileDialog saveDialog) {
+    private Listener saveListener(final Shell shell) {
         return new Listener() {
             @Override
             public void handleEvent(Event event) {
+                FileDialog saveDialog = new FileDialog(shell, SWT.SAVE);
                 saveDialog.setFilterExtensions(filterExtensions);
                 String saveTo = saveDialog.open();
                 if (saveTo != null && saveTo.length() > 0) {
@@ -124,10 +122,11 @@ public class WindowShell extends Observable implements Constants {
         };
     }
 
-    private Listener loadListener(final FileDialog loadDialog) {
+    private Listener loadListener(final Shell shell) {
         return new Listener() {
             @Override
             public void handleEvent(Event event) {
+                FileDialog loadDialog = new FileDialog(shell, SWT.OPEN);
                 loadDialog.setFilterExtensions(filterExtensions);
                 String loadFrom = loadDialog.open();
                 if (loadFrom != null && loadFrom.length() > 0) {
@@ -139,7 +138,7 @@ public class WindowShell extends Observable implements Constants {
         };
     }
 
-    private Listener resetListener() {
+    private Listener resetListener(final Shell shell) {
         return new Listener() {
             @Override
             public void handleEvent(Event event) {
