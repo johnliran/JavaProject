@@ -1,17 +1,21 @@
 package view;
 
-import controller.Constants;
+import java.util.Observable;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
-import java.util.Observable;
-import java.util.Timer;
-import java.util.TimerTask;
+import controller.Constants;
 
 /**
  * Maze View
@@ -25,6 +29,7 @@ public class GameMazeView extends Observable implements View, Runnable, Constant
     private Shell shell;
     private int userCommand;
     private boolean userNotified;
+    private MouseCommand mouseCommand;
 
     public GameMazeView() {
         initComponents();
@@ -35,7 +40,9 @@ public class GameMazeView extends Observable implements View, Runnable, Constant
         display = new Display();
         shell = new Shell(display);
         Label nullLabel = new Label(shell, SWT.FILL);
-        board = new GameMazeBoard(shell, SWT.NONE, 15, 15);
+        initMouseCommand();
+        board = new GameMazeBoard(shell, SWT.NONE, 15, 15, mouseCommand);
+
         String title = "Maze";
         int width = 800;
         int height = 600;
@@ -203,4 +210,64 @@ public class GameMazeView extends Observable implements View, Runnable, Constant
     public WindowShell getWindowShell() {
         return windowShell;
     }
+
+	public void initMouseCommand() {
+		mouseCommand = new MouseCommand() {
+			
+			@Override
+			public void setMouseCommand(Point to, Point objectBounds) {													
+				boolean move = true;
+
+				if (to.x < 0  
+				&&	to.y < 0   
+				&&	Math.abs(to.x) < objectBounds.x    
+				&&	Math.abs(to.y) < objectBounds.y) {
+						userCommand = LEFT_UP;
+				} else if (to.x < 0  
+						&& Math.abs(to.x) < objectBounds.x  
+						&& to.y > objectBounds.y
+						&& to.y < (2 * objectBounds.y)) {
+							userCommand = LEFT_DOWN;
+				} else if (to.x > objectBounds.x    
+						&& to.y < 0
+						&& to.x < (2 * objectBounds.x)
+						&& Math.abs(to.y) < objectBounds.y) {
+							userCommand = RIGHT_UP;
+				} else if (to.x > objectBounds.x
+						&& to.y > objectBounds.y
+						&& to.x < (2 * objectBounds.x) 
+						&& to.y < (2 * objectBounds.y)) {
+							userCommand = RIGHT_DOWN;
+				} else if (to.x > 0 
+						&& to.y < 0
+						&& to.x < objectBounds.x 
+						&& Math.abs(to.y) < objectBounds.y ) {
+							userCommand = UP;
+				} else if (to.x > 0 
+						&& to.x < objectBounds.x
+						&& to.y > objectBounds.y
+						&& to.y < (2 * objectBounds.y)) {
+							userCommand = DOWN;
+				} else if (to.x < 0 
+						&& Math.abs(to.x) < objectBounds.x 
+						&& to.y > 0 
+						&& to.y < objectBounds.y) {
+							userCommand = LEFT;
+				} else if (to.x > objectBounds.x  
+						&& to.y > 0
+						&& to.x < (2 * objectBounds.x)
+						&& to.y < objectBounds.y) {
+							userCommand = RIGHT;
+				} else {
+					move = false;
+				}
+
+				if (move) {
+					setChanged();
+					notifyObservers();
+				}
+			}
+		};
+		
+	}
 }

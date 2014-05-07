@@ -151,7 +151,7 @@ public class GameMazeModel extends Observable implements Model, Constants {
         boolean moved = move(-1, 1, simulate);
         if (moved && !simulate) {
             score += DIAGONAL_MOVEMENT_SCORE;
-            mouseDirection = MOUSE_UP;
+            mouseDirection = MOUSE_RIGHT;
             // nextDiagonalDirection(MOUSE_UP + MOUSE_RIGHT);
             updateMaze(state.getParentState(), state);
             setChanged();
@@ -169,7 +169,7 @@ public class GameMazeModel extends Observable implements Model, Constants {
         boolean moved = move(-1, -1, simulate);
         if (moved && !simulate) {
             score += DIAGONAL_MOVEMENT_SCORE;
-            mouseDirection = MOUSE_UP;
+            mouseDirection = MOUSE_LEFT;
             // nextDiagonalDirection(MOUSE_UP + MOUSE_LEFT);
             updateMaze(state.getParentState(), state);
             setChanged();
@@ -187,7 +187,7 @@ public class GameMazeModel extends Observable implements Model, Constants {
         boolean moved = move(1, 1, simulate);
         if (moved && !simulate) {
             score += DIAGONAL_MOVEMENT_SCORE;
-            mouseDirection = MOUSE_DOWN;
+            mouseDirection = MOUSE_RIGHT;
             // nextDiagonalDirection(MOUSE_DOWN + MOUSE_RIGHT);
             updateMaze(state.getParentState(), state);
             setChanged();
@@ -205,7 +205,7 @@ public class GameMazeModel extends Observable implements Model, Constants {
         boolean moved = move(1, -1, simulate);
         if (moved && !simulate) {
             score += DIAGONAL_MOVEMENT_SCORE;
-            mouseDirection = MOUSE_DOWN;
+            mouseDirection = MOUSE_LEFT;
             // nextDiagonalDirection(MOUSE_DOWN + MOUSE_LEFT);
             updateMaze(state.getParentState(), state);
             setChanged();

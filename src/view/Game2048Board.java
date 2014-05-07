@@ -1,6 +1,7 @@
 package view;
 
 import controller.Constants;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
@@ -23,7 +24,7 @@ public class Game2048Board extends Composite implements Board, Constants {
         }
     }
 
-    public Game2048Board(Composite parent, int style) {
+    public Game2048Board(Composite parent, int style, MouseCommand mouseCommand) {
         super(parent, style);
         this.board = new int[BOARDSIZE][BOARDSIZE];
         setBackground(new Color(getDisplay(), 187, 173, 160));
@@ -31,7 +32,7 @@ public class Game2048Board extends Composite implements Board, Constants {
         tiles = new Tile2048[this.board.length][this.board.length];
         for (int row = 0; row < this.board.length; row++) {
             for (int column = 0; column < this.board.length; column++) {
-                tiles[row][column] = new Tile2048(this, SWT.NONE);
+                tiles[row][column] = new Tile2048(this, SWT.NONE, mouseCommand);
                 tiles[row][column].setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
                 tiles[row][column].setValue(this.board[row][column]);
             }
