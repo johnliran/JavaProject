@@ -1,4 +1,4 @@
-JavaProject - developed on a Mac - Compatible to most of the common platforms.
+JavaProject 
 ===========
 
 ## 2048
@@ -16,6 +16,7 @@ Diagonal move also make a shorcut of moves.
 ===================================================================
 - You can save, quit, and load again whenever you want.
 - Both games can be controlled by keyboard arrows or Mouse dragging.
+- developed on a Mac - Compatible to most of the common platforms.
 ===================================================================
 
 Programmed by Johnnatan Cohen and Liran Polak. 
