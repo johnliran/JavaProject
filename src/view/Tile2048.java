@@ -1,12 +1,16 @@
 package view;
 
 import controller.Constants;
+
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontMetrics;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 
@@ -22,7 +26,7 @@ public class Tile2048 extends Canvas implements Constants {
         redraw();
     }
 
-    public Tile2048(Composite parent, int style) {
+    public Tile2048(Composite parent, int style, final MouseCommand mouseCommand) {
         super(parent, style);
         Font font = getFont();
         setFont(new Font(getDisplay(), font.getFontData()[0].getName(), TILE_FONT_SIZE, SWT.BOLD));
@@ -47,13 +51,15 @@ public class Tile2048 extends Canvas implements Constants {
                 event.gc.fillRoundRectangle(0, 0, getSize().x, getSize().y, 20, 20);
 
                 // Set another font color for numbers higher than 8
-                if (value > 8)
+                if (value > 8) {
                     event.gc.setForeground(new Color(getDisplay(), 255, 255, 255));
-
+                } 
                 // Set the text
                 if (value > 0) {
                     event.gc.drawString(value + "", mX, mY);
                 }
+            	addMouseListener(mouseListener(mouseCommand));
+
             }
         });
     }
@@ -111,5 +117,19 @@ public class Tile2048 extends Canvas implements Constants {
             default:
                 break;
         }
+    }
+    
+    private MouseListener mouseListener(final MouseCommand mouseCommand) {
+        return new MouseListener() {
+        	public void mouseDown(MouseEvent event) {
+        	}
+
+            public void mouseUp(MouseEvent event) {
+            	mouseCommand.setMouseCommand(new Point(event.x, event.y), new Point(getSize().x, getSize().y));
+            }
+
+            public void mouseDoubleClick(MouseEvent event) {
+            }
+        };
     }
 }

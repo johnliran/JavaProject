@@ -1,9 +1,11 @@
 package view;
 
 import controller.Constants;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
@@ -21,12 +23,14 @@ public class Game2048View extends Observable implements View, Runnable, Constant
     private Shell shell;
     private int userCommand;
     private boolean userNotified;
+    private MouseCommand mouseCommand;
 
     private void initComponents() {
         display = new Display();
         shell = new Shell(display);
         Label nullLabel = new Label(shell, SWT.FILL);
-        board = new Game2048Board(shell, SWT.NONE);
+        initMouseCommand();
+        board = new Game2048Board(shell, SWT.NONE, mouseCommand);
         String title = "2048";
         int width = 400;
         int height = 300;
@@ -159,4 +163,33 @@ public class Game2048View extends Observable implements View, Runnable, Constant
     public WindowShell getWindowShell() {
         return windowShell;
     }
+    
+	public void initMouseCommand() {
+		mouseCommand = new MouseCommand() {
+			
+			@Override
+			public void setMouseCommand(Point to, Point objectBounds) {													
+				boolean move = true;
+
+
+				if (to.x > 0 && to.y < 0 ) {
+					userCommand = UP;
+				} else if (to.x > 0 && to.y > objectBounds.y) {
+						userCommand = DOWN;
+				} else if (to.x < 0  && to.y > 0 ) {
+						userCommand = LEFT;
+				} else if (to.x > objectBounds.x  && to.y > 0) {
+						userCommand = RIGHT;
+				} else {
+					move = false;
+				}
+
+				if (move) {
+					setChanged();
+					notifyObservers();
+				}
+			}
+		};
+		
+	}
 }

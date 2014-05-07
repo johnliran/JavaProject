@@ -1,14 +1,27 @@
 package view;
 
-import controller.Constants;
+import java.util.Observable;
+
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.Shell;
 
-import java.util.Observable;
+import controller.Constants;
 
 /**
  * Generic Window Shell
@@ -23,7 +36,7 @@ public class WindowShell extends Observable implements Constants {
         shell.setLayout(new GridLayout(2, false));
         shell.setBackground(new Color(display, 187, 173, 160));
         shell.setBackgroundMode(SWT.INHERIT_DEFAULT);
-        ((Composite) board).setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 6));
+        ((Composite) board).setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 6));        
         initMenuBar(display, shell, board);
         initButtons(display, shell, board);
     }

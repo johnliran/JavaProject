@@ -1,15 +1,19 @@
 package view;
 
-import controller.Constants;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
+
+import controller.Constants;
 
 /**
  * Maze Tiles
@@ -22,7 +26,7 @@ public class TileMaze extends Canvas implements Constants {
         redraw();
     }
 
-    public TileMaze(Composite parent, int style) {
+    public TileMaze(Composite parent, int style, final MouseCommand mouseCommand) {
         super(parent, style);
         Font font = getFont();
         setFont(new Font(getDisplay(), font.getFontData()[0].getName(), 16, SWT.BOLD));
@@ -46,6 +50,7 @@ public class TileMaze extends Canvas implements Constants {
                 setTileBackground(event);
                 event.gc.fillRectangle(0, 0, getSize().x, getSize().y);
                 if (value > 0) {
+                	addMouseListener(mouseListener(mouseCommand));
                     Image figure;
                     switch (value) {
                         case MOUSE_RIGHT:
@@ -84,7 +89,7 @@ public class TileMaze extends Canvas implements Constants {
 
     public void setTileBackground(PaintEvent event) {
         switch (value) {
-            case -1:
+            case WALL:
                 event.gc.setBackground(new Color(getDisplay(), 111, 111, 111));
                 break;
 
@@ -92,5 +97,19 @@ public class TileMaze extends Canvas implements Constants {
                 event.gc.setBackground(new Color(getDisplay(), 224, 215, 201));
                 break;
         }
+    }
+    
+    private MouseListener mouseListener(final MouseCommand mouseCommand) {
+        return new MouseListener() {
+        	public void mouseDown(MouseEvent event) {
+        	}
+
+            public void mouseUp(MouseEvent event) {
+            	mouseCommand.setMouseCommand(new Point(event.x, event.y), new Point(getSize().x, getSize().y));
+            }
+
+            public void mouseDoubleClick(MouseEvent event) {
+            }
+        };
     }
 }
