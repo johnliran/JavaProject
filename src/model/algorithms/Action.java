@@ -1,7 +1,7 @@
 package model.algorithms;
 
 /**
- *
+ * Action
  */
 public interface Action {
 

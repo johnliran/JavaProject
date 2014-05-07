@@ -11,7 +11,7 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 
 /**
- *
+ * 2048 Tiles
  */
 public class Tile2048 extends Canvas implements Constants {
     private int value;

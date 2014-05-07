@@ -1,7 +1,7 @@
 package model.algorithms;
 
 /**
- *
+ * Distance
  */
 public interface Distance {
 

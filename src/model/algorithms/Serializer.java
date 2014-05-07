@@ -6,7 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
 /**
- *
+ * Serializer (used by save and load methods)
  */
 public class Serializer {
     public static void serializeToXML(Object objectToSerialize, String xmlFileName) throws Exception {

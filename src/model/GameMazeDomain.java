@@ -8,7 +8,7 @@ import org.eclipse.swt.graphics.Point;
 import java.util.ArrayList;
 
 /**
- *
+ * Game Maze Domain
  */
 public class GameMazeDomain implements Domain {
     private GameMazeModel maze;
@@ -18,8 +18,8 @@ public class GameMazeDomain implements Domain {
     }
 
     /**
-     * @param state
-     * @return
+     * @param state State
+     * @return Array of possible actions from given state
      */
     @Override
     public ArrayList<Action> getActions(State state) {

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Observable;
 
 /**
- *
+ * Game Maze Model
  */
 public class GameMazeModel extends Observable implements Model, Constants {
     private int mouseDirection;
@@ -47,7 +47,6 @@ public class GameMazeModel extends Observable implements Model, Constants {
         int y = ((Point) (state.getState())).y;
         GameMazeState current = new GameMazeState();
         current.setState(new Point(x, y));
-        mouseDirection = maze[((Point) (state.getState())).x][((Point) (state.getState())).y];
         if (getPointValue((x + dx), (y + dy)) >= BLANK) {
             if (!simulate) {
                 // Backup the current state
@@ -72,15 +71,16 @@ public class GameMazeModel extends Observable implements Model, Constants {
     }
 
     /**
-     * @param simulate
-     * @return
+     * @param simulate Specify whether or not to make changes
+     * @return True: Movement was made / False: No movement was made
      */
     @Override
     public boolean moveUp(boolean simulate) {
         boolean moved = move(-1, 0, simulate);
         if (moved && !simulate) {
             score += STRAIGHT_MOVEMENT_SCORE;
-            nextStraightDirection(MOUSE_UP);
+            mouseDirection = MOUSE_UP;
+            // nextStraightDirection(MOUSE_UP);
             updateMaze(state.getParentState(), state);
             setChanged();
             notifyObservers();
@@ -89,15 +89,16 @@ public class GameMazeModel extends Observable implements Model, Constants {
     }
 
     /**
-     * @param simulate
-     * @return
+     * @param simulate Specify whether or not to make changes
+     * @return True: Movement was made / False: No movement was made
      */
     @Override
     public boolean moveDown(boolean simulate) {
         boolean moved = move(1, 0, simulate);
         if (moved && !simulate) {
             score += STRAIGHT_MOVEMENT_SCORE;
-            nextStraightDirection(MOUSE_DOWN);
+            mouseDirection = MOUSE_DOWN;
+            // nextStraightDirection(MOUSE_DOWN);
             updateMaze(state.getParentState(), state);
             setChanged();
             notifyObservers();
@@ -106,15 +107,16 @@ public class GameMazeModel extends Observable implements Model, Constants {
     }
 
     /**
-     * @param simulate
-     * @return
+     * @param simulate Specify whether or not to make changes
+     * @return True: Movement was made / False: No movement was made
      */
     @Override
     public boolean moveRight(boolean simulate) {
         boolean moved = move(0, 1, simulate);
         if (moved && !simulate) {
             score += STRAIGHT_MOVEMENT_SCORE;
-            nextStraightDirection(MOUSE_RIGHT);
+            mouseDirection = MOUSE_RIGHT;
+            // nextStraightDirection(MOUSE_RIGHT);
             updateMaze(state.getParentState(), state);
             setChanged();
             notifyObservers();
@@ -123,15 +125,16 @@ public class GameMazeModel extends Observable implements Model, Constants {
     }
 
     /**
-     * @param simulate
-     * @return
+     * @param simulate Specify whether or not to make changes
+     * @return True: Movement was made / False: No movement was made
      */
     @Override
     public boolean moveLeft(boolean simulate) {
         boolean moved = move(0, -1, simulate);
         if (moved && !simulate) {
             score += STRAIGHT_MOVEMENT_SCORE;
-            nextStraightDirection(MOUSE_LEFT);
+            mouseDirection = MOUSE_LEFT;
+            // nextStraightDirection(MOUSE_LEFT);
             updateMaze(state.getParentState(), state);
             setChanged();
             notifyObservers();
@@ -140,15 +143,16 @@ public class GameMazeModel extends Observable implements Model, Constants {
     }
 
     /**
-     * @param simulate
-     * @return
+     * @param simulate Specify whether or not to make changes
+     * @return True: Movement was made / False: No movement was made
      */
     @Override
     public boolean moveUpRight(boolean simulate) {
         boolean moved = move(-1, 1, simulate);
         if (moved && !simulate) {
             score += DIAGONAL_MOVEMENT_SCORE;
-            nextDiagonalDirection(MOUSE_UP + MOUSE_RIGHT);
+            mouseDirection = MOUSE_UP;
+            // nextDiagonalDirection(MOUSE_UP + MOUSE_RIGHT);
             updateMaze(state.getParentState(), state);
             setChanged();
             notifyObservers();
@@ -157,15 +161,16 @@ public class GameMazeModel extends Observable implements Model, Constants {
     }
 
     /**
-     * @param simulate
-     * @return
+     * @param simulate Specify whether or not to make changes
+     * @return True: Movement was made / False: No movement was made
      */
     @Override
     public boolean moveUpLeft(boolean simulate) {
         boolean moved = move(-1, -1, simulate);
         if (moved && !simulate) {
             score += DIAGONAL_MOVEMENT_SCORE;
-            nextDiagonalDirection(MOUSE_UP + MOUSE_LEFT);
+            mouseDirection = MOUSE_UP;
+            // nextDiagonalDirection(MOUSE_UP + MOUSE_LEFT);
             updateMaze(state.getParentState(), state);
             setChanged();
             notifyObservers();
@@ -174,15 +179,16 @@ public class GameMazeModel extends Observable implements Model, Constants {
     }
 
     /**
-     * @param simulate
-     * @return
+     * @param simulate Specify whether or not to make changes
+     * @return True: Movement was made / False: No movement was made
      */
     @Override
     public boolean moveDownRight(boolean simulate) {
         boolean moved = move(1, 1, simulate);
         if (moved && !simulate) {
             score += DIAGONAL_MOVEMENT_SCORE;
-            nextDiagonalDirection(MOUSE_DOWN + MOUSE_RIGHT);
+            mouseDirection = MOUSE_DOWN;
+            // nextDiagonalDirection(MOUSE_DOWN + MOUSE_RIGHT);
             updateMaze(state.getParentState(), state);
             setChanged();
             notifyObservers();
@@ -191,15 +197,16 @@ public class GameMazeModel extends Observable implements Model, Constants {
     }
 
     /**
-     * @param simulate
-     * @return
+     * @param simulate Specify whether or not to make changes
+     * @return True: Movement was made / False: No movement was made
      */
     @Override
     public boolean moveDownLeft(boolean simulate) {
         boolean moved = move(1, -1, simulate);
         if (moved && !simulate) {
             score += DIAGONAL_MOVEMENT_SCORE;
-            nextDiagonalDirection(MOUSE_DOWN + MOUSE_LEFT);
+            mouseDirection = MOUSE_DOWN;
+            // nextDiagonalDirection(MOUSE_DOWN + MOUSE_LEFT);
             updateMaze(state.getParentState(), state);
             setChanged();
             notifyObservers();
@@ -208,7 +215,7 @@ public class GameMazeModel extends Observable implements Model, Constants {
     }
 
     /**
-     * @return
+     * @return Board data
      */
     @Override
     public int[][] getData() {
@@ -229,13 +236,14 @@ public class GameMazeModel extends Observable implements Model, Constants {
     }
 
     /**
-     *
+     * Initialize the model's data members when a new game starts
      */
     @Override
     public void initialize() {
         this.maze = copyOf(initialMaze);
         this.state = getStartState();
         this.minimalNumberOfMoves = numberOfMovesToSolveGame();
+        this.mouseDirection = maze[((Point) (state.getState())).x][((Point) (state.getState())).y];
         this.numberOfMoves = 0;
         this.score = 0;
         this.gameWon = false;
@@ -245,7 +253,7 @@ public class GameMazeModel extends Observable implements Model, Constants {
     }
 
     /**
-     *
+     * Restores the player's last movement
      */
     @Override
     public void restore() {
@@ -264,7 +272,7 @@ public class GameMazeModel extends Observable implements Model, Constants {
     }
 
     /**
-     * @return
+     * @return Game score
      */
     @Override
     public int getScore() {
@@ -276,7 +284,7 @@ public class GameMazeModel extends Observable implements Model, Constants {
     }
 
     /**
-     * @return
+     * @return True: Game Won
      */
     @Override
     public boolean isGameWon() {
@@ -284,7 +292,7 @@ public class GameMazeModel extends Observable implements Model, Constants {
     }
 
     /**
-     * @param gameWon
+     * @param gameWon True: Game Won
      */
     @Override
     public void setGameWon(boolean gameWon) {
@@ -292,7 +300,7 @@ public class GameMazeModel extends Observable implements Model, Constants {
     }
 
     /**
-     * @param xmlFileName
+     * @param xmlFileName Output file name
      */
     @Override
     public void saveGame(String xmlFileName) {
@@ -304,7 +312,7 @@ public class GameMazeModel extends Observable implements Model, Constants {
     }
 
     /**
-     * @param xmlFileName
+     * @param xmlFileName Input file name
      */
     @Override
     public void loadGame(String xmlFileName) {
@@ -321,7 +329,7 @@ public class GameMazeModel extends Observable implements Model, Constants {
     }
 
     /**
-     * @return
+     * @return True: Game Over
      */
     @Override
     public boolean isGameOver() {

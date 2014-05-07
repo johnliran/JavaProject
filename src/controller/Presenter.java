@@ -15,8 +15,8 @@ public class Presenter implements Observer, Constants {
     private Model m;
 
     /**
-     * @param observable
-     * @param notification
+     * @param observable   Model and View (The Caller)
+     * @param notification Observable's Parameters
      */
     @Override
     public void update(Observable observable, Object notification) {

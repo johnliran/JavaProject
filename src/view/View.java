@@ -1,7 +1,7 @@
 package view;
 
 /**
- *
+ * View
  */
 public interface View extends Runnable {
 

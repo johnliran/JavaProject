@@ -1,7 +1,7 @@
 package model.algorithms;
 
 /**
- *
+ * Model
  */
 public interface Model {
 

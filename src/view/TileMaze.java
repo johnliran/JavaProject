@@ -12,7 +12,7 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 
 /**
- *
+ * Maze Tiles
  */
 public class TileMaze extends Canvas implements Constants {
     private int value;

@@ -1,7 +1,7 @@
 package model.algorithms;
 
 /**
- *
+ * State
  */
 public class State implements Comparable<State> {
     private Object state;

@@ -9,7 +9,7 @@ import org.eclipse.swt.graphics.Point;
 import java.util.*;
 
 /**
- *
+ * Game 2048 Model
  */
 public class Game2048Model extends Observable implements Model, Constants {
     private int[][] board;
@@ -104,8 +104,8 @@ public class Game2048Model extends Observable implements Model, Constants {
     }
 
     /**
-     * @param simulate
-     * @return
+     * @param simulate Specify whether or not to make changes
+     * @return True: Movement was made / False: No movement was made
      */
     @Override
     public boolean moveUp(boolean simulate) {
@@ -126,8 +126,8 @@ public class Game2048Model extends Observable implements Model, Constants {
     }
 
     /**
-     * @param simulate
-     * @return
+     * @param simulate Specify whether or not to make changes
+     * @return True: Movement was made / False: No movement was made
      */
     @Override
     public boolean moveDown(boolean simulate) {
@@ -148,8 +148,8 @@ public class Game2048Model extends Observable implements Model, Constants {
     }
 
     /**
-     * @param simulate
-     * @return
+     * @param simulate Specify whether or not to make changes
+     * @return True: Movement was made / False: No movement was made
      */
     @Override
     public boolean moveRight(boolean simulate) {
@@ -172,8 +172,8 @@ public class Game2048Model extends Observable implements Model, Constants {
     }
 
     /**
-     * @param simulate
-     * @return
+     * @param simulate Specify whether or not to make changes
+     * @return True: Movement was made / False: No movement was made
      */
     @Override
     public boolean moveLeft(boolean simulate) {
@@ -192,7 +192,7 @@ public class Game2048Model extends Observable implements Model, Constants {
     }
 
     /**
-     * @return
+     * @return Board data
      */
     @Override
     public int[][] getData() {
@@ -204,7 +204,7 @@ public class Game2048Model extends Observable implements Model, Constants {
     }
 
     /**
-     *
+     * Initialize the model's data members when a new game starts
      */
     @Override
     public void initialize() {
@@ -226,7 +226,7 @@ public class Game2048Model extends Observable implements Model, Constants {
     }
 
     /**
-     *
+     * Restores the player's last movement
      */
     @Override
     public void restore() {
@@ -284,7 +284,7 @@ public class Game2048Model extends Observable implements Model, Constants {
     }
 
     /**
-     * @return
+     * @return Game score
      */
     @Override
     public int getScore() {
@@ -292,14 +292,14 @@ public class Game2048Model extends Observable implements Model, Constants {
     }
 
     /**
-     * @param score
+     * @param score Game score
      */
     public void setScore(int score) {
         this.score = score;
     }
 
     /**
-     * @return
+     * @return True: Game Won
      */
     @Override
     public boolean isGameWon() {
@@ -307,7 +307,7 @@ public class Game2048Model extends Observable implements Model, Constants {
     }
 
     /**
-     * @param gameWon
+     * @param gameWon True: Game Won
      */
     @Override
     public void setGameWon(boolean gameWon) {
@@ -315,7 +315,7 @@ public class Game2048Model extends Observable implements Model, Constants {
     }
 
     /**
-     * @param xmlFileName
+     * @param xmlFileName Output file name
      */
     @Override
     public void saveGame(String xmlFileName) {
@@ -327,7 +327,7 @@ public class Game2048Model extends Observable implements Model, Constants {
     }
 
     /**
-     * @param xmlFileName
+     * @param xmlFileName Input file name
      */
     @Override
     public void loadGame(String xmlFileName) {
@@ -342,7 +342,7 @@ public class Game2048Model extends Observable implements Model, Constants {
     }
 
     /**
-     * @return
+     * @return True: Game Over
      */
     @Override
     public boolean isGameOver() {
@@ -354,8 +354,8 @@ public class Game2048Model extends Observable implements Model, Constants {
     }
 
     /**
-     * @param simulate
-     * @return
+     * @param simulate Specify whether or not to make changes
+     * @return True: Movement was made / False: No movement was made
      */
     @Override
     public boolean moveUpRight(boolean simulate) {
@@ -363,8 +363,8 @@ public class Game2048Model extends Observable implements Model, Constants {
     }
 
     /**
-     * @param simulate
-     * @return
+     * @param simulate Specify whether or not to make changes
+     * @return True: Movement was made / False: No movement was made
      */
     @Override
     public boolean moveUpLeft(boolean simulate) {
@@ -372,8 +372,8 @@ public class Game2048Model extends Observable implements Model, Constants {
     }
 
     /**
-     * @param simulate
-     * @return
+     * @param simulate Specify whether or not to make changes
+     * @return True: Movement was made / False: No movement was made
      */
     @Override
     public boolean moveDownRight(boolean simulate) {
@@ -381,8 +381,8 @@ public class Game2048Model extends Observable implements Model, Constants {
     }
 
     /**
-     * @param simulate
-     * @return
+     * @param simulate Specify whether or not to make changes
+     * @return True: Movement was made / False: No movement was made
      */
     @Override
     public boolean moveDownLeft(boolean simulate) {
