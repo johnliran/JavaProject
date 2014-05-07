@@ -24,4 +24,3 @@ Diagonal move also make a shorcut of moves.
 
 ===================================================================
 
-Programmed by Johnnatan Cohen and Liran Polak. 
