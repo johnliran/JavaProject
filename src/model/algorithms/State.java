@@ -1,5 +1,8 @@
 package model.algorithms;
 
+/**
+ * State
+ */
 public class State implements Comparable<State> {
     private Object state;
     private State parentState;
@@ -13,13 +16,6 @@ public class State implements Comparable<State> {
 
     public void setState(Object state) {
         this.state = state;
-    }
-
-    public State(Object state) {
-        this.state = state;
-    }
-
-    public State() {
     }
 
     public double getF() {

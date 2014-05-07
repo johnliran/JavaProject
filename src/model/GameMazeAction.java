@@ -4,6 +4,9 @@ import model.algorithms.Action;
 import model.algorithms.State;
 import org.eclipse.swt.graphics.Point;
 
+/**
+ * Holds X and Y coordinates
+ */
 public class GameMazeAction implements Action {
     private int dx;
     private int dy;
@@ -13,14 +16,20 @@ public class GameMazeAction implements Action {
         this.dy = dy;
     }
 
+    @Override
     public int getDx() {
         return dx;
     }
 
+    @Override
     public int getDy() {
         return dy;
     }
 
+    /**
+     * @param state Current state (current coordinates)
+     * @return New state (new coordinates)
+     */
     @Override
     public State doAction(State state) {
         Point point = (Point) state.getState();

@@ -1,8 +1,15 @@
 package model.algorithms;
 
+/**
+ * Action
+ */
 public interface Action {
 
-    State doAction(State state);
+    public State doAction(State state);
 
-    String getName();
+    public String getName();
+
+    public int getDx();
+
+    public int getDy();
 }

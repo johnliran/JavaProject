@@ -1,5 +1,8 @@
 package view;
 
+/**
+ * View
+ */
 public interface View extends Runnable {
 
     public void displayData(int[][] data);

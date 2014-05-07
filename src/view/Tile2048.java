@@ -1,15 +1,23 @@
 package view;
 
+import controller.Constants;
+
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontMetrics;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 
-public class Tile2048 extends Canvas {
+/**
+ * 2048 Tiles
+ */
+public class Tile2048 extends Canvas implements Constants {
     private int value;
 
 
@@ -18,38 +26,40 @@ public class Tile2048 extends Canvas {
         redraw();
     }
 
-    public Tile2048(Composite parent, int style) {
+    public Tile2048(Composite parent, int style, final MouseCommand mouseCommand) {
         super(parent, style);
         Font font = getFont();
-        setFont(new Font(getDisplay(), font.getFontData()[0].getName(), 16, SWT.BOLD));
+        setFont(new Font(getDisplay(), font.getFontData()[0].getName(), TILE_FONT_SIZE, SWT.BOLD));
         addPaintListener(new PaintListener() {
 
             @Override
             public void paintControl(PaintEvent event) {
-                //Set the default bgcolor of the canvas
+                // Set the default bgcolor of the canvas
                 setBackground(new Color(getDisplay(), 187, 173, 160));
 
-                //Set the fontMetrics
+                // Set the fontMetrics
                 FontMetrics fm = event.gc.getFontMetrics();
                 int charWidth = fm.getAverageCharWidth();
                 int mX = getSize().x / 2 - (value + "").length() * charWidth / 2;
                 int mY = getSize().y / 2 - (fm.getHeight() / 2) - fm.getDescent();
 
-                //Set the font color
+                // Set the font color
                 setForeground(new Color(getDisplay(), 119, 110, 101));
 
-                //Set the color and Draw the RoundedRectangle shape  (passes the event in order to change the event's specific color)
+                // Set the color and Draw the RoundedRectangle shape  (passes the event in order to change the event's specific color)
                 setTileBackground(event);
                 event.gc.fillRoundRectangle(0, 0, getSize().x, getSize().y, 20, 20);
 
-                //Set another font color for numbers higher than 8
-                if (value > 8)
+                // Set another font color for numbers higher than 8
+                if (value > 8) {
                     event.gc.setForeground(new Color(getDisplay(), 255, 255, 255));
-
-                //Set the text
+                } 
+                // Set the text
                 if (value > 0) {
                     event.gc.drawString(value + "", mX, mY);
                 }
+            	addMouseListener(mouseListener(mouseCommand));
+
             }
         });
     }
@@ -107,5 +117,19 @@ public class Tile2048 extends Canvas {
             default:
                 break;
         }
+    }
+    
+    private MouseListener mouseListener(final MouseCommand mouseCommand) {
+        return new MouseListener() {
+        	public void mouseDown(MouseEvent event) {
+        	}
+
+            public void mouseUp(MouseEvent event) {
+            	mouseCommand.setMouseCommand(new Point(event.x, event.y), new Point(getSize().x, getSize().y));
+            }
+
+            public void mouseDoubleClick(MouseEvent event) {
+            }
+        };
     }
 }

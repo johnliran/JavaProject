@@ -7,100 +7,89 @@ import java.util.TimerTask;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
+import controller.Constants;
 
-
-public class GameMazeView extends Observable implements View, Runnable {
-    private final static int RESET = 1;
-    private final static int SAVE = 2;
-    private final static int LOAD = 3;
-    private final static int RIGHT      = 10;
-    private final static int RIGHT_UP   = 11;
-    private final static int RIGHT_DOWN = 12;
-    private final static int LEFT       = 15;
-    private final static int LEFT_UP    = 16;
-    private final static int LEFT_DOWN  = 17;
-    private final static int UP		    = 20;
-    private final static int DOWN 		= 21;
-    
+/**
+ * Maze View
+ */
+public class GameMazeView extends Observable implements View, Runnable, Constants {
+    private boolean keyFlag;
+    private int lastKeyCode;
     private GameMazeBoard board;
     private Display display;
     private WindowShell windowShell;
     private Shell shell;
     private int userCommand;
     private boolean userNotified;
-    boolean keyFlag ;
-    int lastKeyCode;
+    private MouseCommand mouseCommand;
+
+    public GameMazeView() {
+        initComponents();
+        userNotified = false;
+    }
 
     private void initComponents() {
         display = new Display();
         shell = new Shell(display);
         Label nullLabel = new Label(shell, SWT.FILL);
-        board = new GameMazeBoard(shell, SWT.NO_BACKGROUND);
+        initMouseCommand();
+        board = new GameMazeBoard(shell, SWT.NONE, 15, 15, mouseCommand);
+
         String title = "Maze";
         int width = 800;
         int height = 600;
-        windowShell = new WindowShell(title, width, height, display, shell, (Board) board);
-        shell.setBackground(new Color(display, 187, 173, 160));
+        windowShell = new WindowShell(title, width, height, display, shell, board);
         initKeyboardListener();
-        
         shell.open();
     }
-    
-    
 
     private void initKeyboardListener() {
-    	board.addKeyListener(new KeyListener() {
+        board.addKeyListener(new KeyListener() {
             @Override
             public void keyPressed(final KeyEvent event) {
                 if (keyFlag == false) {
-                	keyFlag = true;
-                	lastKeyCode = event.keyCode;
+                    keyFlag = true;
+                    lastKeyCode = event.keyCode;
                     Timer timer = new Timer();
                     timer.schedule(new TimerTask() {
                         @Override
                         public void run() {
-                            int current=0 ,last=0;
-                            if (keyFlag == false && lastKeyCode != event.keyCode) 
-                                    {
-                                         current = event.keyCode;
-                                         last = lastKeyCode;
-                                    }
-                            else
-                            {
+                            int current = 0, last = 0;
+                            if (keyFlag == false && lastKeyCode != event.keyCode) {
+                                current = event.keyCode;
+                                last = lastKeyCode;
+                            } else {
                                 keyFlag = false;
                                 userCommand = event.keyCode;
-
                             }
 
-                            if (current!=0 || last!=0)
-                            {
-                            	if ((current == SWT.ARROW_UP && last == SWT.ARROW_RIGHT) || last == SWT.ARROW_UP && current == SWT.ARROW_RIGHT )
-                                	userCommand = RIGHT_UP;
-                                if ((current == SWT.ARROW_UP && last == SWT.ARROW_LEFT) || last == SWT.ARROW_UP && current == SWT.ARROW_LEFT )
-                                	userCommand = LEFT_UP;
-                            	if ((current == SWT.ARROW_DOWN && last == SWT.ARROW_RIGHT) || last == SWT.ARROW_DOWN && current == SWT.ARROW_RIGHT )
-                                	userCommand = RIGHT_DOWN;
-                                if ((current == SWT.ARROW_DOWN && last == SWT.ARROW_LEFT) || last == SWT.ARROW_DOWN && current == SWT.ARROW_LEFT )
-                                	userCommand = LEFT_DOWN;
-                                
-                            }
-                                
-                            else
-                            {
+                            if (current != 0 || last != 0) {
+                                if ((current == SWT.ARROW_UP && last == SWT.ARROW_RIGHT) || last == SWT.ARROW_UP && current == SWT.ARROW_RIGHT)
+                                    userCommand = RIGHT_UP;
+                                if ((current == SWT.ARROW_UP && last == SWT.ARROW_LEFT) || last == SWT.ARROW_UP && current == SWT.ARROW_LEFT)
+                                    userCommand = LEFT_UP;
+                                if ((current == SWT.ARROW_DOWN && last == SWT.ARROW_RIGHT) || last == SWT.ARROW_DOWN && current == SWT.ARROW_RIGHT)
+                                    userCommand = RIGHT_DOWN;
+                                if ((current == SWT.ARROW_DOWN && last == SWT.ARROW_LEFT) || last == SWT.ARROW_DOWN && current == SWT.ARROW_LEFT)
+                                    userCommand = LEFT_DOWN;
+
+                            } else {
                                 if (event.keyCode == SWT.ARROW_UP)
-                                	userCommand = UP;
+                                    userCommand = UP;
                                 if (event.keyCode == SWT.ARROW_DOWN)
                                     userCommand = DOWN;
                                 if (event.keyCode == SWT.ARROW_RIGHT)
-                                	userCommand = RIGHT;
+                                    userCommand = RIGHT;
                                 if (event.keyCode == SWT.ARROW_LEFT)
-                                	userCommand = LEFT;
+                                    userCommand = LEFT;
                             }
                             display.asyncExec(new Runnable() {
 
@@ -122,10 +111,10 @@ public class GameMazeView extends Observable implements View, Runnable {
             @Override
             public void keyReleased(KeyEvent e) {
             }
-        });	
-	}
+        });
+    }
 
-	@Override
+    @Override
     public void run() {
         while (!shell.isDisposed()) {
             if (!display.readAndDispatch()) {
@@ -133,9 +122,11 @@ public class GameMazeView extends Observable implements View, Runnable {
             }
         }
         display.dispose();
-
     }
 
+    /**
+     * @param data  Board data
+     */
     @Override
     public void displayData(int[][] data) {
         board.setBoardData(data);
@@ -147,16 +138,17 @@ public class GameMazeView extends Observable implements View, Runnable {
         });
     }
 
+    /**
+     * @return User's command
+     */
     @Override
     public int getUserCommand() {
         return userCommand;
     }
 
-    public GameMazeView() {
-        initComponents();
-        userNotified = false;
-    }
-
+    /**
+     * @param score Game score
+     */
     @Override
     public void displayScore(int score) {
         windowShell.setScore(score);
@@ -169,15 +161,14 @@ public class GameMazeView extends Observable implements View, Runnable {
         MessageBox messageBox = new MessageBox(shell, style);
         messageBox.setMessage("You won! Do you want to continue?");
         int rc = messageBox.open();
-
         switch (rc) {
-            case SWT.YES: {
+            case SWT.YES:
                 userCommand = RESET;
                 userNotified = false;
                 setChanged();
                 notifyObservers();
                 break;
-            }
+
             case SWT.NO:
                 display.dispose();
                 System.exit(0);
@@ -191,24 +182,25 @@ public class GameMazeView extends Observable implements View, Runnable {
         MessageBox messageBox = new MessageBox(shell, style);
         messageBox.setMessage("You loose! Do you want to retry again?");
         int rc = messageBox.open();
-
         switch (rc) {
-            case SWT.YES: {
+            case SWT.YES:
                 userCommand = RESET;
                 userNotified = false;
                 setChanged();
                 notifyObservers();
                 break;
-            }
-            case SWT.NO: {
+
+            case SWT.NO:
                 display.dispose();
                 System.exit(0);
                 break;
-            }
-        }
 
+        }
     }
 
+    /**
+     * @return True: A notification message displayed to user
+     */
     @Override
     public boolean isUserNotified() {
         return userNotified;
@@ -218,4 +210,64 @@ public class GameMazeView extends Observable implements View, Runnable {
     public WindowShell getWindowShell() {
         return windowShell;
     }
+
+	public void initMouseCommand() {
+		mouseCommand = new MouseCommand() {
+			
+			@Override
+			public void setMouseCommand(Point to, Point objectBounds) {													
+				boolean move = true;
+
+				if (to.x < 0  
+				&&	to.y < 0   
+				&&	Math.abs(to.x) < objectBounds.x    
+				&&	Math.abs(to.y) < objectBounds.y) {
+						userCommand = LEFT_UP;
+				} else if (to.x < 0  
+						&& Math.abs(to.x) < objectBounds.x  
+						&& to.y > objectBounds.y
+						&& to.y < (2 * objectBounds.y)) {
+							userCommand = LEFT_DOWN;
+				} else if (to.x > objectBounds.x    
+						&& to.y < 0
+						&& to.x < (2 * objectBounds.x)
+						&& Math.abs(to.y) < objectBounds.y) {
+							userCommand = RIGHT_UP;
+				} else if (to.x > objectBounds.x
+						&& to.y > objectBounds.y
+						&& to.x < (2 * objectBounds.x) 
+						&& to.y < (2 * objectBounds.y)) {
+							userCommand = RIGHT_DOWN;
+				} else if (to.x > 0 
+						&& to.y < 0
+						&& to.x < objectBounds.x 
+						&& Math.abs(to.y) < objectBounds.y ) {
+							userCommand = UP;
+				} else if (to.x > 0 
+						&& to.x < objectBounds.x
+						&& to.y > objectBounds.y
+						&& to.y < (2 * objectBounds.y)) {
+							userCommand = DOWN;
+				} else if (to.x < 0 
+						&& Math.abs(to.x) < objectBounds.x 
+						&& to.y > 0 
+						&& to.y < objectBounds.y) {
+							userCommand = LEFT;
+				} else if (to.x > objectBounds.x  
+						&& to.y > 0
+						&& to.x < (2 * objectBounds.x)
+						&& to.y < objectBounds.y) {
+							userCommand = RIGHT;
+				} else {
+					move = false;
+				}
+
+				if (move) {
+					setChanged();
+					notifyObservers();
+				}
+			}
+		};
+		
+	}
 }

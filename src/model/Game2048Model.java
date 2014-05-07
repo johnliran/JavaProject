@@ -1,5 +1,6 @@
 package model;
 
+import controller.Constants;
 import model.algorithms.Model;
 import model.algorithms.Serializer;
 import model.algorithms.State;
@@ -7,27 +8,21 @@ import org.eclipse.swt.graphics.Point;
 
 import java.util.*;
 
-public class Game2048Model extends Observable implements Model {
-    private final static int BOARDSIZE = 4;
-    private final static int TARGETSCORE = 32;
-    private final static int RIGHT = 1;
-    private final static int LEFT = 2;
+/**
+ * Game 2048 Model
+ */
+public class Game2048Model extends Observable implements Model, Constants {
     private int[][] board;
     private int score;
     private boolean gameWon;
     private boolean gameOver;
     private Stack<int[][]> previousBoards;
     private Stack<Integer> previousScores;
-    private Serializer s;
 
     public Game2048Model() {
         this.board = new int[BOARDSIZE][BOARDSIZE];
-        this.score = 0;
         this.previousBoards = new Stack<int[][]>();
         this.previousScores = new Stack<Integer>();
-        this.gameWon = false;
-        this.gameOver = false;
-        this.s = new Serializer();
     }
 
     public void rotate(int direction) {
@@ -59,17 +54,17 @@ public class Game2048Model extends Observable implements Model {
 
     public boolean move(boolean simulate) {
         int[][] newBoard = new int[board.length][board.length];
-        //We use linkedlist to organize all the cells which have numbers
+        // We use linkedlist to organize all the cells which have numbers
         LinkedList<Integer> numbers = new LinkedList<Integer>();
         boolean moved = false;
         boolean seenZero;
-        //Get over all the board and take out the numbers into List.
+        // Get over all the board and take out the numbers into List
         for (int row = 0; row < newBoard.length; row++) {
             seenZero = false;
             for (int column = 0; column < newBoard.length; column++) {
                 if (board[row][column] != 0) {
                     numbers.add(board[row][column]);
-                    //After putting the numbers into the stack,We can override and pad the line with 0;
+                    // After putting the numbers into the stack,We can override and pad the line with 0
                     if (!simulate) {
                         newBoard[row][column] = 0;
                     }
@@ -80,7 +75,7 @@ public class Game2048Model extends Observable implements Model {
                     seenZero = true;
                 }
             }
-            //Merge if there are equal numbers
+            // Merge if there are equal numbers
             for (int column = 0; column < newBoard.length && !numbers.isEmpty(); column++) {
                 int numberToCheck = numbers.poll();
                 if (!numbers.isEmpty()) {
@@ -108,6 +103,10 @@ public class Game2048Model extends Observable implements Model {
         return moved;
     }
 
+    /**
+     * @param simulate Specify whether or not to make changes
+     * @return True: Movement was made / False: No movement was made
+     */
     @Override
     public boolean moveUp(boolean simulate) {
         if (!simulate) {
@@ -126,6 +125,10 @@ public class Game2048Model extends Observable implements Model {
         return moved;
     }
 
+    /**
+     * @param simulate Specify whether or not to make changes
+     * @return True: Movement was made / False: No movement was made
+     */
     @Override
     public boolean moveDown(boolean simulate) {
         if (!simulate) {
@@ -144,6 +147,10 @@ public class Game2048Model extends Observable implements Model {
         return moved;
     }
 
+    /**
+     * @param simulate Specify whether or not to make changes
+     * @return True: Movement was made / False: No movement was made
+     */
     @Override
     public boolean moveRight(boolean simulate) {
         if (!simulate) {
@@ -164,6 +171,10 @@ public class Game2048Model extends Observable implements Model {
         return moved;
     }
 
+    /**
+     * @param simulate Specify whether or not to make changes
+     * @return True: Movement was made / False: No movement was made
+     */
     @Override
     public boolean moveLeft(boolean simulate) {
         if (!simulate) {
@@ -180,6 +191,9 @@ public class Game2048Model extends Observable implements Model {
         return moved;
     }
 
+    /**
+     * @return Board data
+     */
     @Override
     public int[][] getData() {
         return board;
@@ -189,11 +203,14 @@ public class Game2048Model extends Observable implements Model {
         this.board = data;
     }
 
+    /**
+     * Initialize the model's data members when a new game starts
+     */
     @Override
     public void initialize() {
         this.score = 0;
-        this.previousBoards = new Stack<int[][]>();
-        this.previousScores = new Stack<Integer>();
+        this.previousBoards.clear();
+        this.previousScores.clear();
         this.gameWon = false;
         this.gameOver = false;
 
@@ -208,6 +225,9 @@ public class Game2048Model extends Observable implements Model {
         notifyObservers();
     }
 
+    /**
+     * Restores the player's last movement
+     */
     @Override
     public void restore() {
         if (!previousBoards.isEmpty()) {
@@ -233,7 +253,9 @@ public class Game2048Model extends Observable implements Model {
         for (int row = 0; row < board.length; row++) {
             for (int column = 0; column < board.length; column++) {
                 if (board[row][column] == 0) {
-                    freeStates.add(new State(new Point(row, column)));
+                    State free = new State();
+                    free.setState(new Point(row, column));
+                    freeStates.add(free);
                 }
             }
         }
@@ -261,39 +283,57 @@ public class Game2048Model extends Observable implements Model {
         }
     }
 
+    /**
+     * @return Game score
+     */
     @Override
     public int getScore() {
         return score;
     }
 
+    /**
+     * @param score Game score
+     */
     public void setScore(int score) {
         this.score = score;
     }
 
+    /**
+     * @return True: Game Won
+     */
     @Override
     public boolean isGameWon() {
         return gameWon;
     }
 
+    /**
+     * @param gameWon True: Game Won
+     */
     @Override
     public void setGameWon(boolean gameWon) {
         this.gameWon = gameWon;
     }
 
+    /**
+     * @param xmlFileName Output file name
+     */
     @Override
     public void saveGame(String xmlFileName) {
         try {
-            s.serializeToXML(this, xmlFileName);
+            Serializer.serializeToXML(this, xmlFileName);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * @param xmlFileName Input file name
+     */
     @Override
     public void loadGame(String xmlFileName) {
         try {
-            setData(((Game2048Model) s.deserializeXML(xmlFileName)).getData());
-            setScore(((Game2048Model) s.deserializeXML(xmlFileName)).getScore());
+            setData(((Game2048Model) Serializer.deserializeXML(xmlFileName)).getData());
+            setScore(((Game2048Model) Serializer.deserializeXML(xmlFileName)).getScore());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -301,6 +341,9 @@ public class Game2048Model extends Observable implements Model {
         notifyObservers();
     }
 
+    /**
+     * @return True: Game Over
+     */
     @Override
     public boolean isGameOver() {
         return gameOver;
@@ -310,27 +353,39 @@ public class Game2048Model extends Observable implements Model {
         this.gameOver = gameOver;
     }
 
-	@Override
-	public boolean moveUpRight(boolean simulate) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    /**
+     * @param simulate Specify whether or not to make changes
+     * @return True: Movement was made / False: No movement was made
+     */
+    @Override
+    public boolean moveUpRight(boolean simulate) {
+        return false;
+    }
 
-	@Override
-	public boolean moveUpLeft(boolean simulate) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    /**
+     * @param simulate Specify whether or not to make changes
+     * @return True: Movement was made / False: No movement was made
+     */
+    @Override
+    public boolean moveUpLeft(boolean simulate) {
+        return false;
+    }
 
-	@Override
-	public boolean moveDownRight(boolean simulate) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    /**
+     * @param simulate Specify whether or not to make changes
+     * @return True: Movement was made / False: No movement was made
+     */
+    @Override
+    public boolean moveDownRight(boolean simulate) {
+        return false;
+    }
 
-	@Override
-	public boolean moveDownLeft(boolean simulate) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    /**
+     * @param simulate Specify whether or not to make changes
+     * @return True: Movement was made / False: No movement was made
+     */
+    @Override
+    public boolean moveDownLeft(boolean simulate) {
+        return false;
+    }
 }
