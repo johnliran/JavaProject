@@ -125,7 +125,7 @@ public class WindowShell extends Observable implements Constants {
             @Override
             public void handleEvent(Event event) {
                 FileDialog saveDialog = new FileDialog(shell, SWT.SAVE);
-                saveDialog.setFilterExtensions(filterExtensions);
+                saveDialog.setFilterExtensions(EXTENSIONS);
                 String saveTo = saveDialog.open();
                 if (saveTo != null && saveTo.length() > 0) {
                     userCommand = SAVE;
@@ -142,7 +142,7 @@ public class WindowShell extends Observable implements Constants {
             @Override
             public void handleEvent(Event event) {
                 FileDialog loadDialog = new FileDialog(shell, SWT.OPEN);
-                loadDialog.setFilterExtensions(filterExtensions);
+                loadDialog.setFilterExtensions(EXTENSIONS);
                 String loadFrom = loadDialog.open();
                 if (loadFrom != null && loadFrom.length() > 0) {
                     userCommand = LOAD;
