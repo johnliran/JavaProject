@@ -30,6 +30,7 @@ public class TileMaze extends Canvas implements Constants {
         super(parent, style);
         Font font = getFont();
         setFont(new Font(getDisplay(), font.getFontData()[0].getName(), 16, SWT.BOLD));
+        addMouseListener(mouseListener(mouseCommand));
         addPaintListener(new PaintListener() {
 
             @Override
@@ -50,7 +51,7 @@ public class TileMaze extends Canvas implements Constants {
                 setTileBackground(event);
                 event.gc.fillRectangle(0, 0, getSize().x, getSize().y);
                 if (value > 0) {
-                	addMouseListener(mouseListener(mouseCommand));
+                	
                     Image figure;
                     switch (value) {
                         case MOUSE_RIGHT:
@@ -100,12 +101,14 @@ public class TileMaze extends Canvas implements Constants {
     }
     
     private MouseListener mouseListener(final MouseCommand mouseCommand) {
-        return new MouseListener() {
+
+    	return new MouseListener() {
         	public void mouseDown(MouseEvent event) {
         	}
 
             public void mouseUp(MouseEvent event) {
-            	mouseCommand.setMouseCommand(new Point(event.x, event.y), new Point(getSize().x, getSize().y));
+                if (value>0)
+                	mouseCommand.setMouseCommand(new Point(event.x, event.y), new Point(getSize().x, getSize().y));
             }
 
             public void mouseDoubleClick(MouseEvent event) {
