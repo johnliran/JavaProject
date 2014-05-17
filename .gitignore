@@ -12,4 +12,4 @@ bin/
 .idea/
 *.xml
 *.iml
-.metadata/
+.metadata
