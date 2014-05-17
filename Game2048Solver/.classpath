@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/Users/johnnatancohen/Downloads/eclipse/plugins/org.eclipse.swt.cocoa.macosx.x86_64_3.102.1.v20140206-1358.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/RMIInterface"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
