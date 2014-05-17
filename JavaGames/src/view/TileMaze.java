@@ -55,19 +55,19 @@ public class TileMaze extends Canvas  {
                     Image figure;
                     switch (value) {
                         case Constants.MOUSE_RIGHT:
-                            figure = new Image(getDisplay(), "images/mazeGameConstants.MOUSE_right.png");
+                            figure = new Image(getDisplay(), "images/mazeMOUSE_right.png");
                             break;
 
                         case Constants.MOUSE_UP:
-                            figure = new Image(getDisplay(), "images/mazeGameConstants.MOUSE_up.png");
+                            figure = new Image(getDisplay(), "images/mazeMOUSE_up.png");
                             break;
 
                         case Constants.MOUSE_LEFT:
-                            figure = new Image(getDisplay(), "images/mazeGameConstants.MOUSE_left.png");
+                            figure = new Image(getDisplay(), "images/mazeMOUSE_left.png");
                             break;
 
                         case Constants.MOUSE_DOWN:
-                            figure = new Image(getDisplay(), "images/mazeGameConstants.MOUSE_down.png");
+                            figure = new Image(getDisplay(), "images/mazeMOUSE_down.png");
                             break;
 
                         case Constants.CHEESE:
