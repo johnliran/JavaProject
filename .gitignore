@@ -13,3 +13,4 @@ bin/
 *.xml
 *.iml
 .metadata
+.settings
