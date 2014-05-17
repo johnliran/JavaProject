@@ -3,7 +3,7 @@ package controller;
 /**
  * Holds General, Maze and 2048 Constants
  */
-public interface Constants {
+public class Constants {
 
     /* General Constants */
 
@@ -22,6 +22,7 @@ public interface Constants {
     public final static int DIAGONAL_MOVEMENT_SCORE = 15;
     public final static int STRAIGHT_MOVEMENT_SCORE = 10;
     public final static int SCORE_FONT_SIZE = 24;
+    public final static int SPACE = 81;
 
     /* GameMaze Constants */
 
@@ -40,4 +41,6 @@ public interface Constants {
     public final static int BOARDSIZE = 4;
     public final static int TARGETSCORE = 2048;
     public final static int TILE_FONT_SIZE = 16;
+    public final static int[] DIRECTIONS ={UP,DOWN,RIGHT,LEFT}; 
+
 }

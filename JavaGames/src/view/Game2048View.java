@@ -16,7 +16,7 @@ import java.util.Observable;
 /**
  * 2048 View
  */
-public class Game2048View extends Observable implements View, Runnable, Constants {
+public class Game2048View extends Observable implements View, Runnable {
     private Game2048Board board;
     private Display display;
     public WindowShell windowShell;
@@ -48,13 +48,15 @@ public class Game2048View extends Observable implements View, Runnable, Constant
             @Override
             public void keyPressed(KeyEvent event) {
                 if (event.keyCode == SWT.ARROW_UP)
-                    userCommand = UP;
+                    userCommand = Constants.UP;
                 if (event.keyCode == SWT.ARROW_DOWN)
-                    userCommand = DOWN;
+                    userCommand = Constants.DOWN;
                 if (event.keyCode == SWT.ARROW_RIGHT)
-                    userCommand = RIGHT;
+                    userCommand = Constants.RIGHT;
                 if (event.keyCode == SWT.ARROW_LEFT)
-                    userCommand = LEFT;
+                    userCommand = Constants.LEFT;
+                if (event.keyCode == SWT.SPACE)
+                    userCommand = Constants.SPACE;
                 setChanged();
                 notifyObservers();
             }
@@ -136,7 +138,7 @@ public class Game2048View extends Observable implements View, Runnable, Constant
 
         switch (rc) {
             case SWT.YES: {
-                userCommand = RESET;
+                userCommand = Constants.RESET;
                 userNotified = false;
                 setChanged();
                 notifyObservers();
@@ -173,13 +175,13 @@ public class Game2048View extends Observable implements View, Runnable, Constant
 
 
 				if (to.x > 0 && to.y < 0 ) {
-					userCommand = UP;
+					userCommand = Constants.UP;
 				} else if (to.x > 0 && to.y > objectBounds.y) {
-						userCommand = DOWN;
+						userCommand = Constants.DOWN;
 				} else if (to.x < 0  && to.y > 0 ) {
-						userCommand = LEFT;
+						userCommand = Constants.LEFT;
 				} else if (to.x > objectBounds.x  && to.y > 0) {
-						userCommand = RIGHT;
+						userCommand = Constants.RIGHT;
 				} else {
 					move = false;
 				}

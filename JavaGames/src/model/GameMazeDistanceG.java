@@ -8,7 +8,7 @@ import org.eclipse.swt.graphics.Point;
 /**
  * Distance G
  */
-public class GameMazeDistanceG implements Distance, Constants {
+public class GameMazeDistanceG implements Distance {
 
     /**
      * @param from Start position
@@ -20,8 +20,8 @@ public class GameMazeDistanceG implements Distance, Constants {
         Point pFrom = (Point) from.getState();
         Point pTo = (Point) to.getState();
         if ((pTo.x - pFrom.x) == 0 || (pTo.y - pFrom.y) == 0) {
-            return STRAIGHT_MOVEMENT_SCORE;
+            return Constants.STRAIGHT_MOVEMENT_SCORE;
         }
-        return DIAGONAL_MOVEMENT_SCORE;
+        return Constants.DIAGONAL_MOVEMENT_SCORE;
     }
 }

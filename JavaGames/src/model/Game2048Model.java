@@ -1,26 +1,48 @@
 package model;
 
-import controller.Constants;
+import java.beans.Transient;
+import java.io.Serializable;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Observable;
+import java.util.Observer;
+import java.util.Random;
+import java.util.Stack;
+import java.util.Vector;
+
 import model.algorithms.Model;
 import model.algorithms.Serializer;
 import model.algorithms.State;
+
 import org.eclipse.swt.graphics.Point;
 
-import java.util.*;
+import RMIInterface.RemoteInterface;
+import RMIInterface.RMIConst;
+import controller.Constants;
 
 /**
  * Game 2048 Model
  */
-public class Game2048Model extends Observable implements Model, Constants {
-    private int[][] board;
+public class Game2048Model extends Observable implements Model{
+	 
+	private static final long serialVersionUID = 1L;
+	private int[][] board;
     private int score;
     private boolean gameWon;
     private boolean gameOver;
     private Stack<int[][]> previousBoards;
     private Stack<Integer> previousScores;
 
+    
+    
+    
     public Game2048Model() {
-        this.board = new int[BOARDSIZE][BOARDSIZE];
+    	
+        this.board = new int[Constants.BOARDSIZE][Constants.BOARDSIZE];
         this.previousBoards = new Stack<int[][]>();
         this.previousScores = new Stack<Integer>();
     }
@@ -28,7 +50,7 @@ public class Game2048Model extends Observable implements Model, Constants {
     public void rotate(int direction) {
         int[][] newBoard = new int[board.length][board.length];
         switch (direction) {
-            case RIGHT: {
+            case Constants.RIGHT: {
                 for (int row = 0; row < newBoard.length; row++) {
                     for (int column = 0; column < newBoard.length; column++) {
                         newBoard[column][(newBoard.length - 1) - row] = board[row][column];
@@ -37,7 +59,7 @@ public class Game2048Model extends Observable implements Model, Constants {
                 break;
             }
 
-            case LEFT: {
+            case Constants.LEFT: {
                 for (int row = 0; row < newBoard.length; row++) {
                     for (int column = 0; column < newBoard.length; column++) {
                         newBoard[(newBoard.length - 1) - column][row] = board[row][column];
@@ -84,7 +106,7 @@ public class Game2048Model extends Observable implements Model, Constants {
                         moved = true;
                         if (!simulate) {
                             setScore(getScore() + numberToCheck);
-                            if (numberToCheck == TARGETSCORE && !isGameWon()) {
+                            if (numberToCheck == Constants.TARGETSCORE && !isGameWon()) {
                                 setGameWon(true);
                                 notifyObservers();
                             }
@@ -112,12 +134,12 @@ public class Game2048Model extends Observable implements Model, Constants {
         if (!simulate) {
             backup();
         }
-        rotate(LEFT);
+        rotate(Constants.LEFT);
         boolean moved = move(simulate);
         if (!simulate && !moved) {
             delete();
         }
-        rotate(RIGHT);
+        rotate(Constants.RIGHT);
         if (!simulate) {
             setChanged();
             notifyObservers();
@@ -134,12 +156,12 @@ public class Game2048Model extends Observable implements Model, Constants {
         if (!simulate) {
             backup();
         }
-        rotate(RIGHT);
+        rotate(Constants.RIGHT);
         boolean moved = move(simulate);
         if (!simulate && !moved) {
             delete();
         }
-        rotate(LEFT);
+        rotate(Constants.LEFT);
         if (!simulate) {
             setChanged();
             notifyObservers();
@@ -156,14 +178,14 @@ public class Game2048Model extends Observable implements Model, Constants {
         if (!simulate) {
             backup();
         }
-        rotate(LEFT);
-        rotate(LEFT);
+        rotate(Constants.LEFT);
+        rotate(Constants.LEFT);
         boolean moved = move(simulate);
         if (!simulate && !moved) {
             delete();
         }
-        rotate(RIGHT);
-        rotate(RIGHT);
+        rotate(Constants.RIGHT);
+        rotate(Constants.RIGHT);
         if (!simulate) {
             setChanged();
             notifyObservers();
@@ -388,4 +410,51 @@ public class Game2048Model extends Observable implements Model, Constants {
     public boolean moveDownLeft(boolean simulate) {
         return false;
     }
+    
+    @Override
+	 public int getHint() throws CloneNotSupportedException, RemoteException, NotBoundException {
+    	Registry registry = LocateRegistry.getRegistry("localhost",RMIConst.port);
+    	RemoteInterface remote = (RemoteInterface) registry.lookup(RMIConst.RMI_ID);
+    	Game2048Object myGame = new Game2048Object(this);
+    	
+    	int hint = 0;
+		try {
+			
+			hint = remote.getHint((Object)myGame);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+//			 hint = AIsolver.findBestMove(this, 5);
+			 switch (hint) {
+			 case Constants.UP:
+				 moveUp(false);
+				 break;
+			case Constants.DOWN:
+				moveDown(false);
+				break;
+			case Constants.LEFT:
+				moveLeft(false);
+				break;
+			case Constants.RIGHT:
+				moveRight(false);
+				break;
+	
+			default:
+				break;
+			 }
+
+		 
+		 return hint;
+	 }
+    @Override
+    public boolean equals(Object object) {
+    	return true;
+    }
+   
+     
+
+    
+
+    
 }
