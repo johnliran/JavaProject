@@ -12,7 +12,7 @@ import java.util.Observer;
 /**
  *
  */
-public class Presenter implements Observer, Constants {
+public class Presenter implements Observer {
     private View ui;
     private Model m;
 
@@ -33,42 +33,42 @@ public class Presenter implements Observer, Constants {
         }
         if (observable == ui) {
             switch (ui.getUserCommand()) {
-                case UP:
+                case Constants.UP:
                     m.moveUp(false);
                     break;
 
-                case DOWN:
+                case Constants.DOWN:
                     m.moveDown(false);
                     break;
 
-                case RIGHT:
+                case Constants.RIGHT:
                     m.moveRight(false);
                     break;
 
-                case RIGHT_DOWN:
+                case Constants.RIGHT_DOWN:
                     m.moveDownRight(false);
                     break;
 
-                case RIGHT_UP:
+                case Constants.RIGHT_UP:
                     m.moveUpRight(false);
                     break;
 
-                case LEFT:
+                case Constants.LEFT:
                     m.moveLeft(false);
                     break;
 
-                case LEFT_DOWN:
+                case Constants.LEFT_DOWN:
                     m.moveDownLeft(false);
                     break;
 
-                case LEFT_UP:
+                case Constants.LEFT_UP:
                     m.moveUpLeft(false);
                     break;
 
-                case RESET:
+                case Constants.RESET:
 					startGame();
                     break;
-                case SPACE:
+                case Constants.SPACE:
 				
 				try {
 					m.getHint();
@@ -86,19 +86,19 @@ public class Presenter implements Observer, Constants {
         }
         if (observable instanceof WindowShell) {
             switch (ui.getWindowShell().getUserCommand()) {
-                case UNDO:
+                case Constants.UNDO:
                     m.restore();
                     break;
 
-                case SAVE:
+                case Constants.SAVE:
                     m.saveGame((String) notification);
                     break;
 
-                case LOAD:
+                case Constants.LOAD:
                     m.loadGame((String) notification);
                     break;
 
-                case RESET:
+                case Constants.RESET:
 					startGame();
 
                 default:

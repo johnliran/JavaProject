@@ -3,7 +3,6 @@
 import controller.Constants;
 import model.algorithms.AIsolver;
 import model.algorithms.Model;
-import model.algorithms.Serializer;
 import model.algorithms.State;
 
 import org.eclipse.swt.graphics.Point;
@@ -121,12 +120,12 @@ public class Game2048Model implements Cloneable, Model, Constants {
     @Override
     public boolean moveUp(boolean simulate) {
         if (!simulate) {
-            backup();
+            
         }
         rotate(LEFT);
         boolean moved = move(simulate);
         if (!simulate && !moved) {
-            delete();
+            
         }
         rotate(RIGHT);
         if (!simulate) {
@@ -143,12 +142,12 @@ public class Game2048Model implements Cloneable, Model, Constants {
     @Override
     public boolean moveDown(boolean simulate) {
         if (!simulate) {
-            backup();
+            
         }
         rotate(RIGHT);
         boolean moved = move(simulate);
         if (!simulate && !moved) {
-            delete();
+            
         }
         rotate(LEFT);
         if (!simulate) {
@@ -165,13 +164,13 @@ public class Game2048Model implements Cloneable, Model, Constants {
     @Override
     public boolean moveRight(boolean simulate) {
         if (!simulate) {
-            backup();
+            
         }
         rotate(LEFT);
         rotate(LEFT);
         boolean moved = move(simulate);
         if (!simulate && !moved) {
-            delete();
+            
         }
         rotate(RIGHT);
         rotate(RIGHT);
@@ -189,11 +188,11 @@ public class Game2048Model implements Cloneable, Model, Constants {
     @Override
     public boolean moveLeft(boolean simulate) {
         if (!simulate) {
-            backup();
+            
         }
         boolean moved = move(simulate);
         if (!simulate && !moved) {
-            delete();
+            
         }
         if (!simulate) {
 //            setChanged();
@@ -238,25 +237,8 @@ public class Game2048Model implements Cloneable, Model, Constants {
     /**
      * Restores the player's last movement
      */
-    @Override
-    public void restore() {
-//        if (!previousBoards.isEmpty()) {
-//            setData(previousBoards.pop());
-//            setScore(previousScores.pop());
-//            setChanged();
-//            notifyObservers();
-//        }
-    }
+    
 
-    public void backup() {
-//        previousBoards.push(board);
-//        previousScores.push(score);
-    }
-
-    public void delete() {
-//        previousBoards.pop();
-//        previousScores.pop();
-    }
     
 //    @Override
     public ArrayList<State> getFreeStates() {
@@ -341,31 +323,11 @@ public class Game2048Model implements Cloneable, Model, Constants {
     /**
      * @param xmlFileName Output file name
      */
-    @Override
-    public void saveGame(String xmlFileName) {
-        try {
-            Serializer.serializeToXML(this, xmlFileName);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
+   
     /**
      * @param xmlFileName Input file name
      */
-    @Override
-    public void loadGame(String xmlFileName) {
-        try {
-            setData(((Game2048Model) Serializer.deserializeXML(xmlFileName)).getData());
-            setScore(((Game2048Model) Serializer.deserializeXML(xmlFileName)).getScore());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-//        setChanged();
-//        notifyObservers();
-    }
-
-    /**
+       /**
      * @return True: Game Over
      */
     @Override
@@ -381,38 +343,7 @@ public class Game2048Model implements Cloneable, Model, Constants {
      * @param simulate Specify whether or not to make changes
      * @return True: Movement was made / False: No movement was made
      */
-    @Override
-    public boolean moveUpRight(boolean simulate) {
-        return false;
-    }
-
-    /**
-     * @param simulate Specify whether or not to make changes
-     * @return True: Movement was made / False: No movement was made
-     */
-    @Override
-    public boolean moveUpLeft(boolean simulate) {
-        return false;
-    }
-
-    /**
-     * @param simulate Specify whether or not to make changes
-     * @return True: Movement was made / False: No movement was made
-     */
-    @Override
-    public boolean moveDownRight(boolean simulate) {
-        return false;
-    }
-
-    /**
-     * @param simulate Specify whether or not to make changes
-     * @return True: Movement was made / False: No movement was made
-     */
-    @Override
-    public boolean moveDownLeft(boolean simulate) {
-        return false;
-    }
-    
+       
     private int[][] copyOf(int[][] array) {
         int newArray[][] = new int[array.length][array[0].length];
         for (int row = 0; row < array.length; row++) {

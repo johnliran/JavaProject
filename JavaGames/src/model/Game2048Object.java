@@ -15,7 +15,6 @@ public class Game2048Object implements Serializable{
 		this.score = game.getScore();
 		this.gameWon = game.isGameWon();
 		this.gameOver = game.isGameOver();
-		System.out.println("Im here");
 		
 	}
 

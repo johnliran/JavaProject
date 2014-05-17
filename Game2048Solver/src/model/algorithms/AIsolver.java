@@ -59,7 +59,7 @@ public class AIsolver implements Constants{
 //        Map<String, Object> result = minimax(theBoard, depth, Player.USER);
         
         Map<String, Object> result = alphabeta(theBoard, depth, Integer.MIN_VALUE, Integer.MAX_VALUE, Player.USER);
-        
+        System.out.println(result.get("Direction"));
         return (int)result.get("Direction");
     }
     

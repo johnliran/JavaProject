@@ -17,7 +17,7 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * 2048 Tiles
  */
-public class Tile2048 extends Canvas implements Constants {
+public class Tile2048 extends Canvas {
     private int value;
 
 
@@ -29,7 +29,7 @@ public class Tile2048 extends Canvas implements Constants {
     public Tile2048(Composite parent, int style, final MouseCommand mouseCommand) {
         super(parent, style);
         Font font = getFont();
-        setFont(new Font(getDisplay(), font.getFontData()[0].getName(), TILE_FONT_SIZE, SWT.BOLD));
+        setFont(new Font(getDisplay(), font.getFontData()[0].getName(), Constants.TILE_FONT_SIZE, SWT.BOLD));
         addPaintListener(new PaintListener() {
 
             @Override

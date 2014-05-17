@@ -11,7 +11,7 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * 2048 Board
  */
-public class Game2048Board extends Composite implements Board, Constants {
+public class Game2048Board extends Composite implements Board {
     private int[][] board;
     Tile2048[][] tiles;
 
@@ -26,7 +26,7 @@ public class Game2048Board extends Composite implements Board, Constants {
 
     public Game2048Board(Composite parent, int style, MouseCommand mouseCommand) {
         super(parent, style);
-        this.board = new int[BOARDSIZE][BOARDSIZE];
+        this.board = new int[Constants.BOARDSIZE][Constants.BOARDSIZE];
         setBackground(new Color(getDisplay(), 187, 173, 160));
         setLayout(new GridLayout(this.board.length, true));
         tiles = new Tile2048[this.board.length][this.board.length];

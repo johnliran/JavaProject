@@ -5,7 +5,7 @@ import java.rmi.RemoteException;
 
 
 
-public interface Game2048RemoteInterface extends Remote{
+public interface RemoteInterface extends Remote{
 
 	int getHint(Object Game) throws RemoteException,
 			CloneNotSupportedException;

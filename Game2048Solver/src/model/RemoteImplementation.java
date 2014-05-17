@@ -5,9 +5,9 @@ import java.rmi.server.UnicastRemoteObject;
 
 import model.algorithms.AIsolver;
 import model.algorithms.Model;
-import RMIInterface.Game2048RemoteInterface;
+import RMIInterface.RemoteInterface;
 
-public class RemoteImpl extends UnicastRemoteObject implements Game2048RemoteInterface{
+public class RemoteImplementation extends UnicastRemoteObject implements RemoteInterface{
 
 	/**
 	 * 
@@ -18,22 +18,17 @@ public class RemoteImpl extends UnicastRemoteObject implements Game2048RemoteInt
 	 * 
 	 */
 
-	public RemoteImpl() throws RemoteException {
+	public RemoteImplementation() throws RemoteException {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public int getHint(Object game) throws RemoteException, CloneNotSupportedException{
-		Game2048Model myGame = new Game2048Model((Game2048Object)game);
-		
-		
-	return AIsolver.findBestMove((Model)myGame, 5);
+		Game2048Model myGame = new Game2048Model((Game2048Object)game);		
+	return AIsolver.findBestMove((Model)myGame, 7);
 		
 	}
-	
 
-	
-	
 
 }

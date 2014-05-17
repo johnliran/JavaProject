@@ -20,14 +20,14 @@ import model.algorithms.State;
 
 import org.eclipse.swt.graphics.Point;
 
-import RMIInterface.Game2048RemoteInterface;
-import RMIInterface.constants;
+import RMIInterface.RemoteInterface;
+import RMIInterface.RMIConst;
 import controller.Constants;
 
 /**
  * Game 2048 Model
  */
-public class Game2048Model extends Observable implements Model, Constants {
+public class Game2048Model extends Observable implements Model{
 	 
 	private static final long serialVersionUID = 1L;
 	private int[][] board;
@@ -42,16 +42,15 @@ public class Game2048Model extends Observable implements Model, Constants {
     
     public Game2048Model() {
     	
-        this.board = new int[BOARDSIZE][BOARDSIZE];
+        this.board = new int[Constants.BOARDSIZE][Constants.BOARDSIZE];
         this.previousBoards = new Stack<int[][]>();
         this.previousScores = new Stack<Integer>();
-        System.out.println("im in constructor");
     }
 
     public void rotate(int direction) {
         int[][] newBoard = new int[board.length][board.length];
         switch (direction) {
-            case RIGHT: {
+            case Constants.RIGHT: {
                 for (int row = 0; row < newBoard.length; row++) {
                     for (int column = 0; column < newBoard.length; column++) {
                         newBoard[column][(newBoard.length - 1) - row] = board[row][column];
@@ -60,7 +59,7 @@ public class Game2048Model extends Observable implements Model, Constants {
                 break;
             }
 
-            case LEFT: {
+            case Constants.LEFT: {
                 for (int row = 0; row < newBoard.length; row++) {
                     for (int column = 0; column < newBoard.length; column++) {
                         newBoard[(newBoard.length - 1) - column][row] = board[row][column];
@@ -107,7 +106,7 @@ public class Game2048Model extends Observable implements Model, Constants {
                         moved = true;
                         if (!simulate) {
                             setScore(getScore() + numberToCheck);
-                            if (numberToCheck == TARGETSCORE && !isGameWon()) {
+                            if (numberToCheck == Constants.TARGETSCORE && !isGameWon()) {
                                 setGameWon(true);
                                 notifyObservers();
                             }
@@ -135,12 +134,12 @@ public class Game2048Model extends Observable implements Model, Constants {
         if (!simulate) {
             backup();
         }
-        rotate(LEFT);
+        rotate(Constants.LEFT);
         boolean moved = move(simulate);
         if (!simulate && !moved) {
             delete();
         }
-        rotate(RIGHT);
+        rotate(Constants.RIGHT);
         if (!simulate) {
             setChanged();
             notifyObservers();
@@ -157,12 +156,12 @@ public class Game2048Model extends Observable implements Model, Constants {
         if (!simulate) {
             backup();
         }
-        rotate(RIGHT);
+        rotate(Constants.RIGHT);
         boolean moved = move(simulate);
         if (!simulate && !moved) {
             delete();
         }
-        rotate(LEFT);
+        rotate(Constants.LEFT);
         if (!simulate) {
             setChanged();
             notifyObservers();
@@ -179,14 +178,14 @@ public class Game2048Model extends Observable implements Model, Constants {
         if (!simulate) {
             backup();
         }
-        rotate(LEFT);
-        rotate(LEFT);
+        rotate(Constants.LEFT);
+        rotate(Constants.LEFT);
         boolean moved = move(simulate);
         if (!simulate && !moved) {
             delete();
         }
-        rotate(RIGHT);
-        rotate(RIGHT);
+        rotate(Constants.RIGHT);
+        rotate(Constants.RIGHT);
         if (!simulate) {
             setChanged();
             notifyObservers();
@@ -414,8 +413,8 @@ public class Game2048Model extends Observable implements Model, Constants {
     
     @Override
 	 public int getHint() throws CloneNotSupportedException, RemoteException, NotBoundException {
-    	Registry registry = LocateRegistry.getRegistry("localhost",constants.port);
-    	Game2048RemoteInterface remote = (Game2048RemoteInterface) registry.lookup(constants.RMI_ID);
+    	Registry registry = LocateRegistry.getRegistry("localhost",RMIConst.port);
+    	RemoteInterface remote = (RemoteInterface) registry.lookup(RMIConst.RMI_ID);
     	Game2048Object myGame = new Game2048Object(this);
     	
     	int hint = 0;
@@ -428,16 +427,16 @@ public class Game2048Model extends Observable implements Model, Constants {
 		}
 //			 hint = AIsolver.findBestMove(this, 5);
 			 switch (hint) {
-			 case UP:
+			 case Constants.UP:
 				 moveUp(false);
 				 break;
-			case DOWN:
+			case Constants.DOWN:
 				moveDown(false);
 				break;
-			case LEFT:
+			case Constants.LEFT:
 				moveLeft(false);
 				break;
-			case RIGHT:
+			case Constants.RIGHT:
 				moveRight(false);
 				break;
 	

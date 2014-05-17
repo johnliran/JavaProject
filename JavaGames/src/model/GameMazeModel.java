@@ -11,7 +11,7 @@ import java.util.Observable;
 /**
  * Game Maze Model
  */
-public class GameMazeModel extends Observable implements Model, Constants {
+public class GameMazeModel extends Observable implements Model {
     private int mouseDirection;
     private int[][] maze;
     private GameMazeState state;
@@ -21,21 +21,21 @@ public class GameMazeModel extends Observable implements Model, Constants {
     private boolean gameWon;
     private boolean gameOver;
     private int[][] initialMaze = {
-            {WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL},
-            {WALL, BLANK, BLANK, BLANK, WALL, BLANK, BLANK, BLANK, BLANK, BLANK, BLANK, BLANK, BLANK, BLANK, WALL},
-            {WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL, WALL, BLANK, WALL, WALL, BLANK, WALL, BLANK, WALL},
-            {WALL, BLANK, WALL, BLANK, WALL, BLANK, BLANK, WALL, BLANK, WALL, BLANK, BLANK, WALL, BLANK, WALL},
-            {WALL, BLANK, WALL, WALL, WALL, WALL, WALL, WALL, BLANK, WALL, WALL, BLANK, WALL, WALL, WALL},
-            {WALL, BLANK, BLANK, BLANK, BLANK, BLANK, BLANK, BLANK, BLANK, BLANK, WALL, BLANK, WALL, BLANK, WALL},
-            {WALL, BLANK, WALL, BLANK, WALL, WALL, WALL, WALL, WALL, WALL, WALL, BLANK, WALL, BLANK, WALL},
-            {WALL, BLANK, WALL, BLANK, WALL, BLANK, BLANK, BLANK, BLANK, BLANK, WALL, BLANK, BLANK, BLANK, CHEESE},
-            {WALL, BLANK, WALL, WALL, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL},
-            {MOUSE_RIGHT, BLANK, BLANK, BLANK, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL},
-            {WALL, WALL, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL},
-            {WALL, BLANK, BLANK, BLANK, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL, BLANK, WALL},
-            {WALL, BLANK, WALL, WALL, WALL, WALL, WALL, BLANK, WALL, WALL, WALL, WALL, WALL, BLANK, WALL},
-            {WALL, BLANK, BLANK, BLANK, BLANK, BLANK, WALL, BLANK, BLANK, BLANK, BLANK, BLANK, BLANK, BLANK, WALL},
-            {WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL},
+            {Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL},
+            {Constants.WALL, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.WALL},
+            {Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL},
+            {Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL},
+            {Constants.WALL, Constants.BLANK, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.WALL, Constants.WALL},
+            {Constants.WALL, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL},
+            {Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL},
+            {Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.CHEESE},
+            {Constants.WALL, Constants.BLANK, Constants.WALL, Constants.WALL, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL},
+            {Constants.MOUSE_RIGHT, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL},
+            {Constants.WALL, Constants.WALL, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL},
+            {Constants.WALL, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL},
+            {Constants.WALL, Constants.BLANK, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.BLANK, Constants.WALL},
+            {Constants.WALL, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.WALL},
+            {Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL},
     };
 
     public GameMazeModel() {
@@ -48,7 +48,7 @@ public class GameMazeModel extends Observable implements Model, Constants {
         int y = ((Point) (state.getState())).y;
         GameMazeState current = new GameMazeState();
         current.setState(new Point(x, y));
-        if (getPointValue((x + dx), (y + dy)) >= BLANK) {
+        if (getPointValue((x + dx), (y + dy)) >= Constants.BLANK) {
             if (!simulate) {
                 // Backup the current state
                 GameMazeState newState = new GameMazeState();
@@ -58,7 +58,7 @@ public class GameMazeModel extends Observable implements Model, Constants {
                 newState.setMouseDirection(mouseDirection);
                 state = newState;
                 numberOfMoves++;
-                if (getPointValue((x + dx), (y + dy)) == CHEESE) {
+                if (getPointValue((x + dx), (y + dy)) == Constants.CHEESE) {
                     if (numberOfMoves == minimalNumberOfMoves) {
                         setGameWon(true);
                     } else {
@@ -79,8 +79,8 @@ public class GameMazeModel extends Observable implements Model, Constants {
     public boolean moveUp(boolean simulate) {
         boolean moved = move(-1, 0, simulate);
         if (moved && !simulate) {
-            score += STRAIGHT_MOVEMENT_SCORE;
-            mouseDirection = MOUSE_UP;
+            score += Constants.STRAIGHT_MOVEMENT_SCORE;
+            mouseDirection = Constants.MOUSE_UP;
             // nextStraightDirection(MOUSE_UP);
             updateMaze(state.getParentState(), state);
             setChanged();
@@ -97,8 +97,8 @@ public class GameMazeModel extends Observable implements Model, Constants {
     public boolean moveDown(boolean simulate) {
         boolean moved = move(1, 0, simulate);
         if (moved && !simulate) {
-            score += STRAIGHT_MOVEMENT_SCORE;
-            mouseDirection = MOUSE_DOWN;
+            score += Constants.STRAIGHT_MOVEMENT_SCORE;
+            mouseDirection = Constants.MOUSE_DOWN;
             // nextStraightDirection(MOUSE_DOWN);
             updateMaze(state.getParentState(), state);
             setChanged();
@@ -115,8 +115,8 @@ public class GameMazeModel extends Observable implements Model, Constants {
     public boolean moveRight(boolean simulate) {
         boolean moved = move(0, 1, simulate);
         if (moved && !simulate) {
-            score += STRAIGHT_MOVEMENT_SCORE;
-            mouseDirection = MOUSE_RIGHT;
+            score += Constants.STRAIGHT_MOVEMENT_SCORE;
+            mouseDirection = Constants.MOUSE_RIGHT;
             // nextStraightDirection(MOUSE_RIGHT);
             updateMaze(state.getParentState(), state);
             setChanged();
@@ -133,8 +133,8 @@ public class GameMazeModel extends Observable implements Model, Constants {
     public boolean moveLeft(boolean simulate) {
         boolean moved = move(0, -1, simulate);
         if (moved && !simulate) {
-            score += STRAIGHT_MOVEMENT_SCORE;
-            mouseDirection = MOUSE_LEFT;
+            score += Constants.STRAIGHT_MOVEMENT_SCORE;
+            mouseDirection = Constants.MOUSE_LEFT;
             // nextStraightDirection(MOUSE_LEFT);
             updateMaze(state.getParentState(), state);
             setChanged();
@@ -151,8 +151,8 @@ public class GameMazeModel extends Observable implements Model, Constants {
     public boolean moveUpRight(boolean simulate) {
         boolean moved = move(-1, 1, simulate);
         if (moved && !simulate) {
-            score += DIAGONAL_MOVEMENT_SCORE;
-            mouseDirection = MOUSE_RIGHT;
+            score += Constants.DIAGONAL_MOVEMENT_SCORE;
+            mouseDirection = Constants.MOUSE_RIGHT;
             // nextDiagonalDirection(MOUSE_UP + MOUSE_RIGHT);
             updateMaze(state.getParentState(), state);
             setChanged();
@@ -169,8 +169,8 @@ public class GameMazeModel extends Observable implements Model, Constants {
     public boolean moveUpLeft(boolean simulate) {
         boolean moved = move(-1, -1, simulate);
         if (moved && !simulate) {
-            score += DIAGONAL_MOVEMENT_SCORE;
-            mouseDirection = MOUSE_LEFT;
+            score += Constants.DIAGONAL_MOVEMENT_SCORE;
+            mouseDirection = Constants.MOUSE_LEFT;
             // nextDiagonalDirection(MOUSE_UP + MOUSE_LEFT);
             updateMaze(state.getParentState(), state);
             setChanged();
@@ -187,8 +187,8 @@ public class GameMazeModel extends Observable implements Model, Constants {
     public boolean moveDownRight(boolean simulate) {
         boolean moved = move(1, 1, simulate);
         if (moved && !simulate) {
-            score += DIAGONAL_MOVEMENT_SCORE;
-            mouseDirection = MOUSE_RIGHT;
+            score += Constants.DIAGONAL_MOVEMENT_SCORE;
+            mouseDirection = Constants.MOUSE_RIGHT;
             // nextDiagonalDirection(MOUSE_DOWN + MOUSE_RIGHT);
             updateMaze(state.getParentState(), state);
             setChanged();
@@ -205,8 +205,8 @@ public class GameMazeModel extends Observable implements Model, Constants {
     public boolean moveDownLeft(boolean simulate) {
         boolean moved = move(1, -1, simulate);
         if (moved && !simulate) {
-            score += DIAGONAL_MOVEMENT_SCORE;
-            mouseDirection = MOUSE_LEFT;
+            score += Constants.DIAGONAL_MOVEMENT_SCORE;
+            mouseDirection = Constants.MOUSE_LEFT;
             // nextDiagonalDirection(MOUSE_DOWN + MOUSE_LEFT);
             updateMaze(state.getParentState(), state);
             setChanged();
@@ -228,9 +228,9 @@ public class GameMazeModel extends Observable implements Model, Constants {
     }
 
     public void updateMaze(State current, State goal) {
-        maze[((Point) (current.getState())).x][((Point) (current.getState())).y] = BLANK;
-        if (maze[((Point) (goal.getState())).x][((Point) (goal.getState())).y] == CHEESE) {
-            maze[((Point) (goal.getState())).x][((Point) (goal.getState())).y] = MOUSE_AND_CHEESE;
+        maze[((Point) (current.getState())).x][((Point) (current.getState())).y] = Constants.BLANK;
+        if (maze[((Point) (goal.getState())).x][((Point) (goal.getState())).y] == Constants.CHEESE) {
+            maze[((Point) (goal.getState())).x][((Point) (goal.getState())).y] = Constants.MOUSE_AND_CHEESE;
         } else {
             maze[((Point) (goal.getState())).x][((Point) (goal.getState())).y] = mouseDirection;
         }
@@ -260,9 +260,9 @@ public class GameMazeModel extends Observable implements Model, Constants {
     public void restore() {
         if (state.getParentState() != null) {
             if (state.getLeadingAction().getDx() != 0 && state.getLeadingAction().getDy() != 0) {
-                score -= DIAGONAL_MOVEMENT_SCORE;
+                score -= Constants.DIAGONAL_MOVEMENT_SCORE;
             } else {
-                score -= STRAIGHT_MOVEMENT_SCORE;
+                score -= Constants.STRAIGHT_MOVEMENT_SCORE;
             }
             mouseDirection = state.getMouseDirection();
             updateMaze(state, state.getParentState());
@@ -361,7 +361,7 @@ public class GameMazeModel extends Observable implements Model, Constants {
     public GameMazeState getStartState() {
         for (int row = 0; row < maze.length; row++) {
             for (int column = 0; column < maze[0].length; column++) {
-                if (maze[row][column] > 0 && maze[row][column] != CHEESE) {
+                if (maze[row][column] > 0 && maze[row][column] != Constants.CHEESE) {
                     GameMazeState start = new GameMazeState();
                     start.setState(new Point(row, column));
                     return start;
@@ -374,7 +374,7 @@ public class GameMazeModel extends Observable implements Model, Constants {
     public GameMazeState getGoalState() {
         for (int row = 0; row < maze.length; row++) {
             for (int column = 0; column < maze[0].length; column++) {
-                if (maze[row][column] == CHEESE) {
+                if (maze[row][column] == Constants.CHEESE) {
                     GameMazeState goal = new GameMazeState();
                     goal.setState(new Point(row, column));
                     return goal;
@@ -393,32 +393,32 @@ public class GameMazeModel extends Observable implements Model, Constants {
     // Define the next direction based on the next possible movement
     private void nextStraightDirection(int mouseDirection) {
         switch (mouseDirection) {
-            case MOUSE_UP:
+            case Constants.MOUSE_UP:
                 if (moveUp(true))
-                    this.mouseDirection = MOUSE_UP;
+                    this.mouseDirection = Constants.MOUSE_UP;
                 else
-                    this.mouseDirection = MOUSE_DOWN;
+                    this.mouseDirection = Constants.MOUSE_DOWN;
                 break;
 
-            case MOUSE_DOWN:
+            case Constants.MOUSE_DOWN:
                 if (moveDown(true))
-                    this.mouseDirection = MOUSE_DOWN;
+                    this.mouseDirection = Constants.MOUSE_DOWN;
                 else
-                    this.mouseDirection = MOUSE_UP;
+                    this.mouseDirection = Constants.MOUSE_UP;
                 break;
 
-            case MOUSE_RIGHT:
+            case Constants.MOUSE_RIGHT:
                 if (moveRight(true))
-                    this.mouseDirection = MOUSE_RIGHT;
+                    this.mouseDirection = Constants.MOUSE_RIGHT;
                 else
-                    this.mouseDirection = MOUSE_LEFT;
+                    this.mouseDirection = Constants.MOUSE_LEFT;
                 break;
 
-            case MOUSE_LEFT:
+            case Constants.MOUSE_LEFT:
                 if (moveLeft(true))
-                    this.mouseDirection = MOUSE_LEFT;
+                    this.mouseDirection = Constants.MOUSE_LEFT;
                 else
-                    this.mouseDirection = MOUSE_RIGHT;
+                    this.mouseDirection = Constants.MOUSE_RIGHT;
                 break;
         }
     }
@@ -426,32 +426,32 @@ public class GameMazeModel extends Observable implements Model, Constants {
     // Define the next direction based on the next possible movement
     private void nextDiagonalDirection(int mouseDirection) {
         switch (mouseDirection) {
-            case (MOUSE_UP + MOUSE_RIGHT):
+            case (Constants.MOUSE_UP + Constants.MOUSE_RIGHT):
                 if (moveUp(true))
-                    this.mouseDirection = MOUSE_UP;
+                    this.mouseDirection = Constants.MOUSE_UP;
                 else
-                    this.mouseDirection = MOUSE_RIGHT;
+                    this.mouseDirection = Constants.MOUSE_RIGHT;
                 break;
 
-            case (MOUSE_UP + MOUSE_LEFT):
+            case (Constants.MOUSE_UP + Constants.MOUSE_LEFT):
                 if (moveUp(true))
-                    this.mouseDirection = MOUSE_UP;
+                    this.mouseDirection = Constants.MOUSE_UP;
                 else
-                    this.mouseDirection = MOUSE_LEFT;
+                    this.mouseDirection = Constants.MOUSE_LEFT;
                 break;
 
-            case (MOUSE_DOWN + MOUSE_RIGHT):
+            case (Constants.MOUSE_DOWN + Constants.MOUSE_RIGHT):
                 if (moveDown(true))
-                    this.mouseDirection = MOUSE_DOWN;
+                    this.mouseDirection = Constants.MOUSE_DOWN;
                 else
-                    this.mouseDirection = MOUSE_RIGHT;
+                    this.mouseDirection = Constants.MOUSE_RIGHT;
                 break;
 
-            case (MOUSE_DOWN + MOUSE_LEFT):
+            case (Constants.MOUSE_DOWN + Constants.MOUSE_LEFT):
                 if (moveDown(true))
-                    this.mouseDirection = MOUSE_DOWN;
+                    this.mouseDirection = Constants.MOUSE_DOWN;
                 else
-                    this.mouseDirection = MOUSE_LEFT;
+                    this.mouseDirection = Constants.MOUSE_LEFT;
                 break;
         }
     }
