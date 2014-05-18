@@ -20,7 +20,7 @@ import controller.Constants;
 /**
  * Maze View
  */
-public class GameMazeView extends Observable implements View, Runnable, Constants {
+public class GameMazeView extends Observable implements View, Runnable {
     private boolean keyFlag;
     private int lastKeyCode;
     private GameMazeBoard board;
@@ -73,23 +73,23 @@ public class GameMazeView extends Observable implements View, Runnable, Constant
 
                             if (current != 0 || last != 0) {
                                 if ((current == SWT.ARROW_UP && last == SWT.ARROW_RIGHT) || last == SWT.ARROW_UP && current == SWT.ARROW_RIGHT)
-                                    userCommand = RIGHT_UP;
+                                    userCommand = Constants.RIGHT_UP;
                                 if ((current == SWT.ARROW_UP && last == SWT.ARROW_LEFT) || last == SWT.ARROW_UP && current == SWT.ARROW_LEFT)
-                                    userCommand = LEFT_UP;
+                                    userCommand = Constants.LEFT_UP;
                                 if ((current == SWT.ARROW_DOWN && last == SWT.ARROW_RIGHT) || last == SWT.ARROW_DOWN && current == SWT.ARROW_RIGHT)
-                                    userCommand = RIGHT_DOWN;
+                                    userCommand = Constants.RIGHT_DOWN;
                                 if ((current == SWT.ARROW_DOWN && last == SWT.ARROW_LEFT) || last == SWT.ARROW_DOWN && current == SWT.ARROW_LEFT)
-                                    userCommand = LEFT_DOWN;
+                                    userCommand = Constants.LEFT_DOWN;
 
                             } else {
                                 if (event.keyCode == SWT.ARROW_UP)
-                                    userCommand = UP;
+                                    userCommand = Constants.UP;
                                 if (event.keyCode == SWT.ARROW_DOWN)
-                                    userCommand = DOWN;
+                                    userCommand = Constants.DOWN;
                                 if (event.keyCode == SWT.ARROW_RIGHT)
-                                    userCommand = RIGHT;
+                                    userCommand = Constants.RIGHT;
                                 if (event.keyCode == SWT.ARROW_LEFT)
-                                    userCommand = LEFT;
+                                    userCommand = Constants.LEFT;
                             }
                             display.asyncExec(new Runnable() {
 
@@ -163,7 +163,7 @@ public class GameMazeView extends Observable implements View, Runnable, Constant
         int rc = messageBox.open();
         switch (rc) {
             case SWT.YES:
-                userCommand = RESET;
+                userCommand = Constants.RESET;
                 userNotified = false;
                 setChanged();
                 notifyObservers();
@@ -184,7 +184,7 @@ public class GameMazeView extends Observable implements View, Runnable, Constant
         int rc = messageBox.open();
         switch (rc) {
             case SWT.YES:
-                userCommand = RESET;
+                userCommand = Constants.RESET;
                 userNotified = false;
                 setChanged();
                 notifyObservers();
@@ -222,42 +222,42 @@ public class GameMazeView extends Observable implements View, Runnable, Constant
 				&&	to.y < 0   
 				&&	Math.abs(to.x) < objectBounds.x    
 				&&	Math.abs(to.y) < objectBounds.y) {
-						userCommand = LEFT_UP;
+						userCommand = Constants.LEFT_UP;
 				} else if (to.x < 0  
 						&& Math.abs(to.x) < objectBounds.x  
 						&& to.y > objectBounds.y
 						&& to.y < (2 * objectBounds.y)) {
-							userCommand = LEFT_DOWN;
+							userCommand = Constants.LEFT_DOWN;
 				} else if (to.x > objectBounds.x    
 						&& to.y < 0
 						&& to.x < (2 * objectBounds.x)
 						&& Math.abs(to.y) < objectBounds.y) {
-							userCommand = RIGHT_UP;
+							userCommand = Constants.RIGHT_UP;
 				} else if (to.x > objectBounds.x
 						&& to.y > objectBounds.y
 						&& to.x < (2 * objectBounds.x) 
 						&& to.y < (2 * objectBounds.y)) {
-							userCommand = RIGHT_DOWN;
+							userCommand = Constants.RIGHT_DOWN;
 				} else if (to.x > 0 
 						&& to.y < 0
 						&& to.x < objectBounds.x 
 						&& Math.abs(to.y) < objectBounds.y ) {
-							userCommand = UP;
+							userCommand = Constants.UP;
 				} else if (to.x > 0 
 						&& to.x < objectBounds.x
 						&& to.y > objectBounds.y
 						&& to.y < (2 * objectBounds.y)) {
-							userCommand = DOWN;
+							userCommand = Constants.DOWN;
 				} else if (to.x < 0 
 						&& Math.abs(to.x) < objectBounds.x 
 						&& to.y > 0 
 						&& to.y < objectBounds.y) {
-							userCommand = LEFT;
+							userCommand = Constants.LEFT;
 				} else if (to.x > objectBounds.x  
 						&& to.y > 0
 						&& to.x < (2 * objectBounds.x)
 						&& to.y < objectBounds.y) {
-							userCommand = RIGHT;
+							userCommand = Constants.RIGHT;
 				} else {
 					move = false;
 				}

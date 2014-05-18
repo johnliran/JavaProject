@@ -26,7 +26,7 @@ import controller.Constants;
 /**
  * Generic Window Shell
  */
-public class WindowShell extends Observable implements Constants {
+public class WindowShell extends Observable {
     private Label score;
     private int userCommand;
 
@@ -99,7 +99,7 @@ public class WindowShell extends Observable implements Constants {
         score.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
         score.setForeground(new Color(display, 119, 110, 101));
         Font font = score.getFont();
-        score.setFont(new Font(display, font.getFontData()[0].getName(), SCORE_FONT_SIZE, SWT.BOLD));
+        score.setFont(new Font(display, font.getFontData()[0].getName(), Constants.SCORE_FONT_SIZE, SWT.BOLD));
         score.setText(0 + "     ");
 
         undoButton.addListener(SWT.Selection, undoListener(shell, board));
@@ -112,7 +112,7 @@ public class WindowShell extends Observable implements Constants {
         return new Listener() {
             @Override
             public void handleEvent(Event event) {
-                userCommand = UNDO;
+                userCommand = Constants.UNDO;
                 setChanged();
                 notifyObservers();
                 ((Composite) board).forceFocus();
@@ -125,10 +125,10 @@ public class WindowShell extends Observable implements Constants {
             @Override
             public void handleEvent(Event event) {
                 FileDialog saveDialog = new FileDialog(shell, SWT.SAVE);
-                saveDialog.setFilterExtensions(filterExtensions);
+                saveDialog.setFilterExtensions(Constants.EXTENSIONS);
                 String saveTo = saveDialog.open();
                 if (saveTo != null && saveTo.length() > 0) {
-                    userCommand = SAVE;
+                    userCommand = Constants.SAVE;
                     setChanged();
                     notifyObservers(saveTo);
                     ((Composite) board).forceFocus();
@@ -142,10 +142,10 @@ public class WindowShell extends Observable implements Constants {
             @Override
             public void handleEvent(Event event) {
                 FileDialog loadDialog = new FileDialog(shell, SWT.OPEN);
-                loadDialog.setFilterExtensions(filterExtensions);
+                loadDialog.setFilterExtensions(Constants.EXTENSIONS);
                 String loadFrom = loadDialog.open();
                 if (loadFrom != null && loadFrom.length() > 0) {
-                    userCommand = LOAD;
+                    userCommand = Constants.LOAD;
                     setChanged();
                     notifyObservers(loadFrom);
                     ((Composite) board).forceFocus();
@@ -158,7 +158,7 @@ public class WindowShell extends Observable implements Constants {
         return new Listener() {
             @Override
             public void handleEvent(Event event) {
-                userCommand = RESET;
+                userCommand = Constants.RESET;
                 setChanged();
                 notifyObservers();
                 ((Composite) board).forceFocus();

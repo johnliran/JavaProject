@@ -18,7 +18,7 @@ import controller.Constants;
 /**
  * Maze Tiles
  */
-public class TileMaze extends Canvas implements Constants {
+public class TileMaze extends Canvas  {
     private int value;
 
     public void setValue(int value) {
@@ -53,27 +53,27 @@ public class TileMaze extends Canvas implements Constants {
                 	addMouseListener(mouseListener(mouseCommand));
                     Image figure;
                     switch (value) {
-                        case MOUSE_RIGHT:
-                            figure = new Image(getDisplay(), "images/mazeMouse_right.png");
+                        case Constants.MOUSE_RIGHT:
+                            figure = new Image(getDisplay(), "images/mazeMOUSE_right.png");
                             break;
 
-                        case MOUSE_UP:
-                            figure = new Image(getDisplay(), "images/mazeMouse_up.png");
+                        case Constants.MOUSE_UP:
+                            figure = new Image(getDisplay(), "images/mazeMOUSE_up.png");
                             break;
 
-                        case MOUSE_LEFT:
-                            figure = new Image(getDisplay(), "images/mazeMouse_left.png");
+                        case Constants.MOUSE_LEFT:
+                            figure = new Image(getDisplay(), "images/mazeMOUSE_left.png");
                             break;
 
-                        case MOUSE_DOWN:
-                            figure = new Image(getDisplay(), "images/mazeMouse_down.png");
+                        case Constants.MOUSE_DOWN:
+                            figure = new Image(getDisplay(), "images/mazeMOUSE_down.png");
                             break;
 
-                        case CHEESE:
+                        case Constants.CHEESE:
                             figure = new Image(getDisplay(), "images/mazeCheese.png");
                             break;
 
-                        case MOUSE_AND_CHEESE:
+                        case Constants.MOUSE_AND_CHEESE:
                             figure = new Image(getDisplay(), "images/mazeMouseAndCheese.png");
                             break;
 
@@ -89,7 +89,7 @@ public class TileMaze extends Canvas implements Constants {
 
     public void setTileBackground(PaintEvent event) {
         switch (value) {
-            case WALL:
+            case Constants.WALL:
                 event.gc.setBackground(new Color(getDisplay(), 111, 111, 111));
                 break;
 
