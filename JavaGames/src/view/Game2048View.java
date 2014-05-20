@@ -77,11 +77,11 @@ public class Game2048View extends Observable implements View, Runnable {
      * @param data  Board data
      */
     @Override
-    public void displayData(int[][] data) {
-        board.setBoardData(data);
+    public void displayData(final int[][] data) {
         display.syncExec(new Runnable() {
             @Override
             public void run() {
+            	board.setBoardData(data);
                 board.redraw();
             }
         });
@@ -104,8 +104,14 @@ public class Game2048View extends Observable implements View, Runnable {
      * @param score Game score
      */
     @Override
-    public void displayScore(int score) {
-        windowShell.setScore(score);
+    public void displayScore(final int score) {
+       display.syncExec(new Runnable() {
+    	   @Override
+           public void run() {
+    		   windowShell.setScore(score);
+    	   }
+       }
+    );
     }
 
     @Override

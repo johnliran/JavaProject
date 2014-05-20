@@ -10,7 +10,6 @@ public interface Model {
 
     public void initialize();
 
-
     public boolean moveUp(boolean simulate);
 
     public boolean moveDown(boolean simulate);
@@ -32,17 +31,10 @@ public interface Model {
     public int getNumOfFreeStates();
     
     public void generate();
-//
-//	ArrayList<State> getFreeStates();
 	
 	public List<Integer> getEmptyCellIds();
+	
 	public void setEmptyCell(int i, int j, int value);
 
 	public Object clone() throws CloneNotSupportedException;
-	
-
-
-
-
-
 }

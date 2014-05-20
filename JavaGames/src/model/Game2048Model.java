@@ -21,7 +21,7 @@ import model.algorithms.State;
 import org.eclipse.swt.graphics.Point;
 
 import RMIInterface.RemoteInterface;
-import RMIInterface.RMIConst;
+import RMIInterface.RMIConstants;
 import controller.Constants;
 
 /**
@@ -413,16 +413,13 @@ public class Game2048Model extends Observable implements Model{
     
     @Override
 	 public int getHint() throws CloneNotSupportedException, RemoteException, NotBoundException {
-    	Registry registry = LocateRegistry.getRegistry("localhost",RMIConst.port);
-    	RemoteInterface remote = (RemoteInterface) registry.lookup(RMIConst.RMI_ID);
+    	Registry registry = LocateRegistry.getRegistry("localhost",RMIConstants.PORT);
+    	RemoteInterface remote = (RemoteInterface) registry.lookup(RMIConstants.RMI_ID);
     	Game2048Object myGame = new Game2048Object(this);
-    	
     	int hint = 0;
-		try {
-			
+		try {		
 			hint = remote.getHint((Object)myGame);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 //			 hint = AIsolver.findBestMove(this, 5);
@@ -443,18 +440,17 @@ public class Game2048Model extends Observable implements Model{
 			default:
 				break;
 			 }
-
-		 
-		 return hint;
+    	return hint;
 	 }
+    
+    @Override
+    public void solveGame() throws RemoteException, CloneNotSupportedException, NotBoundException{
+    	while (!isGameWon())
+    		getHint();
+    }
+    
     @Override
     public boolean equals(Object object) {
     	return true;
     }
-   
-     
-
-    
-
-    
 }

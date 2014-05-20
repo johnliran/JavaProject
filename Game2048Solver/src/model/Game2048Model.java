@@ -1,7 +1,7 @@
  package model;
 
 import controller.Constants;
-import model.algorithms.AIsolver;
+import model.algorithms.AISolver;
 import model.algorithms.Model;
 import model.algorithms.State;
 
@@ -12,7 +12,7 @@ import java.util.*;
 /**
  * Game 2048 Model
  */
-public class Game2048Model implements Cloneable, Model, Constants {
+public class Game2048Model implements Cloneable, Model {
 	public static final long serialVersionUID = 1L;
 	public int[][] board;
     public int score;
@@ -22,7 +22,7 @@ public class Game2048Model implements Cloneable, Model, Constants {
 //    private Stack<Integer> previousScores;
 
     public Game2048Model() {
-        this.board = new int[BOARDSIZE][BOARDSIZE];
+        this.board = new int[Constants.BOARDSIZE][Constants.BOARDSIZE];
 //        this.previousBoards = new Stack<int[][]>();
 //        this.previousScores = new Stack<Integer>();
     }
@@ -38,7 +38,7 @@ public class Game2048Model implements Cloneable, Model, Constants {
     public void rotate(int direction) {
         int[][] newBoard = new int[board.length][board.length];
         switch (direction) {
-            case RIGHT: {
+            case Constants.RIGHT: {
                 for (int row = 0; row < newBoard.length; row++) {
                     for (int column = 0; column < newBoard.length; column++) {
                         newBoard[column][(newBoard.length - 1) - row] = board[row][column];
@@ -47,7 +47,7 @@ public class Game2048Model implements Cloneable, Model, Constants {
                 break;
             }
 
-            case LEFT: {
+            case Constants.LEFT: {
                 for (int row = 0; row < newBoard.length; row++) {
                     for (int column = 0; column < newBoard.length; column++) {
                         newBoard[(newBoard.length - 1) - column][row] = board[row][column];
@@ -94,7 +94,7 @@ public class Game2048Model implements Cloneable, Model, Constants {
                         moved = true;
                         if (!simulate) {
                             setScore(getScore() + numberToCheck);
-                            if (numberToCheck == TARGETSCORE && !isGameWon()) {
+                            if (numberToCheck == Constants.TARGETSCORE && !isGameWon()) {
                                 setGameWon(true);
 //                                notifyObservers();
                             }
@@ -122,12 +122,12 @@ public class Game2048Model implements Cloneable, Model, Constants {
         if (!simulate) {
             
         }
-        rotate(LEFT);
+        rotate(Constants.LEFT);
         boolean moved = move(simulate);
         if (!simulate && !moved) {
             
         }
-        rotate(RIGHT);
+        rotate(Constants.RIGHT);
         if (!simulate) {
 //            setChanged();
 //            notifyObservers();
@@ -144,12 +144,12 @@ public class Game2048Model implements Cloneable, Model, Constants {
         if (!simulate) {
             
         }
-        rotate(RIGHT);
+        rotate(Constants.RIGHT);
         boolean moved = move(simulate);
         if (!simulate && !moved) {
             
         }
-        rotate(LEFT);
+        rotate(Constants.LEFT);
         if (!simulate) {
 //            setChanged();
 //            notifyObservers();
@@ -166,14 +166,14 @@ public class Game2048Model implements Cloneable, Model, Constants {
         if (!simulate) {
             
         }
-        rotate(LEFT);
-        rotate(LEFT);
+        rotate(Constants.LEFT);
+        rotate(Constants.LEFT);
         boolean moved = move(simulate);
         if (!simulate && !moved) {
             
         }
-        rotate(RIGHT);
-        rotate(RIGHT);
+        rotate(Constants.RIGHT);
+        rotate(Constants.RIGHT);
         if (!simulate) {
 //            setChanged();
 //            notifyObservers();
@@ -358,10 +358,10 @@ public class Game2048Model implements Cloneable, Model, Constants {
 	public List<Integer> getEmptyCellIds() {
         List<Integer> cellList = new ArrayList<>();
         
-        for(int i=0;i<BOARDSIZE;++i) {
-            for(int j=0;j<BOARDSIZE;++j) {
+        for(int i=0;i<Constants.BOARDSIZE;++i) {
+            for(int j=0;j<Constants.BOARDSIZE;++j) {
                 if(board[i][j]==0) {
-                    cellList.add(BOARDSIZE*i+j);
+                    cellList.add(Constants.BOARDSIZE*i+j);
                 }
             }
         }
@@ -390,10 +390,4 @@ public class Game2048Model implements Cloneable, Model, Constants {
 	        copy.setData(clone2dArray(board));
 	        return copy;
 	    }
-	 
-	 
-//
-//	@Override
-//	public void run() {
-//	}
 }
