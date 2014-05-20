@@ -3,11 +3,11 @@ package model;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-import model.algorithms.AIsolver;
+import model.algorithms.AISolver;
 import model.algorithms.Model;
 import RMIInterface.RemoteInterface;
 
-public class RemoteImplementation extends UnicastRemoteObject implements RemoteInterface{
+public class RemoteImplementation extends UnicastRemoteObject implements RemoteInterface {
 
 	/**
 	 * 
@@ -25,8 +25,9 @@ public class RemoteImplementation extends UnicastRemoteObject implements RemoteI
 
 	@Override
 	public int getHint(Object game) throws RemoteException, CloneNotSupportedException{
+		System.out.println("Im in hint");
 		Game2048Model myGame = new Game2048Model((Game2048Object)game);		
-	return AIsolver.findBestMove((Model)myGame, 7);
+	return AISolver.findBestMove((Model)myGame, 7);
 		
 	}
 

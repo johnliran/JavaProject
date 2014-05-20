@@ -44,5 +44,7 @@ public interface Model extends Serializable{
 
     public void loadGame(String xmlFileName);
 
-	int getHint() throws CloneNotSupportedException, RemoteException, NotBoundException;
+	public int getHint() throws CloneNotSupportedException, RemoteException, NotBoundException;
+
+	public void solveGame() throws RemoteException, CloneNotSupportedException, NotBoundException;
 }

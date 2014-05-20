@@ -5,6 +5,8 @@ import model.algorithms.*;
 
 import org.eclipse.swt.graphics.Point;
 
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Observable;
 
@@ -460,5 +462,12 @@ public class GameMazeModel extends Observable implements Model {
 	public int getHint() throws CloneNotSupportedException {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public void solveGame() throws RemoteException, CloneNotSupportedException,
+			NotBoundException {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -11,6 +11,8 @@ public class Constants {
     public final static int SAVE = 2;
     public final static int LOAD = 3;
     public final static int UNDO = 4;
+    public final static int SOLVE = 5;
+    public final static int HINT = 6;
     public final static int RIGHT = 10;
     public final static int RIGHT_UP = 11;
     public final static int RIGHT_DOWN = 12;
@@ -23,6 +25,7 @@ public class Constants {
     public final static int STRAIGHT_MOVEMENT_SCORE = 10;
     public final static int SCORE_FONT_SIZE = 24;
     public final static int SPACE = 81;
+    
 
     /* GameMaze Constants */
 
