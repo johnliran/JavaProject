@@ -27,8 +27,8 @@ public class Presenter implements Observer {
             ui.displayData(((Model) observable).getData());
             if (((Model) observable).isGameOver()) {
                 ui.gameOver();
-            } else if (((Model) observable).isGameWon() && !(ui.isUserNotified())) {
-                ui.gameWon();
+            } else if (((Model) observable).isGameWon() && !(ui.isUserNotified())) {                
+            	ui.gameWon();
             }
         }
         if (observable == ui) {
@@ -68,25 +68,42 @@ public class Presenter implements Observer {
                 case Constants.RESET:
 					startGame();
                     break;
-                case Constants.SPACE:
-				
-				try {
-					m.getHint();
-				} catch (RemoteException | CloneNotSupportedException
-						| NotBoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-                    break;
-
+                    
                 default:
                     break;
             }
         }
         if (observable instanceof WindowShell) {
             switch (ui.getWindowShell().getUserCommand()) {
-                case Constants.UNDO:
+	            case Constants.SOLVE: 
+	            	new Thread(new Runnable() {
+						public void run() {
+							try {
+								m.solveGame();
+							} catch (RemoteException | CloneNotSupportedException
+									| NotBoundException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+					}).start();
+	                break;
+	                
+	            case Constants.HINT:
+	            	new Thread(new Runnable() {
+						public void run() {
+							try {
+								m.getHint();
+							} catch (RemoteException | CloneNotSupportedException
+									| NotBoundException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+					}).start();
+	                break;
+            
+            	case Constants.UNDO:
                     m.restore();
                     break;
 

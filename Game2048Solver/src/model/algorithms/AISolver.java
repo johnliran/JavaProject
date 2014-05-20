@@ -29,7 +29,7 @@ import java.util.Map;
  * 
  * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
-public class AIsolver implements Constants{
+public class AISolver implements Constants{
     
     /**
      * Player vs Computer enum class
