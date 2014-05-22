@@ -25,7 +25,7 @@ public class RemoteImplementation extends UnicastRemoteObject implements RemoteI
 
 	public RemoteImplementation() throws RemoteException {
 		super();
-		tpes = Executors.newFixedThreadPool(1);
+		tpes = Executors.newFixedThreadPool(2);
 	}
 
 	@Override
@@ -38,13 +38,11 @@ public class RemoteImplementation extends UnicastRemoteObject implements RemoteI
 		tpes.execute(new Runnable() {
 			@Override
 			public void run() {
-				System.out.println("Im in hint");
 				Game2048Model myGame = new Game2048Model((Game2048Object)game);	
 				try {
 					int move = AISolver.findBestMove((Model)myGame, 7);
 					container.put("Move", move);
 					container.put("Changed", 1);
-					System.out.println("move value is " + container.get("Move"));
 					t.interrupt();
 				} catch (CloneNotSupportedException e) {
 					// TODO Auto-generated catch block
@@ -54,11 +52,11 @@ public class RemoteImplementation extends UnicastRemoteObject implements RemoteI
 		});
 		
 		try {
-			while (container.get("Changed") != 1)
-			{
-				Thread.sleep(Integer.MAX_VALUE);
-				System.out.println("Im calculating");
-			}
+			while (container.get("Changed") != 1) {
+				 try {
+				 Thread.sleep(Integer.MAX_VALUE);
+				 } catch (InterruptedException e) { }
+				 }
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
