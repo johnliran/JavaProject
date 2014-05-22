@@ -34,6 +34,7 @@ public class RemoteImplementation extends UnicastRemoteObject implements RemoteI
 		container.put("Move", 0);
 		container.put("Changed", 0);
 		isChanged = false;
+		final Thread t=Thread.currentThread();
 		tpes.execute(new Runnable() {
 			@Override
 			public void run() {
@@ -44,16 +45,18 @@ public class RemoteImplementation extends UnicastRemoteObject implements RemoteI
 					container.put("Move", move);
 					container.put("Changed", 1);
 					System.out.println("move value is " + container.get("Move"));
+					t.interrupt();
 				} catch (CloneNotSupportedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} 
 			}						
-		});	
+		});
+		
 		try {
 			while (container.get("Changed") != 1)
 			{
-				Thread.sleep(10);
+				Thread.sleep(Integer.MAX_VALUE);
 				System.out.println("Im calculating");
 			}
 		} catch (Exception e) {
