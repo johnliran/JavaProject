@@ -72,28 +72,48 @@ public class AISolver implements Constants{
      * @return
      * @throws CloneNotSupportedException 
      */
-    /*
-    private static Map<String, Object> minimax(Model theBoard, int depth, Player player) throws CloneNotSupportedException {
+
+private static Map<String, Object> minimax(Model theBoard, int depth, Player player) throws CloneNotSupportedException {
         Map<String, Object> result = new HashMap<>();
         
         int bestDirection = 0;
         int bestScore;
 //        isGameTerminated
-        if(depth==0 || theBoard.isGameTerminated()) {
-            bestScore=heuristicScore(theBoard.getScore(),theBoard.getNumberOfEmptyCells(),calculateClusteringScore(theBoard.getData()));
+        if(depth==0 || (theBoard.isGameWon() || theBoard.isGameOver())) {
+            bestScore=heuristicScore(theBoard.getScore(),theBoard.getNumOfFreeStates(),calculateClusteringScore(theBoard.getData()));
         }
         else {
             if(player == Player.USER) {
                 bestScore = Integer.MIN_VALUE;
-                for(int direction : directionArr) {
-                    Model newBoard = (Model) theBoard.clone();
-
+                for(int direction : DIRECTIONS) {
+                	boolean moved=false;
+                	Model newBoard = (Model) theBoard.clone();
 //                    We need to implement one move method
-                    int points=newBoard.move(direction);
-                    
+                    switch (direction) {
+					case UP: {
+						moved = newBoard.moveUp(false);
+						break;
+					}
+					case DOWN: {
+						moved = newBoard.moveDown(false);
+						break;
+					}
+					case RIGHT: {
+						moved = newBoard.moveRight(false);
+						break;
+					}
+					case LEFT: {
+						moved = newBoard.moveLeft(false);
+						break;
+					}
+
+					default:
+						break;
+					}
+ 
 //                    We need to implement the isEqual so it will work with the Model
 //                    if(points==0 && newBoard.isEqual(theBoard.getData(), newBoard.getData())) {
-                      if(points==0 && newBoard.equals(newBoard.getData())) {
+                      if(!moved && newBoard.equals(newBoard.getData())) {
                     	continue;
                     }
 
@@ -139,7 +159,7 @@ public class AISolver implements Constants{
         
         return result;
     }
-    */
+
     /**
      * Finds the best move bay using the Alpha-Beta pruning algorithm.
      * 
