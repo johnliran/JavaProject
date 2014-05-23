@@ -28,10 +28,10 @@ public class Game2048Model implements Cloneable, Model {
     }
     
     public Game2048Model(Game2048Object gameObject) {
-    	this.board = gameObject.board;
-    	this.score = gameObject.score;
-    	this.gameWon = gameObject.gameWon;
-    	this.gameOver = gameObject.gameOver;
+    	this.board = gameObject.getBoard();
+    	this.score = gameObject.getScore();
+    	this.gameWon = gameObject.isGameWon();
+    	this.gameOver = gameObject.isGameOver();
     }
     
 

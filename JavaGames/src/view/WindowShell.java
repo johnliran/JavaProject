@@ -129,7 +129,7 @@ public class WindowShell extends Observable {
         Font font = score.getFont();
         score.setFont(new Font(display, font.getFontData()[0].getName(), Constants.SCORE_FONT_SIZE, SWT.BOLD));
         score.setText(0 + "         ");
-
+        
         hintButton.addListener(SWT.Selection, hintListener(shell, board));
         solveButton.addListener(SWT.Selection, solveListener(shell, board));
         undoButton.addListener(SWT.Selection, undoListener(shell, board));
