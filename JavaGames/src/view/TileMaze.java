@@ -50,36 +50,36 @@ public class TileMaze extends Canvas  {
                 setTileBackground(event);
                 event.gc.fillRectangle(0, 0, getSize().x, getSize().y);
                 if (value > 0) {
-                	addMouseListener(mouseListener(mouseCommand));
+                    addMouseListener(mouseListener(mouseCommand));
                     Image figure;
                     switch (value) {
-                        case Constants.MOUSE_RIGHT:
-                            figure = new Image(getDisplay(), "images/mazeMOUSE_right.png");
-                            break;
-
                         case Constants.MOUSE_UP:
-                            figure = new Image(getDisplay(), "images/mazeMOUSE_up.png");
-                            break;
-
-                        case Constants.MOUSE_LEFT:
-                            figure = new Image(getDisplay(), "images/mazeMOUSE_left.png");
+                            figure = new Image(getDisplay(), Constants.IMAGE_MAZE_MOUSE_UP);
                             break;
 
                         case Constants.MOUSE_DOWN:
-                            figure = new Image(getDisplay(), "images/mazeMOUSE_down.png");
+                            figure = new Image(getDisplay(), Constants.IMAGE_MAZE_MOUSE_DOWN);
+                            break;
+
+                        case Constants.MOUSE_RIGHT:
+                            figure = new Image(getDisplay(), Constants.IMAGE_MAZE_MOUSE_RIGHT);
+                            break;
+
+                        case Constants.MOUSE_LEFT:
+                            figure = new Image(getDisplay(), Constants.IMAGE_MAZE_MOUSE_LEFT);
                             break;
 
                         case Constants.CHEESE:
-                            figure = new Image(getDisplay(), "images/mazeCheese.png");
+                            figure = new Image(getDisplay(), Constants.IMAGE_MAZE_CHEESE);
                             break;
 
                         case Constants.MOUSE_AND_CHEESE:
-                            figure = new Image(getDisplay(), "images/mazeMouseAndCheese.png");
+                            figure = new Image(getDisplay(), Constants.IMAGE_MAZE_MOUSE_AND_CHEESE);
                             break;
 
                         default:
-                            figure = new Image(getDisplay(), "images/mazeMouse.png");
-
+                            figure = new Image(getDisplay(), Constants.IMAGE_MAZE_MOUSE);
+                            break;
                     }
                     event.gc.drawImage(figure, 0, 0, (figure.getBounds().width), (figure.getBounds().height), 0, 0, getSize().x, getSize().y);
                 }
@@ -98,14 +98,14 @@ public class TileMaze extends Canvas  {
                 break;
         }
     }
-    
+
     private MouseListener mouseListener(final MouseCommand mouseCommand) {
         return new MouseListener() {
-        	public void mouseDown(MouseEvent event) {
-        	}
+            public void mouseDown(MouseEvent event) {
+            }
 
             public void mouseUp(MouseEvent event) {
-            	mouseCommand.setMouseCommand(new Point(event.x, event.y), new Point(getSize().x, getSize().y));
+                mouseCommand.setMouseCommand(new Point(event.x, event.y), new Point(getSize().x, getSize().y));
             }
 
             public void mouseDoubleClick(MouseEvent event) {

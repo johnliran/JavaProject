@@ -25,7 +25,14 @@ public class Constants {
     public final static int STRAIGHT_MOVEMENT_SCORE = 10;
     public final static int SCORE_FONT_SIZE = 24;
     public final static int SPACE = 81;
-    
+    public final static String IMAGE_BUTTON_CONNECT = "images/WindowShell/Connect.png";
+    public final static String IMAGE_BUTTON_HINT = "images/WindowShell/Hint.png";
+    public final static String IMAGE_BUTTON_LOAD = "images/WindowShell/Load.png";
+    public final static String IMAGE_BUTTON_PAUSE =  "images/WindowShell/Pause.png";
+    public final static String IMAGE_BUTTON_RESET = "images/WindowShell/Reset.png";
+    public final static String IMAGE_BUTTON_SAVE = "images/WindowShell/Save.png";
+    public final static String IMAGE_BUTTON_SOLVE = "images/WindowShell/Solve.png";
+    public final static String IMAGE_BUTTON_UNDO = "images/WindowShell/Undo.png";
 
     /* GameMaze Constants */
 
@@ -38,12 +45,19 @@ public class Constants {
     public final static int CHEESE = 12;
     public final static int MOUSE_AND_CHEESE = 14;
     public final static String[] EXTENSIONS = {"xml"};
+    public final static String IMAGE_MAZE_CHEESE = "images/GameMaze/mazeCheese.png";
+    public final static String IMAGE_MAZE_MOUSE_AND_CHEESE = "images/GameMaze/mazeMouseAndCheese.png";
+    public final static String IMAGE_MAZE_MOUSE = "images/GameMaze/mazeMouse.png";
+    public final static String IMAGE_MAZE_MOUSE_UP = "images/GameMaze/mazeMouse_up.png";
+    public final static String IMAGE_MAZE_MOUSE_DOWN = "images/GameMaze/mazeMouse_down.png";
+    public final static String IMAGE_MAZE_MOUSE_RIGHT = "images/GameMaze/mazeMouse_right.png";
+    public final static String IMAGE_MAZE_MOUSE_LEFT = "images/GameMaze/mazeMouse_left.png";
 
     /* Game2048 Constants */
 
     public final static int BOARDSIZE = 4;
     public final static int TARGETSCORE = 2048;
     public final static int TILE_FONT_SIZE = 16;
-    public final static int[] DIRECTIONS ={UP,DOWN,RIGHT,LEFT}; 
+    public final static int[] DIRECTIONS ={UP,DOWN,RIGHT,LEFT};
 
 }

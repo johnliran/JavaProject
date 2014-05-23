@@ -18,4 +18,3 @@ public class Game2048Main {
         p.startGame();
     }
 }
-
