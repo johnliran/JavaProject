@@ -150,7 +150,7 @@ public class Game2048View extends Observable implements View, Runnable {
 			public void run() {
 				int style = SWT.ICON_WORKING | SWT.YES | SWT.NO;
 				MessageBox messageBox = new MessageBox(shell, style);
-				messageBox.setMessage("You loose! Do you want to retry again?");
+				messageBox.setMessage("You lose! Do you want to retry again?");
 				int rc = messageBox.open();
 
 				switch (rc) {

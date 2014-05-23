@@ -82,10 +82,8 @@ public class Presenter implements Observer {
 						@Override
 						public void run() {
 							try {
-//								int solveDepth = ui.getWindowShell().getSolveDepth();
-								int solveDepth = 7;
-
-
+								int solveDepth = ui.getWindowShell().getSolveDepth();
+//								int solveDepth = 7;
 								m.solveGame(solveDepth);
 							} catch (RemoteException | CloneNotSupportedException
 									| NotBoundException e) {
@@ -105,10 +103,10 @@ public class Presenter implements Observer {
 						@Override
 						public void run() {
 							try {
-//								int solveDepth = ui.getWindowShell().getSolveDepth();
-//				            	int numOfHints = ui.getWindowShell().getNumOfHints();
-								int solveDepth = 7;
-				            	int numOfHints = 1;
+								int solveDepth = ui.getWindowShell().getSolveDepth();
+				            	int numOfHints = ui.getWindowShell().getNumOfHints();
+//								int solveDepth = 7;
+//				            	int numOfHints = 1;
 								m.getHint(numOfHints, solveDepth);
 							} catch (RemoteException | CloneNotSupportedException
 									| NotBoundException e) {
