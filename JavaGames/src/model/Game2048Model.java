@@ -409,7 +409,7 @@ public class Game2048Model extends Observable implements Model{
     }
     
     @Override
-	 public int getHint() throws CloneNotSupportedException, RemoteException, NotBoundException {
+	 public int getHint(int numOfHints, int solveDepth) throws CloneNotSupportedException, RemoteException, NotBoundException {
     	Registry registry = LocateRegistry.getRegistry("localhost",RMIConstants.PORT);
     	RemoteInterface remote = (RemoteInterface) registry.lookup(RMIConstants.RMI_ID);
     	Game2048Object myGame = new Game2048Object(this);
@@ -441,9 +441,9 @@ public class Game2048Model extends Observable implements Model{
 	 }
     
     @Override
-    public void solveGame() throws RemoteException, CloneNotSupportedException, NotBoundException{
+    public void solveGame(int solveDepth) throws RemoteException, CloneNotSupportedException, NotBoundException{
     	while (!isGameWon())
-    		getHint();
+    		getHint(1,solveDepth);
     }
     
     @Override
