@@ -415,7 +415,9 @@ public class Game2048Model extends Observable implements Model{
     	Game2048Object myGame = new Game2048Object(this);
     	int hint = 0;
 		try {		
-			hint = remote.getHint((Object)myGame);
+			for (int i = 0; i < numOfHints; i++) {
+				hint = remote.getHint((Object)myGame, solveDepth);	
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

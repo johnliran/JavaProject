@@ -6,6 +6,7 @@ import view.WindowShell;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -15,6 +16,7 @@ import java.util.Observer;
 public class Presenter implements Observer {
     private View ui;
     private Model m;
+    private ArrayList<Thread> threadsList;
 
     /**
      * @param observable   Model and View (The Caller)
@@ -76,10 +78,14 @@ public class Presenter implements Observer {
         if (observable instanceof WindowShell) {
             switch (ui.getWindowShell().getUserCommand()) {
 	            case Constants.SOLVE: 
-	            	new Thread(new Runnable() {
+	            	Runnable solveRun = new Runnable() {	
+						@Override
 						public void run() {
 							try {
-								int solveDepth = ui.getWindowShell().getSolveDepth();
+//								int solveDepth = ui.getWindowShell().getSolveDepth();
+								int solveDepth = 7;
+
+
 								m.solveGame(solveDepth);
 							} catch (RemoteException | CloneNotSupportedException
 									| NotBoundException e) {
@@ -87,15 +93,22 @@ public class Presenter implements Observer {
 								e.printStackTrace();
 							}
 						}
-					}).start();
+					};
+	            	Thread solveThread = new Thread(solveRun);
+	            	threadsList.add(solveThread);
+	            	solveThread.start();
+	        
 	                break;
 	                
 	            case Constants.HINT:
-	            	new Thread(new Runnable() {
+	            	Runnable hintRun = new Runnable() {	
+						@Override
 						public void run() {
 							try {
-								int solveDepth = ui.getWindowShell().getSolveDepth();
-				            	int numOfHints = ui.getWindowShell().getNumOfHints();
+//								int solveDepth = ui.getWindowShell().getSolveDepth();
+//				            	int numOfHints = ui.getWindowShell().getNumOfHints();
+								int solveDepth = 7;
+				            	int numOfHints = 1;
 								m.getHint(numOfHints, solveDepth);
 							} catch (RemoteException | CloneNotSupportedException
 									| NotBoundException e) {
@@ -103,8 +116,21 @@ public class Presenter implements Observer {
 								e.printStackTrace();
 							}
 						}
-					}).start();
-	                break;
+					};
+	            	Thread hintThread = new Thread(hintRun);
+	            	threadsList.add(hintThread);
+	            	hintThread.start();
+	            	break;
+	            
+	            case Constants.CLOSETHREADS: 
+	            	System.out.println("Im in CLOSETHREADS CASE");
+				try {
+					closeAllThreads();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	            	break;
             
             	case Constants.UNDO:
                     m.restore();
@@ -130,6 +156,17 @@ public class Presenter implements Observer {
     public Presenter(Model m, View ui) {
         this.m = m;
         this.ui = ui;
+        threadsList = new ArrayList<Thread>();
+    }
+    
+    public void closeAllThreads() throws InterruptedException {
+    	for (Thread thread : threadsList) {
+			if (thread.isAlive()) {
+    			thread.stop();
+				thread.join();
+        		System.out.println("i Closed " + thread);
+			}
+		}
     }
 
     public void startGame() {

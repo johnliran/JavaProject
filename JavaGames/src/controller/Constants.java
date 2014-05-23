@@ -25,6 +25,7 @@ public class Constants {
     public final static int STRAIGHT_MOVEMENT_SCORE = 10;
     public final static int SCORE_FONT_SIZE = 24;
     public final static int SPACE = 81;
+    public final static int CLOSETHREADS = 999;
     public final static String IMAGE_BUTTON_CONNECT = "images/WindowShell/Connect.png";
     public final static String IMAGE_BUTTON_HINT = "images/WindowShell/Hint.png";
     public final static String IMAGE_BUTTON_LOAD = "images/WindowShell/Load.png";
@@ -33,6 +34,7 @@ public class Constants {
     public final static String IMAGE_BUTTON_SAVE = "images/WindowShell/Save.png";
     public final static String IMAGE_BUTTON_SOLVE = "images/WindowShell/Solve.png";
     public final static String IMAGE_BUTTON_UNDO = "images/WindowShell/Undo.png";
+    
 
     /* GameMaze Constants */
 
