@@ -159,7 +159,7 @@ public class WindowShell extends Observable {
             solveDepthCombo.add(Integer.toString(defaultSolveDepth));
         }
         solveDepthCombo.select(solveDepthCombo.getItemCount() - 1);
-        setNumOfHints(Constants.DEFAULT_SOLVE_DEPTH[Constants.DEFAULT_SOLVE_DEPTH.length - 1]);
+        setSolveDepth(Constants.DEFAULT_SOLVE_DEPTH[Constants.DEFAULT_SOLVE_DEPTH.length - 1]);
 
         Label connectTo = new Label(parent, SWT.CENTER);
         Font connectToFont = connectTo.getFont();
