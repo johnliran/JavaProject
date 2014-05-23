@@ -9,13 +9,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
 import java.util.Observable;
 
 /**
@@ -45,9 +38,9 @@ public class WindowShell extends Observable {
 
         // Initialize with default values
         setRmiConnected(false);
-        setRemoteServer(Constants.DEFAULT_SERVERS[0]);
-        setSolveDepth(Constants.DEFAULT_SOLVE_DEPTH[Constants.DEFAULT_SOLVE_DEPTH.length - 1]);
-        setNumOfHints(Constants.DEFAULT_NUMBER_OF_HINTS[0]);
+        setRemoteServer(Constants.SERVERS_LIST[0]);
+        setSolveDepth(Constants.SOLVE_DEPTHS_LIST[Constants.SOLVE_DEPTHS_LIST.length/2]);
+        setNumOfHints(Constants.NUMBER_OF_HINTS_LIST[0]);
 
         createMenuBar(shell, board);
 
@@ -129,11 +122,11 @@ public class WindowShell extends Observable {
         serverGroup.setText("Remote Server");
         serverGroup.setLayout(new GridLayout(1, false));
     */
-        createLabel(parent, Constants.DEFAULT_FONT_SIZE,"Number Of Hints");
+        createLabel(parent, Constants.DEFAULT_FONT_SIZE, "Number Of Hints");
         Combo numOfHintsCombo = new Combo(parent, SWT.READ_ONLY);
         numOfHintsCombo.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
-        for (int defaultNumberOfHints : Constants.DEFAULT_NUMBER_OF_HINTS) {
-            numOfHintsCombo.add(Integer.toString(defaultNumberOfHints));
+        for (int possibleNumberOfHints : Constants.NUMBER_OF_HINTS_LIST) {
+            numOfHintsCombo.add(Integer.toString(possibleNumberOfHints));
         }
         numOfHintsCombo.add("To Resolve");
         numOfHintsCombo.select(0);
@@ -141,37 +134,24 @@ public class WindowShell extends Observable {
         createLabel(parent, Constants.DEFAULT_FONT_SIZE, "Solve Depth");
         Combo solveDepthCombo = new Combo(parent, SWT.READ_ONLY);
         solveDepthCombo.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
-        for (int defaultSolveDepth : Constants.DEFAULT_SOLVE_DEPTH) {
-            solveDepthCombo.add(Integer.toString(defaultSolveDepth));
+        for (int possibleSolveDepth : Constants.SOLVE_DEPTHS_LIST) {
+            solveDepthCombo.add(Integer.toString(possibleSolveDepth));
         }
-        solveDepthCombo.select(solveDepthCombo.getItemCount() - 1);
+        solveDepthCombo.select(solveDepthCombo.getItemCount()/2);
 
         createLabel(parent, Constants.DEFAULT_FONT_SIZE, "Connect to Server");
         Combo connectToCombo = new Combo(parent, SWT.DROP_DOWN);
         connectToCombo.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
-        connectToCombo.setItems(Constants.DEFAULT_SERVERS);
+        connectToCombo.setItems(Constants.SERVERS_LIST);
         connectToCombo.select(0);
 
-        Label connectionStatus = createLabel(parent, Constants.DEFAULT_FONT_SIZE, "");
-        connectionStatus.setForeground(setConnectionStatusColor());
-        connectionStatus.setText(setConnectionStatusText());
-
+        createButton(parent, "Connect", Constants.IMAGE_BUTTON_CONNECT).addListener(SWT.Selection, connectListener());
         numOfHintsCombo.addListener(SWT.Modify, numOfHintsListener());
         solveDepthCombo.addListener(SWT.Modify, solveDepthListener());
         connectToCombo.addListener(SWT.Modify, connectToLitener());
-        createButton(parent, "Connect", Constants.IMAGE_BUTTON_CONNECT).addListener(SWT.Selection, connectListener());
-    }
 
-    private Color setConnectionStatusColor() {
-        if (isRmiConnected()) {
-            return Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GREEN);
-        } else return Display.getCurrent().getSystemColor(SWT.COLOR_DARK_RED);
-    }
-
-    private String setConnectionStatusText() {
-        if (isRmiConnected()) {
-            return "Connected";
-        } else return "Disconnected";
+        Label connectionStatus = createLabel(parent, Constants.DEFAULT_FONT_SIZE, "");
+        setConnectionStatusStyle(connectionStatus);
     }
 
     private Label createLabel(Composite parent, int fontSize, String text) {
@@ -196,9 +176,9 @@ public class WindowShell extends Observable {
             @Override
             public void handleEvent(Event event) {
                 boolean solveGame = true;
-                for (int defaultNumberOfHints : Constants.DEFAULT_NUMBER_OF_HINTS) {
-                    if (Integer.toString(defaultNumberOfHints).equalsIgnoreCase(((Combo) event.widget).getText().toString())) {
-                        setNumOfHints(defaultNumberOfHints);
+                for (int possibleNumberOfHints : Constants.NUMBER_OF_HINTS_LIST) {
+                    if (Integer.toString(possibleNumberOfHints).equalsIgnoreCase(((Combo) event.widget).getText().toString())) {
+                        setNumOfHints(possibleNumberOfHints);
                         solveGame = false;
                         break;
                     }
@@ -214,9 +194,9 @@ public class WindowShell extends Observable {
         return new Listener() {
             @Override
             public void handleEvent(Event event) {
-                for (int defaultSolveDepth : Constants.DEFAULT_SOLVE_DEPTH) {
-                    if (Integer.toString(defaultSolveDepth).equalsIgnoreCase(((Combo) event.widget).getText().toString())) {
-                        setSolveDepth(defaultSolveDepth);
+                for (int possibleSolveDepth : Constants.SOLVE_DEPTHS_LIST) {
+                    if (Integer.toString(possibleSolveDepth).equalsIgnoreCase(((Combo) event.widget).getText().toString())) {
+                        setSolveDepth(possibleSolveDepth);
                         break;
                     }
                 }
@@ -252,8 +232,8 @@ public class WindowShell extends Observable {
             @Override
             public void handleEvent(Event event) {
                 boolean solveGame = true;
-                for (int defaultNumberOfHints : Constants.DEFAULT_NUMBER_OF_HINTS) {
-                    if (defaultNumberOfHints == getNumOfHints()) {
+                for (int possibleNumberOfHints : Constants.NUMBER_OF_HINTS_LIST) {
+                    if (possibleNumberOfHints == getNumOfHints()) {
                         userCommand = Constants.HINT;
                         solveGame = false;
                         break;
@@ -350,7 +330,7 @@ public class WindowShell extends Observable {
         return numOfHints;
     }
 
-    public void setNumOfHints(int numOfHints) {
+    private void setNumOfHints(int numOfHints) {
         this.numOfHints = numOfHints;
     }
 
@@ -358,7 +338,7 @@ public class WindowShell extends Observable {
         return solveDepth;
     }
 
-    public void setSolveDepth(int solveDepth) {
+    private void setSolveDepth(int solveDepth) {
         this.solveDepth = solveDepth;
     }
 
@@ -366,7 +346,7 @@ public class WindowShell extends Observable {
         return rmiConnected;
     }
 
-    public void setRmiConnected(boolean rmiConnected) {
+    private void setRmiConnected(boolean rmiConnected) {
         this.rmiConnected = rmiConnected;
     }
 
@@ -374,8 +354,18 @@ public class WindowShell extends Observable {
         return remoteServer;
     }
 
-    public void setRemoteServer(String remoteServer) {
+    private void setRemoteServer(String remoteServer) {
         this.remoteServer = remoteServer;
+    }
+
+    private void setConnectionStatusStyle(Label connectionStatus) {
+        if (isRmiConnected()) {
+            connectionStatus.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GREEN));
+            connectionStatus.setText("Connected");
+        } else {
+            connectionStatus.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_RED));
+            connectionStatus.setText("Disconnected");
+        }
     }
 
     public void closeAll() {
