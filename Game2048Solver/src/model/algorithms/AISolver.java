@@ -29,7 +29,7 @@ import java.util.Map;
  * 
  * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
-public class AISolver implements Constants{
+public class AISolver {
     
     /**
      * Player vs Computer enum class
@@ -84,24 +84,24 @@ private static Map<String, Object> minimax(Model theBoard, int depth, Player pla
         else {
             if(player == Player.USER) {
                 bestScore = Integer.MIN_VALUE;
-                for(int direction : DIRECTIONS) {
+                for(int direction : Constants.DIRECTIONS) {
                 	boolean moved=false;
                 	Model newBoard = (Model) theBoard.clone();
 //                    We need to implement one move method
                     switch (direction) {
-					case UP: {
+					case Constants.UP: {
 						moved = newBoard.moveUp(false);
 						break;
 					}
-					case DOWN: {
+					case Constants.DOWN: {
 						moved = newBoard.moveDown(false);
 						break;
 					}
-					case RIGHT: {
+					case Constants.RIGHT: {
 						moved = newBoard.moveRight(false);
 						break;
 					}
-					case LEFT: {
+					case Constants.LEFT: {
 						moved = newBoard.moveLeft(false);
 						break;
 					}
@@ -136,8 +136,8 @@ private static Map<String, Object> minimax(Model theBoard, int depth, Player pla
                 int i,j;
                 int[][] boardArray;
                 for(Integer cellId : moves) {
-                    i = cellId/BOARDSIZE;
-                    j = cellId%BOARDSIZE;
+                    i = cellId/Constants.BOARDSIZE;
+                    j = cellId%Constants.BOARDSIZE;
 
                     for(int value : possibleValues) {
                         Model newBoard = (Model) theBoard.clone();
@@ -190,22 +190,22 @@ private static Map<String, Object> minimax(Model theBoard, int depth, Player pla
         else {
             if(player == Player.USER) {
             	boolean moved=false;
-                for(int direction : DIRECTIONS) {
+                for(int direction : Constants.DIRECTIONS) {
                     Model newBoard = (Model) theBoard.clone();
                     switch (direction) {
-					case UP: {
+					case Constants.UP: {
 						moved = newBoard.moveUp(false);
 						break;
 					}
-					case DOWN: {
+					case Constants.DOWN: {
 						moved = newBoard.moveDown(false);
 						break;
 					}
-					case RIGHT: {
+					case Constants.RIGHT: {
 						moved = newBoard.moveRight(false);
 						break;
 					}
-					case LEFT: {
+					case Constants.LEFT: {
 						moved = newBoard.moveLeft(false);
 						break;
 					}
@@ -239,9 +239,9 @@ private static Map<String, Object> minimax(Model theBoard, int depth, Player pla
 
                 int i,j;
                 abloop: for(Integer cellId : moves) {
-                    i = cellId/BOARDSIZE;
+                    i = cellId/Constants.BOARDSIZE;
                     
-                    j = cellId%BOARDSIZE;
+                    j = cellId%Constants.BOARDSIZE;
 
                     for(int value : possibleValues) {
                         Model newBoard = (Model) theBoard.clone();
