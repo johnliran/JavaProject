@@ -33,6 +33,11 @@ public class WindowShell extends Observable {
         });
 
         ((Composite) board).setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 8));
+
+        // Initialize with default values
+        setSolveDepth(Constants.DEFAULT_SOLVE_DEPTH[Constants.DEFAULT_SOLVE_DEPTH.length - 1]);
+        setNumOfHints(Constants.DEFAULT_NUMBER_OF_HINTS[0]);
+
         createMenuBar(shell, board);
 
         TabFolder tabFolder = new TabFolder(shell, SWT.NULL);
@@ -146,7 +151,6 @@ public class WindowShell extends Observable {
             numOfHintsCombo.add(Integer.toString(defaultNumberOfHint));
         }
         numOfHintsCombo.select(0);
-        setNumOfHints(Constants.DEFAULT_NUMBER_OF_HINTS[0]);
 
         Label solveDepth = new Label(parent, SWT.CENTER);
         Font solveFont = solveDepth.getFont();
@@ -159,7 +163,6 @@ public class WindowShell extends Observable {
             solveDepthCombo.add(Integer.toString(defaultSolveDepth));
         }
         solveDepthCombo.select(solveDepthCombo.getItemCount() - 1);
-        setSolveDepth(Constants.DEFAULT_SOLVE_DEPTH[Constants.DEFAULT_SOLVE_DEPTH.length - 1]);
 
         Label connectTo = new Label(parent, SWT.CENTER);
         Font connectToFont = connectTo.getFont();
