@@ -36,9 +36,6 @@ public class Game2048Model extends Observable implements Model{
     private boolean gameOver;
     private Stack<int[][]> previousBoards;
     private Stack<Integer> previousScores;
-
-    
-    
     
     public Game2048Model() {
     	

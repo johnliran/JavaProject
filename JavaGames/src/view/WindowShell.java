@@ -7,6 +7,7 @@ import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -36,7 +37,7 @@ public class WindowShell extends Observable {
         shell.setLayout(new GridLayout(2, false));
         shell.setBackground(new Color(display, 187, 173, 160));
         shell.setBackgroundMode(SWT.INHERIT_DEFAULT);
-        ((Composite) board).setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 8));        
+        ((Composite) board).setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 8));
         initMenuBar(display, shell, board);
         initButtons(display, shell, board);
     }
@@ -65,10 +66,10 @@ public class WindowShell extends Observable {
 
         MenuItem hintItem = new MenuItem(editMenu, SWT.PUSH);
         hintItem.setText("Hint");
-        
+
         MenuItem solveItem = new MenuItem(editMenu, SWT.PUSH);
         solveItem.setText("Solve");
-        
+
         MenuItem undoItem = new MenuItem(editMenu, SWT.PUSH);
         undoItem.setText("Undo");
 
@@ -87,28 +88,34 @@ public class WindowShell extends Observable {
     }
 
     private void initButtons(Display display, Shell shell, Board board) {
-    	Button hintButton = new Button(shell, SWT.PUSH);
-    	hintButton.setText("Hint");
-    	hintButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
-    	
+        Button hintButton = new Button(shell, SWT.PUSH);
+        hintButton.setText("Hint");
+        hintButton.setImage(new Image(display, Constants.IMAGE_BUTTON_HINT));
+        hintButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
+
         Button solveButton = new Button(shell, SWT.PUSH);
         solveButton.setText("Solve");
+        solveButton.setImage(new Image(display, Constants.IMAGE_BUTTON_SOLVE));
         solveButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
-    	
-    	Button undoButton = new Button(shell, SWT.PUSH);
+
+        Button undoButton = new Button(shell, SWT.PUSH);
         undoButton.setText("Undo");
+        undoButton.setImage(new Image(display, Constants.IMAGE_BUTTON_UNDO));
         undoButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
 
         Button resetButton = new Button(shell, SWT.PUSH);
         resetButton.setText("Reset");
+        resetButton.setImage(new Image(display, Constants.IMAGE_BUTTON_RESET));
         resetButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
 
         Button loadButton = new Button(shell, SWT.PUSH);
         loadButton.setText("Load");
+        loadButton.setImage(new Image(display, Constants.IMAGE_BUTTON_LOAD));
         loadButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
 
         Button saveButton = new Button(shell, SWT.PUSH);
         saveButton.setText("Save");
+        saveButton.setImage(new Image(display, Constants.IMAGE_BUTTON_SAVE));
         saveButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
 
         score = new Label(shell, SWT.NONE);
@@ -117,7 +124,7 @@ public class WindowShell extends Observable {
         Font font = score.getFont();
         score.setFont(new Font(display, font.getFontData()[0].getName(), Constants.SCORE_FONT_SIZE, SWT.BOLD));
         score.setText(0 + "         ");
-        
+
         hintButton.addListener(SWT.Selection, hintListener(shell, board));
         solveButton.addListener(SWT.Selection, solveListener(shell, board));
         undoButton.addListener(SWT.Selection, undoListener(shell, board));
@@ -125,7 +132,7 @@ public class WindowShell extends Observable {
         loadButton.addListener(SWT.Selection, loadListener(shell, board));
         resetButton.addListener(SWT.Selection, resetListener(shell, board));
     }
-    
+
 
     private Listener hintListener(final Shell shell, final Board board) {
         return new Listener() {
@@ -138,7 +145,7 @@ public class WindowShell extends Observable {
             }
         };
     }
-    
+
 
     private Listener solveListener(final Shell shell, final Board board) {
         return new Listener() {
