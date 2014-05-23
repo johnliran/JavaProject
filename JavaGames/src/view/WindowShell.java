@@ -3,12 +3,9 @@ package view;
 import java.util.Observable;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -20,6 +17,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
 import controller.Constants;
@@ -31,7 +29,7 @@ public class WindowShell extends Observable {
     private Label score;
     private int userCommand;
 
-    public WindowShell(String title, int width, int height, Display display, Shell shell, Board board) {
+    public WindowShell(String title, int width, int height, Display display, final Shell shell, Board board) {
         shell.setText(title);
         shell.setSize(width, height);
         shell.setLayout(new GridLayout(2, false));
@@ -40,6 +38,13 @@ public class WindowShell extends Observable {
         ((Composite) board).setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 8));
         initMenuBar(display, shell, board);
         initButtons(display, shell, board);
+        shell.addListener (SWT.Close, new Listener () {
+        	public void handleEvent (Event event) {
+        		closeAll();
+        		
+        	  }
+
+        	  });
     }
 
     private void initMenuBar(Display display, Shell shell, Board board) {
@@ -221,7 +226,8 @@ public class WindowShell extends Observable {
         return new Listener() {
             @Override
             public void handleEvent(Event event) {
-                display.dispose();
+            	closeAll();
+            	display.dispose();
                 System.exit(0);
             }
         };
@@ -234,4 +240,13 @@ public class WindowShell extends Observable {
     public void setScore(int score) {
         this.score.setText(score + "");
     }
+    
+    public void closeAll() {
+		userCommand = Constants.CLOSETHREADS;
+		setChanged();
+		notifyObservers();
+		Thread.currentThread().stop();
+		
+		
+	}
 }

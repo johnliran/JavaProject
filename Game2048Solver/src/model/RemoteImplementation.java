@@ -29,7 +29,7 @@ public class RemoteImplementation extends UnicastRemoteObject implements RemoteI
 	}
 
 	@Override
-	public int getHint(final Object game) throws RemoteException, CloneNotSupportedException, InterruptedException{
+	public int getHint(final Object game, final int solveDepth) throws RemoteException, CloneNotSupportedException, InterruptedException{
 		final HashMap<String, Integer> container = new HashMap<>();
 		container.put("Move", 0);
 		container.put("Changed", 0);
@@ -40,7 +40,7 @@ public class RemoteImplementation extends UnicastRemoteObject implements RemoteI
 			public void run() {
 				Game2048Model myGame = new Game2048Model((Game2048Object)game);	
 				try {
-					int move = AISolver.findBestMove((Model)myGame, 7);
+					int move = AISolver.findBestMove((Model)myGame, solveDepth);
 					container.put("Move", move);
 					container.put("Changed", 1);
 					t.interrupt();

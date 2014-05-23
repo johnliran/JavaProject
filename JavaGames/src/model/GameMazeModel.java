@@ -458,15 +458,18 @@ public class GameMazeModel extends Observable implements Model {
         }
     }
 
+
 	@Override
-	public int getHint() throws CloneNotSupportedException {
+	public int getHint(int numOfHints, int solveDepth)
+			throws CloneNotSupportedException, RemoteException,
+			NotBoundException {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public void solveGame() throws RemoteException, CloneNotSupportedException,
-			NotBoundException {
+	public void solveGame(int solveDepth) throws RemoteException,
+			CloneNotSupportedException, NotBoundException {
 		// TODO Auto-generated method stub
 		
 	}
