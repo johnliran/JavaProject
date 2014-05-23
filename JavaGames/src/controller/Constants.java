@@ -3,7 +3,7 @@ package controller;
 /**
  * Holds General, Maze and 2048 Constants
  */
-public interface Constants {
+public final class Constants {
 
     /* General Constants */
 
@@ -13,6 +13,7 @@ public interface Constants {
     public final static int UNDO = 4;
     public final static int SOLVE = 5;
     public final static int HINT = 6;
+    public final static int CONNECT = 7;
     public final static int RIGHT = 10;
     public final static int RIGHT_UP = 11;
     public final static int RIGHT_DOWN = 12;
