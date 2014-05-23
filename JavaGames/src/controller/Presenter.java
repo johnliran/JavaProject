@@ -68,7 +68,12 @@ public class Presenter implements Observer {
                     break;
 
                 case Constants.RESET:
-					startGame();
+				try {
+					closeAllThreads();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+                	startGame();
                     break;
                     
                 default:
@@ -143,7 +148,12 @@ public class Presenter implements Observer {
                     break;
 
                 case Constants.RESET:
-					startGame();
+				try {
+					closeAllThreads();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+                	startGame();
 
                 default:
                     break;
