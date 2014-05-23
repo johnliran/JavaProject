@@ -88,7 +88,7 @@ public class Presenter implements Observer {
 							} catch (RemoteException | CloneNotSupportedException
 									| NotBoundException e) {
 								// TODO Auto-generated catch block
-								e.printStackTrace();
+								System.out.println(e.getMessage());
 							}
 						}
 					};
@@ -111,7 +111,7 @@ public class Presenter implements Observer {
 							} catch (RemoteException | CloneNotSupportedException
 									| NotBoundException e) {
 								// TODO Auto-generated catch block
-								e.printStackTrace();
+								System.out.println(e.getMessage());
 							}
 						}
 					};

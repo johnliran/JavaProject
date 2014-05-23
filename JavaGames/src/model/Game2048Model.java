@@ -36,6 +36,8 @@ public class Game2048Model extends Observable implements Model{
     private boolean gameOver;
     private Stack<int[][]> previousBoards;
     private Stack<Integer> previousScores;
+    private Registry registry ;
+	private RemoteInterface remote ;
     
     public Game2048Model() {
     	
@@ -410,38 +412,46 @@ public class Game2048Model extends Observable implements Model{
     
     @Override
 	 public int getHint(int numOfHints, int solveDepth) throws CloneNotSupportedException, RemoteException, NotBoundException {
-    	Registry registry = LocateRegistry.getRegistry("localhost",RMIConstants.PORT);
+		Registry registry = LocateRegistry.getRegistry("localhost",RMIConstants.PORT);	
     	RemoteInterface remote = (RemoteInterface) registry.lookup(RMIConstants.RMI_ID);
+
     	Game2048Object myGame = new Game2048Object(this);
     	int hint = 0;
 		try {		
 			for (int i = 0; i < numOfHints; i++) {
-				hint = remote.getHint((Object)myGame, solveDepth);	
+				hint = remote.getHint((Object)myGame, solveDepth);
+				switch (hint) {
+				 case Constants.UP:
+					 moveUp(false);
+					 break;
+				case Constants.DOWN:
+					moveDown(false);
+					break;
+				case Constants.LEFT:
+					moveLeft(false);
+					break;
+				case Constants.RIGHT:
+					moveRight(false);
+					break;
+		
+				default:
+					break;
+				 }
+	    
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			
 		}
 //			 hint = AIsolver.findBestMove(this, 5);
-			 switch (hint) {
-			 case Constants.UP:
-				 moveUp(false);
-				 break;
-			case Constants.DOWN:
-				moveDown(false);
-				break;
-			case Constants.LEFT:
-				moveLeft(false);
-				break;
-			case Constants.RIGHT:
-				moveRight(false);
-				break;
-	
-			default:
-				break;
-			 }
-    	return hint;
+			 	return hint;
 	 }
     
+    public boolean connectRMI() throws RemoteException, NotBoundException {
+    		registry = LocateRegistry.getRegistry("localhost",RMIConstants.PORT);	
+    		remote = (RemoteInterface) registry.lookup(RMIConstants.RMI_ID);
+		return true;
+    }
     @Override
     public void solveGame(int solveDepth) throws RemoteException, CloneNotSupportedException, NotBoundException{
     	while (!isGameWon())
