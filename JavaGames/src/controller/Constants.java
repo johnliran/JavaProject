@@ -38,13 +38,13 @@ public final class Constants {
     public final static int[] NUMBER_OF_HINTS_LIST = {1, 3, 5, 7, 10};
     public final static String[] SERVERS_LIST = {"localhost"};
     public final static String[] EXTENSIONS = {"xml"};
-    public final static String IMAGE_BUTTON_CONNECT = "images/WindowShell/Connect.png";
-    public final static String IMAGE_BUTTON_LOAD = "images/WindowShell/Load.png";
-    public final static String IMAGE_BUTTON_PAUSE =  "images/WindowShell/Pause.png";
-    public final static String IMAGE_BUTTON_RESET = "images/WindowShell/Reset.png";
-    public final static String IMAGE_BUTTON_SAVE = "images/WindowShell/Save.png";
-    public final static String IMAGE_BUTTON_SOLVE = "images/WindowShell/Solve.png";
-    public final static String IMAGE_BUTTON_UNDO = "images/WindowShell/Undo.png";
+    public final static String IMAGE_BUTTON_CONNECT = "JavaGames/images/WindowShell/Connect.png";
+    public final static String IMAGE_BUTTON_LOAD = "JavaGames/images/WindowShell/Load.png";
+    public final static String IMAGE_BUTTON_PAUSE =  "JavaGames/images/WindowShell/Pause.png";
+    public final static String IMAGE_BUTTON_RESET = "JavaGames/images/WindowShell/Reset.png";
+    public final static String IMAGE_BUTTON_SAVE = "JavaGames/images/WindowShell/Save.png";
+    public final static String IMAGE_BUTTON_SOLVE = "JavaGames/images/WindowShell/Solve.png";
+    public final static String IMAGE_BUTTON_UNDO = "JavaGames/images/WindowShell/Undo.png";
 
     /* GameMaze Constants */
 
@@ -56,13 +56,13 @@ public final class Constants {
     public final static int MOUSE_LEFT = 10;
     public final static int CHEESE = 12;
     public final static int MOUSE_AND_CHEESE = 14;
-    public final static String IMAGE_MAZE_CHEESE = "images/GameMaze/mazeCheese.png";
-    public final static String IMAGE_MAZE_MOUSE_AND_CHEESE = "images/GameMaze/mazeMouseAndCheese.png";
-    public final static String IMAGE_MAZE_MOUSE = "images/GameMaze/mazeMouse.png";
-    public final static String IMAGE_MAZE_MOUSE_UP = "images/GameMaze/mazeMouse_up.png";
-    public final static String IMAGE_MAZE_MOUSE_DOWN = "images/GameMaze/mazeMouse_down.png";
-    public final static String IMAGE_MAZE_MOUSE_RIGHT = "images/GameMaze/mazeMouse_right.png";
-    public final static String IMAGE_MAZE_MOUSE_LEFT = "images/GameMaze/mazeMouse_left.png";
+    public final static String IMAGE_MAZE_CHEESE = "JavaGames/images/GameMaze/mazeCheese.png";
+    public final static String IMAGE_MAZE_MOUSE_AND_CHEESE = "JavaGames/images/GameMaze/mazeMouseAndCheese.png";
+    public final static String IMAGE_MAZE_MOUSE = "JavaGames/images/GameMaze/mazeMouse.png";
+    public final static String IMAGE_MAZE_MOUSE_UP = "JavaGames/images/GameMaze/mazeMouse_up.png";
+    public final static String IMAGE_MAZE_MOUSE_DOWN = "JavaGames/images/GameMaze/mazeMouse_down.png";
+    public final static String IMAGE_MAZE_MOUSE_RIGHT = "JavaGames/images/GameMaze/mazeMouse_right.png";
+    public final static String IMAGE_MAZE_MOUSE_LEFT = "JavaGames/images/GameMaze/mazeMouse_left.png";
 
     /* Game2048 Constants */
 

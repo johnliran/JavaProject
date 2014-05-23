@@ -145,13 +145,13 @@ public class WindowShell extends Observable {
         connectToCombo.setItems(Constants.SERVERS_LIST);
         connectToCombo.select(0);
 
-        Label connectionStatus = createLabel(parent, Constants.DEFAULT_FONT_SIZE, "");
-        setConnectionStatusStyle(connectionStatus);
-
+        createButton(parent, "Connect", Constants.IMAGE_BUTTON_CONNECT).addListener(SWT.Selection, connectListener());
         numOfHintsCombo.addListener(SWT.Modify, numOfHintsListener());
         solveDepthCombo.addListener(SWT.Modify, solveDepthListener());
         connectToCombo.addListener(SWT.Modify, connectToLitener());
-        createButton(parent, "Connect", Constants.IMAGE_BUTTON_CONNECT).addListener(SWT.Selection, connectListener());
+
+        Label connectionStatus = createLabel(parent, Constants.DEFAULT_FONT_SIZE, "");
+        setConnectionStatusStyle(connectionStatus);
     }
 
     private Label createLabel(Composite parent, int fontSize, String text) {
