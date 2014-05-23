@@ -9,13 +9,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
 import java.util.Observable;
 
 /**
@@ -129,7 +122,7 @@ public class WindowShell extends Observable {
         serverGroup.setText("Remote Server");
         serverGroup.setLayout(new GridLayout(1, false));
     */
-        createLabel(parent, Constants.DEFAULT_FONT_SIZE,"Number Of Hints");
+        createLabel(parent, Constants.DEFAULT_FONT_SIZE, "Number Of Hints");
         Combo numOfHintsCombo = new Combo(parent, SWT.READ_ONLY);
         numOfHintsCombo.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
         for (int defaultNumberOfHints : Constants.DEFAULT_NUMBER_OF_HINTS) {
@@ -153,25 +146,12 @@ public class WindowShell extends Observable {
         connectToCombo.select(0);
 
         Label connectionStatus = createLabel(parent, Constants.DEFAULT_FONT_SIZE, "");
-        connectionStatus.setForeground(setConnectionStatusColor());
-        connectionStatus.setText(setConnectionStatusText());
+        setConnectionStatusStyle(connectionStatus);
 
         numOfHintsCombo.addListener(SWT.Modify, numOfHintsListener());
         solveDepthCombo.addListener(SWT.Modify, solveDepthListener());
         connectToCombo.addListener(SWT.Modify, connectToLitener());
         createButton(parent, "Connect", Constants.IMAGE_BUTTON_CONNECT).addListener(SWT.Selection, connectListener());
-    }
-
-    private Color setConnectionStatusColor() {
-        if (isRmiConnected()) {
-            return Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GREEN);
-        } else return Display.getCurrent().getSystemColor(SWT.COLOR_DARK_RED);
-    }
-
-    private String setConnectionStatusText() {
-        if (isRmiConnected()) {
-            return "Connected";
-        } else return "Disconnected";
     }
 
     private Label createLabel(Composite parent, int fontSize, String text) {
@@ -350,7 +330,7 @@ public class WindowShell extends Observable {
         return numOfHints;
     }
 
-    public void setNumOfHints(int numOfHints) {
+    private void setNumOfHints(int numOfHints) {
         this.numOfHints = numOfHints;
     }
 
@@ -358,7 +338,7 @@ public class WindowShell extends Observable {
         return solveDepth;
     }
 
-    public void setSolveDepth(int solveDepth) {
+    private void setSolveDepth(int solveDepth) {
         this.solveDepth = solveDepth;
     }
 
@@ -366,7 +346,7 @@ public class WindowShell extends Observable {
         return rmiConnected;
     }
 
-    public void setRmiConnected(boolean rmiConnected) {
+    private void setRmiConnected(boolean rmiConnected) {
         this.rmiConnected = rmiConnected;
     }
 
@@ -374,8 +354,18 @@ public class WindowShell extends Observable {
         return remoteServer;
     }
 
-    public void setRemoteServer(String remoteServer) {
+    private void setRemoteServer(String remoteServer) {
         this.remoteServer = remoteServer;
+    }
+
+    private void setConnectionStatusStyle(Label connectionStatus) {
+        if (isRmiConnected()) {
+            connectionStatus.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GREEN));
+            connectionStatus.setText("Connected");
+        } else {
+            connectionStatus.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_RED));
+            connectionStatus.setText("Disconnected");
+        }
     }
 
     public void closeAll() {

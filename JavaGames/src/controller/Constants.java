@@ -34,8 +34,9 @@ public final class Constants {
     public final static int FCOLOR_B = 101;
     public final static int SPACE = 81;
     public final static int CLOSETHREADS = 999;
-    public final static int[] DEFAULT_SOLVE_DEPTH = {1, 2, 3, 4, 5, 6, 7};
+    public final static int[] DEFAULT_SOLVE_DEPTH = {3, 4, 5, 6, 7, 8, 9, 10};
     public final static int[] DEFAULT_NUMBER_OF_HINTS = {1, 3, 5, 7, 10};
+    public final static String[] EXTENSIONS = {"xml"};
     public final static String[] DEFAULT_SERVERS = {"localhost"};
     public final static String IMAGE_BUTTON_CONNECT = "images/WindowShell/Connect.png";
     public final static String IMAGE_BUTTON_LOAD = "images/WindowShell/Load.png";
@@ -55,7 +56,6 @@ public final class Constants {
     public final static int MOUSE_LEFT = 10;
     public final static int CHEESE = 12;
     public final static int MOUSE_AND_CHEESE = 14;
-    public final static String[] EXTENSIONS = {"xml"};
     public final static String IMAGE_MAZE_CHEESE = "images/GameMaze/mazeCheese.png";
     public final static String IMAGE_MAZE_MOUSE_AND_CHEESE = "images/GameMaze/mazeMouseAndCheese.png";
     public final static String IMAGE_MAZE_MOUSE = "images/GameMaze/mazeMouse.png";
@@ -70,5 +70,4 @@ public final class Constants {
     public final static int TARGETSCORE = 2048;
     public final static int TILE_FONT_SIZE = 16;
     public final static int[] DIRECTIONS ={UP,DOWN,RIGHT,LEFT};
-
 }
