@@ -79,7 +79,8 @@ public class Presenter implements Observer {
 	            	new Thread(new Runnable() {
 						public void run() {
 							try {
-								m.solveGame();
+								int solveDepth = ui.getWindowShell().getSolveDepth();
+								m.solveGame(solveDepth);
 							} catch (RemoteException | CloneNotSupportedException
 									| NotBoundException e) {
 								// TODO Auto-generated catch block
@@ -93,7 +94,9 @@ public class Presenter implements Observer {
 	            	new Thread(new Runnable() {
 						public void run() {
 							try {
-								m.getHint();
+								int solveDepth = ui.getWindowShell().getSolveDepth();
+				            	int numOfHints = ui.getWindowShell().getNumOfHints();
+								m.getHint(numOfHints, solveDepth);
 							} catch (RemoteException | CloneNotSupportedException
 									| NotBoundException e) {
 								// TODO Auto-generated catch block
