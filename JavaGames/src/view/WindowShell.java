@@ -1,7 +1,6 @@
 package view;
 
 import controller.Constants;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.graphics.Color;
@@ -17,119 +16,107 @@ import java.util.Observable;
  * Generic Window Shell
  */
 public class WindowShell extends Observable {
-	private Label score;
-	private int userCommand;
-	private int numOfHints;
-	private int solveDepth;
-	private String remoteServer;
-	private boolean rmiConnected;
-	Shell shell;
-	private Label connectionStatus;
+    private Label score;
+    private int userCommand;
+    private int numOfHints;
+    private int solveDepth;
+    private boolean rmiConnected;
+    private String remoteServer;
+    private Label connectionStatus;
 
-	public WindowShell(String title, int width, int height, Display display,
-			Shell shell, Board board) {
-		this.shell = shell;
-		shell.setText(title);
-		shell.setSize(width, height);
-		shell.setLayout(new GridLayout(2, false));
-		shell.setBackground(new Color(display, Constants.BCOLOR_R,
-				Constants.BCOLOR_G, Constants.BCOLOR_B));
-		shell.setBackgroundMode(SWT.INHERIT_DEFAULT);
-		shell.addListener(SWT.Close, new Listener() {
-			public void handleEvent(Event event) {
-				closeAll();
-			}
-		});
+    public WindowShell(String title, int width, int height, Display display, Shell shell, Board board) {
+        shell.setText(title);
+        shell.setSize(width, height);
+        shell.setLayout(new GridLayout(2, false));
+        shell.setBackground(new Color(display, Constants.BCOLOR_R, Constants.BCOLOR_G, Constants.BCOLOR_B));
+        shell.setBackgroundMode(SWT.INHERIT_DEFAULT);
+        shell.addListener(SWT.Close, new Listener() {
+            public void handleEvent(Event event) {
+                closeAll();
+            }
+        });
 
-		((Composite) board).setLayoutData(new GridData(SWT.FILL, SWT.FILL,
-				true, true, 1, 8));
+        ((Composite) board).setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 8));
 
-		// Initialize with default values
-		rmiConnected = false;
-		setRemoteServer(Constants.SERVERS_LIST[0]);
-		setSolveDepth(Constants.SOLVE_DEPTHS_LIST[Constants.SOLVE_DEPTHS_LIST.length / 2]);
-		setNumOfHints(Constants.NUMBER_OF_HINTS_LIST[0]);
+        // Initialize with default values
+        rmiConnected = false;
+        setRemoteServer(Constants.SERVERS_LIST[0]);
+        setSolveDepth(Constants.SOLVE_DEPTHS_LIST[Constants.SOLVE_DEPTHS_LIST.length / 2]);
+        setNumOfHints(Constants.NUMBER_OF_HINTS_LIST[0]);
 
-		createMenuBar(shell, board);
+        createMenuBar(shell, board);
 
-		TabFolder tabFolder = new TabFolder(shell, SWT.NULL);
+        TabFolder tabFolder = new TabFolder(shell, SWT.NULL);
 
-		TabItem playTab = new TabItem(tabFolder, SWT.NULL);
-		SashForm playForm = new SashForm(tabFolder, SWT.VERTICAL);
-		createPlayButtons(playForm, board);
-		playTab.setText("Play");
-		playTab.setControl(playForm);
+        TabItem playTab = new TabItem(tabFolder, SWT.NULL);
+        SashForm playForm = new SashForm(tabFolder, SWT.VERTICAL);
+        createPlayButtons(playForm, board);
+        playTab.setText("Play");
+        playTab.setControl(playForm);
 
-		TabItem settingsTab = new TabItem(tabFolder, SWT.NULL);
-		SashForm settingsForm = new SashForm(tabFolder, SWT.VERTICAL);
-		Composite settingsComposite = new Composite(settingsForm, SWT.FILL);
-		GridLayout settingsLayout = new GridLayout(1, false);
-		settingsLayout.verticalSpacing = 1;
-		settingsComposite.setLayout(settingsLayout);
-		createSettingsButtons(settingsComposite, board);
-		settingsTab.setText("Settings");
-		settingsTab.setControl(settingsForm);
-	}
+        TabItem settingsTab = new TabItem(tabFolder, SWT.NULL);
+        SashForm settingsForm = new SashForm(tabFolder, SWT.VERTICAL);
+        Composite settingsComposite = new Composite(settingsForm, SWT.FILL);
+        GridLayout settingsLayout = new GridLayout(1, false);
+        settingsLayout.verticalSpacing = 1;
+        settingsComposite.setLayout(settingsLayout);
+        createSettingsButtons(settingsComposite);
+        settingsTab.setText("Settings");
+        settingsTab.setControl(settingsForm);
+    }
 
-	private void createMenuBar(Shell parent, Board board) {
-		Menu menuBar = new Menu(parent, SWT.BAR);
-		Menu fileMenu = new Menu(menuBar);
-		Menu editMenu = new Menu(menuBar);
+    private void createMenuBar(Shell parent, Board board) {
+        Menu menuBar = new Menu(parent, SWT.BAR);
+        Menu fileMenu = new Menu(menuBar);
+        Menu editMenu = new Menu(menuBar);
 
-		MenuItem file = new MenuItem(menuBar, SWT.CASCADE);
-		file.setText("File");
-		file.setMenu(fileMenu);
+        MenuItem file = new MenuItem(menuBar, SWT.CASCADE);
+        file.setText("File");
+        file.setMenu(fileMenu);
 
-		MenuItem editItem = new MenuItem(menuBar, SWT.CASCADE);
-		editItem.setText("Edit");
-		editItem.setMenu(editMenu);
+        MenuItem editItem = new MenuItem(menuBar, SWT.CASCADE);
+        editItem.setText("Edit");
+        editItem.setMenu(editMenu);
 
-		MenuItem loadItem = new MenuItem(fileMenu, SWT.PUSH);
-		loadItem.setText("Load");
+        MenuItem loadItem = new MenuItem(fileMenu, SWT.PUSH);
+        loadItem.setText("Load");
 
-		MenuItem saveItem = new MenuItem(fileMenu, SWT.PUSH);
-		saveItem.setText("Save");
+        MenuItem saveItem = new MenuItem(fileMenu, SWT.PUSH);
+        saveItem.setText("Save");
 
-		MenuItem exitItem = new MenuItem(fileMenu, SWT.PUSH);
-		exitItem.setText("Exit");
+        MenuItem exitItem = new MenuItem(fileMenu, SWT.PUSH);
+        exitItem.setText("Exit");
 
-		MenuItem solveItem = new MenuItem(editMenu, SWT.PUSH);
-		solveItem.setText("Solve");
+        MenuItem solveItem = new MenuItem(editMenu, SWT.PUSH);
+        solveItem.setText("Solve");
 
-		MenuItem undoItem = new MenuItem(editMenu, SWT.PUSH);
-		undoItem.setText("Undo");
+        MenuItem undoItem = new MenuItem(editMenu, SWT.PUSH);
+        undoItem.setText("Undo");
 
-		MenuItem resetItem = new MenuItem(editMenu, SWT.PUSH);
-		resetItem.setText("Reset");
+        MenuItem resetItem = new MenuItem(editMenu, SWT.PUSH);
+        resetItem.setText("Reset");
 
-		parent.setMenuBar(menuBar);
+        parent.setMenuBar(menuBar);
 
-		solveItem.addListener(SWT.Selection,
-				solvePauseListener(parent.getShell(), board));
-		undoItem.addListener(SWT.Selection, undoListener(board));
-		resetItem.addListener(SWT.Selection, resetListener(board));
-		exitItem.addListener(SWT.Selection, exitListener(board));
-		saveItem.addListener(SWT.Selection, saveListener(parent, board));
-		loadItem.addListener(SWT.Selection, loadListener(parent, board));
-	}
+        solveItem.addListener(SWT.Selection, solvePauseListener(board));
+        undoItem.addListener(SWT.Selection, undoListener(board));
+        resetItem.addListener(SWT.Selection, resetListener(board));
+        saveItem.addListener(SWT.Selection, saveListener(parent, board));
+        loadItem.addListener(SWT.Selection, loadListener(parent, board));
+        exitItem.addListener(SWT.Selection, exitListener());
+    }
 
-	private void createPlayButtons(Composite parent, Board board) {
-		createButton(parent, "Solve", Constants.IMAGE_BUTTON_SOLVE)
-				.addListener(SWT.Selection,
-						solvePauseListener(parent.getShell(), board));
-		createButton(parent, "Undo", Constants.IMAGE_BUTTON_UNDO).addListener(
-				SWT.Selection, undoListener(board));
-		createButton(parent, "Reset", Constants.IMAGE_BUTTON_RESET)
-				.addListener(SWT.Selection, resetListener(board));
-		createButton(parent, "Save", Constants.IMAGE_BUTTON_SAVE).addListener(
-				SWT.Selection, saveListener(parent.getShell(), board));
-		createButton(parent, "Load", Constants.IMAGE_BUTTON_LOAD).addListener(
-				SWT.Selection, loadListener(parent.getShell(), board));
-		score = createLabel(parent, Constants.SCORE_FONT_SIZE, 0 + "         ");
-	}
+    private void createPlayButtons(Composite parent, Board board) {
+        createButton(parent, "Solve", Constants.IMAGE_BUTTON_SOLVE).addListener(SWT.Selection, solvePauseListener(board));
+        createButton(parent, "Undo", Constants.IMAGE_BUTTON_UNDO).addListener(SWT.Selection, undoListener(board));
+        createButton(parent, "Reset", Constants.IMAGE_BUTTON_RESET).addListener(SWT.Selection, resetListener(board));
+        createButton(parent, "Save", Constants.IMAGE_BUTTON_SAVE).addListener(SWT.Selection, saveListener(parent.getShell(), board));
+        createButton(parent, "Load", Constants.IMAGE_BUTTON_LOAD).addListener(SWT.Selection, loadListener(parent.getShell(), board));
+        score = createLabel(parent, Constants.SCORE_FONT_SIZE, 0 + "         ");
+    }
 
-	private void createSettingsButtons(Composite parent, Board board) {
-		/*
+    private void createSettingsButtons(Composite parent) {
+        /*
 		 * Group solverGroup = new Group(parent, SWT.SHADOW_ETCHED_IN);
 		 * solverGroup.setText("Solver"); solverGroup.setLayout(new
 		 * GridLayout(1, false));
@@ -138,331 +125,313 @@ public class WindowShell extends Observable {
 		 * serverGroup.setText("Remote Server"); serverGroup.setLayout(new
 		 * GridLayout(1, false));
 		 */
-		createLabel(parent, Constants.DEFAULT_FONT_SIZE, "Number Of Hints");
-		Combo numOfHintsCombo = new Combo(parent, SWT.READ_ONLY);
-		numOfHintsCombo.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false,
-				false, 1, 1));
-		for (int possibleNumberOfHints : Constants.NUMBER_OF_HINTS_LIST) {
-			numOfHintsCombo.add(Integer.toString(possibleNumberOfHints));
-		}
-		numOfHintsCombo.add("To Resolve");
-		numOfHintsCombo.select(0);
+        createLabel(parent, Constants.DEFAULT_FONT_SIZE, "Number Of Hints");
+        Combo numOfHintsCombo = new Combo(parent, SWT.READ_ONLY);
+        numOfHintsCombo.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
+        for (int possibleNumberOfHints : Constants.NUMBER_OF_HINTS_LIST) {
+            numOfHintsCombo.add(Integer.toString(possibleNumberOfHints));
+        }
+        numOfHintsCombo.add("To Resolve");
+        numOfHintsCombo.select(0);
 
-		createLabel(parent, Constants.DEFAULT_FONT_SIZE, "Solve Depth");
-		Combo solveDepthCombo = new Combo(parent, SWT.READ_ONLY);
-		solveDepthCombo.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false,
-				false, 1, 1));
-		for (int possibleSolveDepth : Constants.SOLVE_DEPTHS_LIST) {
-			solveDepthCombo.add(Integer.toString(possibleSolveDepth));
-		}
-		solveDepthCombo.select(solveDepthCombo.getItemCount() / 2);
+        createLabel(parent, Constants.DEFAULT_FONT_SIZE, "Solve Depth");
+        Combo solveDepthCombo = new Combo(parent, SWT.READ_ONLY);
+        solveDepthCombo.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
+        for (int possibleSolveDepth : Constants.SOLVE_DEPTHS_LIST) {
+            solveDepthCombo.add(Integer.toString(possibleSolveDepth));
+        }
+        solveDepthCombo.select(solveDepthCombo.getItemCount() / 2);
 
-		createLabel(parent, Constants.DEFAULT_FONT_SIZE, "Connect to Server");
-		Combo connectToCombo = new Combo(parent, SWT.DROP_DOWN);
-		connectToCombo.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false,
-				false, 1, 1));
-		connectToCombo.setItems(Constants.SERVERS_LIST);
-		connectToCombo.select(0);
+        createLabel(parent, Constants.DEFAULT_FONT_SIZE, "Connect to Server");
+        Combo connectToCombo = new Combo(parent, SWT.DROP_DOWN);
+        connectToCombo.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
+        connectToCombo.setItems(Constants.SERVERS_LIST);
+        connectToCombo.select(0);
 
-		Button connect = createButton(parent, "Connect",
-				Constants.IMAGE_BUTTON_CONNECT);
+        Button connect = createButton(parent, "Connect", Constants.IMAGE_BUTTON_CONNECT);
 
-		numOfHintsCombo.addListener(SWT.Modify, numOfHintsListener());
-		solveDepthCombo.addListener(SWT.Modify, solveDepthListener());
-		connectToCombo.addListener(SWT.FocusIn, connectToLitener(connect));
-		connectToCombo.addListener(SWT.Traverse, connectToLitener(connect));
-		connect.addListener(SWT.Selection, connectListener());
+        numOfHintsCombo.addListener(SWT.Modify, numOfHintsListener());
+        solveDepthCombo.addListener(SWT.Modify, solveDepthListener());
+        connectToCombo.addListener(SWT.FocusIn, connectToLitener(connect));
+        connectToCombo.addListener(SWT.Traverse, connectToLitener(connect));
+        connect.addListener(SWT.Selection, connectListener());
 
-		connectionStatus = createLabel(parent, Constants.DEFAULT_FONT_SIZE, "");
-		setConnectionStatusStyle();
-	}
+        connectionStatus = createLabel(parent, Constants.DEFAULT_FONT_SIZE, "");
+        setConnectionStatusStyle();
+    }
 
-	private Label createLabel(Composite parent, int fontSize, String text) {
-		Label label = new Label(parent, SWT.CENTER);
-		label.setForeground(new Color(Display.getCurrent(), Constants.FCOLOR_R,
-				Constants.FCOLOR_G, Constants.FCOLOR_B));
-		label.setFont(new Font(Display.getCurrent(), label.getFont()
-				.getFontData()[0].getName(), fontSize, SWT.BOLD));
-		label.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
-		label.setText(text);
-		return label;
-	}
+    private Label createLabel(Composite parent, int fontSize, String text) {
+        Label label = new Label(parent, SWT.CENTER);
+        label.setForeground(new Color(Display.getCurrent(), Constants.FCOLOR_R, Constants.FCOLOR_G, Constants.FCOLOR_B));
+        label.setFont(new Font(Display.getCurrent(), label.getFont().getFontData()[0].getName(), fontSize, SWT.BOLD));
+        label.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
+        label.setText(text);
+        return label;
+    }
 
-	private Button createButton(Composite parent, String text, String image) {
-		Button button = new Button(parent, SWT.PUSH);
-		button.setImage(new Image(Display.getCurrent(), image));
-		button.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
-		button.setText(text);
-		return button;
-	}
+    private Button createButton(Composite parent, String text, String image) {
+        Button button = new Button(parent, SWT.PUSH);
+        button.setImage(new Image(Display.getCurrent(), image));
+        button.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
+        button.setText(text);
+        return button;
+    }
 
-	private Listener numOfHintsListener() {
-		return new Listener() {
-			@Override
-			public void handleEvent(Event event) {
-				boolean solveGame = true;
-				for (int possibleNumberOfHints : Constants.NUMBER_OF_HINTS_LIST) {
-					if (Integer
-							.toString(possibleNumberOfHints)
-							.equalsIgnoreCase(
-									((Combo) event.widget).getText().toString())) {
-						setNumOfHints(possibleNumberOfHints);
-						solveGame = false;
-						break;
-					}
-				}
-				if (solveGame) {
-					setNumOfHints(Integer.MAX_VALUE);
-				}
-			}
-		};
-	}
+    private Listener numOfHintsListener() {
+        return new Listener() {
+            @Override
+            public void handleEvent(Event event) {
+                boolean solveGame = true;
+                for (int possibleNumberOfHints : Constants.NUMBER_OF_HINTS_LIST) {
+                    if (Integer.toString(possibleNumberOfHints).equalsIgnoreCase(((Combo) event.widget).getText().toString())) {
+                        setNumOfHints(possibleNumberOfHints);
+                        solveGame = false;
+                        break;
+                    }
+                }
+                if (solveGame) {
+                    setNumOfHints(Integer.MAX_VALUE);
+                }
+            }
+        };
+    }
 
-	private Listener solveDepthListener() {
-		return new Listener() {
-			@Override
-			public void handleEvent(Event event) {
-				for (int possibleSolveDepth : Constants.SOLVE_DEPTHS_LIST) {
-					if (Integer.toString(possibleSolveDepth).equalsIgnoreCase(
-							((Combo) event.widget).getText().toString())) {
-						setSolveDepth(possibleSolveDepth);
-						break;
-					}
-				}
-			}
-		};
-	}
+    private Listener solveDepthListener() {
+        return new Listener() {
+            @Override
+            public void handleEvent(Event event) {
+                for (int possibleSolveDepth : Constants.SOLVE_DEPTHS_LIST) {
+                    if (Integer.toString(possibleSolveDepth).equalsIgnoreCase(
+                            ((Combo) event.widget).getText().toString())) {
+                        setSolveDepth(possibleSolveDepth);
+                        break;
+                    }
+                }
+            }
+        };
+    }
 
-	private Listener connectToLitener(final Button connect) {
-		return new Listener() {
-			@Override
-			public void handleEvent(Event event) {
-				switch (event.type) {
-				case SWT.FocusIn:
-					System.out.println("FocusIn");
-					break;
-				case SWT.Traverse:
-					if (event.detail == SWT.TRAVERSE_RETURN) {
-						System.out.println("Enter");
-						connect.forceFocus();
-					}
-					break;
-				}
-			}
-		};
-	}
+    private Listener connectToLitener(final Button connect) {
+        return new Listener() {
+            @Override
+            public void handleEvent(Event event) {
+                switch (event.type) {
+                    case SWT.FocusIn:
+                        System.out.println("FocusIn");
+                        break;
+                    case SWT.Traverse:
+                        if (event.detail == SWT.TRAVERSE_RETURN) {
+                            System.out.println("Enter");
+                            connect.forceFocus();
+                        }
+                        break;
+                }
+            }
+        };
+    }
 
-	private Listener connectListener() {
-		return new Listener() {
-			@Override
-			public void handleEvent(Event event) {
-				userCommand = Constants.CONNECT;
-				setChanged();
-				notifyObservers();
-			}
-		};
-	}
+    private Listener connectListener() {
+        return new Listener() {
+            @Override
+            public void handleEvent(Event event) {
+                userCommand = Constants.CONNECT;
+                setChanged();
+                notifyObservers();
+            }
+        };
+    }
 
-	private Listener solvePauseListener(final Shell shell, final Board board) {
-		return new Listener() {
-			@Override
-			public void handleEvent(Event event) {
-				// Is the user connected to remote solver server? YES;
-				if (isRmiConnected()) {
-					String text;
-					Boolean isButton = false;
-					if (event.widget.toString().contains("Button")) {
-						text = ((Button) event.widget).getText();
-						isButton = true;
-					} else
-						text = ((MenuItem) event.widget).getText();
-					switch (text) {
-					case "Solve":
-						boolean solveGame = true;
-						for (int possibleNumberOfHints : Constants.NUMBER_OF_HINTS_LIST) {
-							if (possibleNumberOfHints == getNumOfHints()) {
-								userCommand = Constants.HINT;
-								solveGame = false;
-								break;
-							}
-						}
-						if (solveGame) {
-							userCommand = Constants.SOLVE;
-							if (isButton) {
-								((Button) event.widget).setText("Pause");
-								((Button) event.widget).setImage(new Image(
-										Display.getCurrent(),
-										Constants.IMAGE_BUTTON_PAUSE));
-							} else
-								((MenuItem) event.widget).setText("Pause");
-						}
-						break;
-					case "Pause":
-						userCommand = Constants.PAUSE;
-						if (isButton) {
-							((Button) event.widget).setText("Solve");
-							((Button) event.widget)
-									.setImage(new Image(Display.getCurrent(),
-											Constants.IMAGE_BUTTON_SOLVE));
-						} else
-							((MenuItem) event.widget).setText("Solve");
-						break;
-					}
-				} else { // Is the user connected to remote solver server? NO;
-					displayErrorMessage(Constants.ERROR_SOLVE_WITHOUT_CONNECT);
+    private Listener solvePauseListener(final Board board) {
+        return new Listener() {
+            @Override
+            public void handleEvent(Event event) {
+                // Is the user connected to remote solver server? YES;
+                if (isRmiConnected()) {
+                    String text;
+                    Boolean isButton = false;
+                    if (event.widget.toString().contains("Button")) {
+                        text = ((Button) event.widget).getText();
+                        isButton = true;
+                    } else
+                        text = ((MenuItem) event.widget).getText();
+                    switch (text) {
+                        case "Solve":
+                            boolean solveGame = true;
+                            for (int possibleNumberOfHints : Constants.NUMBER_OF_HINTS_LIST) {
+                                if (possibleNumberOfHints == getNumOfHints()) {
+                                    userCommand = Constants.HINT;
+                                    solveGame = false;
+                                    break;
+                                }
+                            }
+                            if (solveGame) {
+                                userCommand = Constants.SOLVE;
+                                if (isButton) {
+                                    ((Button) event.widget).setText("Pause");
+                                    ((Button) event.widget).setImage(new Image(Display.getCurrent(), Constants.IMAGE_BUTTON_PAUSE));
+                                } else ((MenuItem) event.widget).setText("Pause");
+                            }
+                            break;
+                        case "Pause":
+                            userCommand = Constants.PAUSE;
+                            if (isButton) {
+                                ((Button) event.widget).setText("Solve");
+                                ((Button) event.widget).setImage(new Image(Display.getCurrent(), Constants.IMAGE_BUTTON_SOLVE));
+                            } else
+                                ((MenuItem) event.widget).setText("Solve");
+                            break;
+                    }
+                } else { // Is the user connected to remote solver server? NO;
+                    displayErrorMessage(Constants.ERROR_SOLVE_WITHOUT_CONNECT);
+                }
+                setChanged();
+                notifyObservers();
+                ((Composite) board).forceFocus();
+            }
+        };
+    }
 
-				}
-				setChanged();
-				notifyObservers();
-				((Composite) board).forceFocus();
-			}
-		};
-	}
+    private Listener undoListener(final Board board) {
+        return new Listener() {
+            @Override
+            public void handleEvent(Event event) {
+                userCommand = Constants.UNDO;
+                setChanged();
+                notifyObservers();
+                ((Composite) board).forceFocus();
+            }
+        };
+    }
 
-	private Listener undoListener(final Board board) {
-		return new Listener() {
-			@Override
-			public void handleEvent(Event event) {
-				userCommand = Constants.UNDO;
-				setChanged();
-				notifyObservers();
-				((Composite) board).forceFocus();
-			}
-		};
-	}
+    private Listener resetListener(final Board board) {
+        return new Listener() {
+            @Override
+            public void handleEvent(Event event) {
+                userCommand = Constants.RESET;
+                setChanged();
+                notifyObservers();
+                ((Composite) board).forceFocus();
+            }
+        };
+    }
 
-	private Listener resetListener(final Board board) {
-		return new Listener() {
-			@Override
-			public void handleEvent(Event event) {
-				userCommand = Constants.RESET;
-				setChanged();
-				notifyObservers();
-				((Composite) board).forceFocus();
-			}
-		};
-	}
+    private Listener exitListener() {
+        return new Listener() {
+            @Override
+            public void handleEvent(Event event) {
+                closeAll();
+                Display.getCurrent().dispose();
+                System.exit(0);
+            }
+        };
+    }
 
-	private Listener exitListener(final Board board) {
-		return new Listener() {
-			@Override
-			public void handleEvent(Event event) {
-				closeAll();
-				Display.getCurrent().dispose();
-				System.exit(0);
-			}
-		};
-	}
+    private Listener saveListener(final Shell shell, final Board board) {
+        return new Listener() {
+            @Override
+            public void handleEvent(Event event) {
+                FileDialog saveDialog = new FileDialog(shell, SWT.SAVE);
+                saveDialog.setFilterExtensions(Constants.EXTENSIONS);
+                String saveTo = saveDialog.open();
+                if (saveTo != null && saveTo.length() > 0) {
+                    userCommand = Constants.SAVE;
+                    setChanged();
+                    notifyObservers(saveTo);
+                }
+                ((Composite) board).forceFocus();
+            }
+        };
+    }
 
-	private Listener saveListener(final Shell shell, final Board board) {
-		return new Listener() {
-			@Override
-			public void handleEvent(Event event) {
-				FileDialog saveDialog = new FileDialog(shell, SWT.SAVE);
-				saveDialog.setFilterExtensions(Constants.EXTENSIONS);
-				String saveTo = saveDialog.open();
-				if (saveTo != null && saveTo.length() > 0) {
-					userCommand = Constants.SAVE;
-					setChanged();
-					notifyObservers(saveTo);
-				}
-				((Composite) board).forceFocus();
-			}
-		};
-	}
+    private Listener loadListener(final Shell shell, final Board board) {
+        return new Listener() {
+            @Override
+            public void handleEvent(Event event) {
+                FileDialog loadDialog = new FileDialog(shell, SWT.OPEN);
+                loadDialog.setFilterExtensions(Constants.EXTENSIONS);
+                String loadFrom = loadDialog.open();
+                if (loadFrom != null && loadFrom.length() > 0) {
+                    userCommand = Constants.LOAD;
+                    setChanged();
+                    notifyObservers(loadFrom);
+                }
+                ((Composite) board).forceFocus();
+            }
+        };
+    }
 
-	private Listener loadListener(final Shell shell, final Board board) {
-		return new Listener() {
-			@Override
-			public void handleEvent(Event event) {
-				FileDialog loadDialog = new FileDialog(shell, SWT.OPEN);
-				loadDialog.setFilterExtensions(Constants.EXTENSIONS);
-				String loadFrom = loadDialog.open();
-				if (loadFrom != null && loadFrom.length() > 0) {
-					userCommand = Constants.LOAD;
-					setChanged();
-					notifyObservers(loadFrom);
-				}
-				((Composite) board).forceFocus();
-			}
-		};
-	}
+    public int getUserCommand() {
+        return userCommand;
+    }
 
-	public int getUserCommand() {
-		return userCommand;
-	}
+    public void setScore(int score) {
+        this.score.setText(score + "");
+    }
 
-	public void setScore(int score) {
-		this.score.setText(score + "");
-	}
+    public int getNumOfHints() {
+        return numOfHints;
+    }
 
-	public int getNumOfHints() {
-		return numOfHints;
-	}
+    private void setNumOfHints(int numOfHints) {
+        this.numOfHints = numOfHints;
+    }
 
-	private void setNumOfHints(int numOfHints) {
-		this.numOfHints = numOfHints;
-	}
+    public int getSolveDepth() {
+        return solveDepth;
+    }
 
-	public int getSolveDepth() {
-		return solveDepth;
-	}
+    private void setSolveDepth(int solveDepth) {
+        this.solveDepth = solveDepth;
+    }
 
-	private void setSolveDepth(int solveDepth) {
-		this.solveDepth = solveDepth;
-	}
+    public boolean isRmiConnected() {
+        return rmiConnected;
+    }
 
-	public boolean isRmiConnected() {
-		return rmiConnected;
-	}
+    public void setRmiConnected(boolean rmiConnected) {
+        this.rmiConnected = rmiConnected;
+        setConnectionStatusStyle();
+    }
 
-	public void setRmiConnected(boolean rmiConnected) {
-		this.rmiConnected = rmiConnected;
-		setConnectionStatusStyle();
-	}
+    public String getRemoteServer() {
+        return remoteServer;
+    }
 
-	public String getRemoteServer() {
-		return remoteServer;
-	}
+    private void setRemoteServer(String remoteServer) {
+        this.remoteServer = remoteServer;
+    }
 
-	private void setRemoteServer(String remoteServer) {
-		this.remoteServer = remoteServer;
-	}
+    private void setConnectionStatusStyle() {
+        Display.getCurrent().syncExec(new Runnable() {
+            @Override
+            public void run() {
+                if (isRmiConnected()) {
+                    connectionStatus.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GREEN));
+                    connectionStatus.setText("Connected");
+                } else {
+                    connectionStatus.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_RED));
+                    connectionStatus.setText("Disconnected");
+                }
+            }
+        });
+    }
 
-	private void setConnectionStatusStyle() {
-		shell.getDisplay().syncExec(new Runnable() {
-			@Override
-			public void run() {
-				if (isRmiConnected()) {
-					connectionStatus.setForeground(Display.getCurrent()
-							.getSystemColor(SWT.COLOR_DARK_GREEN));
-					connectionStatus.setText("Connected");
-				} else {
-					connectionStatus.setForeground(Display.getCurrent()
-							.getSystemColor(SWT.COLOR_DARK_RED));
-					connectionStatus.setText("Disconnected");
-				}
-			}
-		});
-	}
+    public void displayErrorMessage(final String errorMessage) {
+        Display.getCurrent().syncExec(new Runnable() {
+            @Override
+            public void run() {
+                int style = SWT.ICON_WORKING | SWT.OK;
+                MessageBox messageBox = new MessageBox(new Shell(Display.getCurrent()), style);
+                messageBox.setMessage(errorMessage);
+                messageBox.open();
+            }
+        });
+    }
 
-	public void displayErrorMessage(final String errorMessage) {
-		shell.getDisplay().syncExec(new Runnable() {
-			@Override
-			public void run() {
-				int style = SWT.ICON_WORKING | SWT.OK;
-				MessageBox messageBox = new MessageBox(shell, style);
-				messageBox.setMessage(errorMessage);
-				messageBox.open();
-			}
-		});
-
-	}
-
-	public void closeAll() {
-		userCommand = Constants.CLOSETHREADS;
-		setChanged();
-		notifyObservers();
-		Thread.currentThread().stop();
-	}
+    public void closeAll() {
+        userCommand = Constants.CLOSETHREADS;
+        setChanged();
+        notifyObservers();
+        Thread.currentThread().stop();
+    }
 }
