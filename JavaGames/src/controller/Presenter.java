@@ -19,10 +19,8 @@ public class Presenter implements Observer {
 	private ArrayList<Thread> threadsList;
 
 	/**
-	 * @param observable
-	 *            Model and View (The Caller)
-	 * @param notification
-	 *            Observable's Parameters
+	 * @param observable    Model and View (The Caller)
+	 * @param notification  Observable's Parameters
 	 */
 	@Override
 	public void update(Observable observable, Object notification) {
@@ -90,22 +88,18 @@ public class Presenter implements Observer {
 					@Override
 					public void run() {
 						try {
-							int solveDepth = ui.getWindowShell()
-									.getSolveDepth();
-							// int solveDepth = 7;
+							int solveDepth = ui.getWindowShell().getSolveDepth();
 							m.solveGame(solveDepth);
 						} catch (RemoteException | CloneNotSupportedException
 								| InterruptedException | NotBoundException e) {
 							ui.getWindowShell().setRmiConnected(false);
-							ui.getWindowShell().displayErrorMessage(
-									Constants.ERROR_SERVER_GENERAL);
+							ui.getWindowShell().displayErrorMessage(Constants.ERROR_SERVER_GENERAL);
 						}
 					}
 				};
 				Thread solveThread = new Thread(solveRun);
 				threadsList.add(solveThread);
 				solveThread.start();
-
 				break;
 
 			case Constants.HINT:
@@ -113,21 +107,14 @@ public class Presenter implements Observer {
 					@Override
 					public void run() {
 						try {
-							int solveDepth = ui.getWindowShell()
-									.getSolveDepth();
-							int numOfHints = ui.getWindowShell()
-									.getNumOfHints();
-							// int solveDepth = 7;
-							// int numOfHints = 1;
+							int solveDepth = ui.getWindowShell().getSolveDepth();
+							int numOfHints = ui.getWindowShell().getNumOfHints();
 							m.getHint(numOfHints, solveDepth);
 						} catch (RemoteException | CloneNotSupportedException
 								| InterruptedException | NotBoundException e) {
-							// TODO Auto-generated catch block
 							ui.getWindowShell().setRmiConnected(false);
-							ui.getWindowShell().displayErrorMessage(
-									Constants.ERROR_SERVER_GENERAL);
+							ui.getWindowShell().displayErrorMessage(Constants.ERROR_SERVER_GENERAL);
 						}
-
 					}
 				};
 				Thread hintThread = new Thread(hintRun);
@@ -172,18 +159,15 @@ public class Presenter implements Observer {
 				try {
 					closeAllThreads();
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				break;
 
 			case Constants.CLOSETHREADS:
-				System.out.println("Im in CLOSETHREADS CASE");
 				try {
 					closeAllThreads();
 
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				break;
@@ -201,13 +185,10 @@ public class Presenter implements Observer {
 	}
 
 	public void closeAllThreads() throws InterruptedException {
-		System.out.println(threadsList.size());
 		for (Thread thread : threadsList) {
 			if (thread.isAlive()) {
 				thread.stop();
-				System.out.println("i Closed " + thread);
 				thread.join();
-				System.out.println("After Joining " + thread);
 			}
 		}
 	}
