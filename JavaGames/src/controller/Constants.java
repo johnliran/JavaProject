@@ -46,6 +46,10 @@ public final class Constants {
     public final static String IMAGE_BUTTON_SAVE = "images/WindowShell/Save.png";
     public final static String IMAGE_BUTTON_SOLVE = "images/WindowShell/Solve.png";
     public final static String IMAGE_BUTTON_UNDO = "images/WindowShell/Undo.png";
+    public final static String ERROR_COULDNT_CONNECT = "We can't reach server. Please check the port or connect to another one.";
+    public final static String ERROR_SERVER_GENERAL = "Server connection lost, Please reconnect or try another server.";
+    public final static String ERROR_SOLVE_WITHOUT_CONNECT = "Cannot connect to the remote solver server. Please check the connection status using the Settings page and try again.";
+    
 
     /* GameMaze Constants */
 

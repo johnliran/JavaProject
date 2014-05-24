@@ -473,4 +473,11 @@ public class GameMazeModel extends Observable implements Model {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void connectRMI(String serverName) throws RemoteException,
+			NotBoundException {
+		// TODO Auto-generated method stub
+		
+	}
 }
