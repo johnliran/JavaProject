@@ -46,9 +46,12 @@ public interface Model extends Serializable{
 
 	int getHint(int numOfHints, int solveDepth)
 			throws CloneNotSupportedException, RemoteException,
-			NotBoundException;
+			NotBoundException, InterruptedException;
 
 	void solveGame(int solveDepth) throws RemoteException,
-			CloneNotSupportedException, NotBoundException;
+			CloneNotSupportedException, NotBoundException, InterruptedException;
+
+	void connectRMI(String serverName) throws RemoteException,
+			NotBoundException;
 
 }
