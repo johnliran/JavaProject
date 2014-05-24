@@ -9,6 +9,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
+
 import java.util.Observable;
 
 /**
@@ -39,7 +40,7 @@ public class WindowShell extends Observable {
         // Initialize with default values
         setRmiConnected(false);
         setRemoteServer(Constants.SERVERS_LIST[0]);
-        setSolveDepth(Constants.SOLVE_DEPTHS_LIST[Constants.SOLVE_DEPTHS_LIST.length/2]);
+        setSolveDepth(Constants.SOLVE_DEPTHS_LIST[Constants.SOLVE_DEPTHS_LIST.length / 2]);
         setNumOfHints(Constants.NUMBER_OF_HINTS_LIST[0]);
 
         createMenuBar(shell, board);
@@ -96,7 +97,7 @@ public class WindowShell extends Observable {
 
         parent.setMenuBar(menuBar);
 
-        solveItem.addListener(SWT.Selection, solveListener(board));
+        solveItem.addListener(SWT.Selection, solvePauseListener(parent.getShell(), board));
         undoItem.addListener(SWT.Selection, undoListener(board));
         resetItem.addListener(SWT.Selection, resetListener(board));
         exitItem.addListener(SWT.Selection, exitListener(board));
@@ -105,7 +106,7 @@ public class WindowShell extends Observable {
     }
 
     private void createPlayButtons(Composite parent, Board board) {
-        createButton(parent, "Solve", Constants.IMAGE_BUTTON_SOLVE).addListener(SWT.Selection, solveListener(board));
+        createButton(parent, "Solve", Constants.IMAGE_BUTTON_SOLVE).addListener(SWT.Selection, solvePauseListener(parent.getShell(), board));
         createButton(parent, "Undo", Constants.IMAGE_BUTTON_UNDO).addListener(SWT.Selection, undoListener(board));
         createButton(parent, "Reset", Constants.IMAGE_BUTTON_RESET).addListener(SWT.Selection, resetListener(board));
         createButton(parent, "Save", Constants.IMAGE_BUTTON_SAVE).addListener(SWT.Selection, saveListener(parent.getShell(), board));
@@ -137,7 +138,7 @@ public class WindowShell extends Observable {
         for (int possibleSolveDepth : Constants.SOLVE_DEPTHS_LIST) {
             solveDepthCombo.add(Integer.toString(possibleSolveDepth));
         }
-        solveDepthCombo.select(solveDepthCombo.getItemCount()/2);
+        solveDepthCombo.select(solveDepthCombo.getItemCount() / 2);
 
         createLabel(parent, Constants.DEFAULT_FONT_SIZE, "Connect to Server");
         Combo connectToCombo = new Combo(parent, SWT.DROP_DOWN);
@@ -145,10 +146,13 @@ public class WindowShell extends Observable {
         connectToCombo.setItems(Constants.SERVERS_LIST);
         connectToCombo.select(0);
 
-        createButton(parent, "Connect", Constants.IMAGE_BUTTON_CONNECT).addListener(SWT.Selection, connectListener());
+        Button connect = createButton(parent, "Connect", Constants.IMAGE_BUTTON_CONNECT);
+
         numOfHintsCombo.addListener(SWT.Modify, numOfHintsListener());
         solveDepthCombo.addListener(SWT.Modify, solveDepthListener());
-        connectToCombo.addListener(SWT.Modify, connectToLitener());
+        connectToCombo.addListener(SWT.FocusIn, connectToLitener(connect));
+        connectToCombo.addListener(SWT.Traverse, connectToLitener(connect));
+        connect.addListener(SWT.Selection, connectListener());
 
         Label connectionStatus = createLabel(parent, Constants.DEFAULT_FONT_SIZE, "");
         setConnectionStatusStyle(connectionStatus);
@@ -204,14 +208,21 @@ public class WindowShell extends Observable {
         };
     }
 
-    private Listener connectToLitener() {
+    private Listener connectToLitener(final Button connect) {
         return new Listener() {
             @Override
             public void handleEvent(Event event) {
-                System.out.println("Connect To");
-                System.out.println(((Combo) event.widget).getText().toString());
-                setRemoteServer(((Combo) event.widget).getText().toString());
-                ((Combo) event.widget).getParent().forceFocus();
+                switch (event.type) {
+                    case SWT.FocusIn:
+                        System.out.println("FocusIn");
+                        break;
+                    case SWT.Traverse:
+                        if (event.detail == SWT.TRAVERSE_RETURN) {
+                            System.out.println("Enter");
+                            connect.forceFocus();
+                        }
+                        break;
+                }
             }
         };
     }
@@ -227,20 +238,49 @@ public class WindowShell extends Observable {
         };
     }
 
-    private Listener solveListener(final Board board) {
+    private Listener solvePauseListener(final Shell shell, final Board board) {
         return new Listener() {
             @Override
             public void handleEvent(Event event) {
-                boolean solveGame = true;
-                for (int possibleNumberOfHints : Constants.NUMBER_OF_HINTS_LIST) {
-                    if (possibleNumberOfHints == getNumOfHints()) {
-                        userCommand = Constants.HINT;
-                        solveGame = false;
-                        break;
+                // Is the user connected to remote solver server? YES;
+                if (isRmiConnected()) {
+                    String text;
+                    Boolean isButton = false;
+                    if (event.widget.toString().contains("Button")) {
+                        text = ((Button) event.widget).getText();
+                        isButton = true;
+                    } else text = ((MenuItem) event.widget).getText();
+                    switch (text) {
+                        case "Solve":
+                            boolean solveGame = true;
+                            for (int possibleNumberOfHints : Constants.NUMBER_OF_HINTS_LIST) {
+                                if (possibleNumberOfHints == getNumOfHints()) {
+                                    userCommand = Constants.HINT;
+                                    solveGame = false;
+                                    break;
+                                }
+                            }
+                            if (solveGame) {
+                                userCommand = Constants.SOLVE;
+                                if (isButton) {
+                                    ((Button) event.widget).setText("Pause");
+                                    ((Button) event.widget).setImage(new Image(Display.getCurrent(), Constants.IMAGE_BUTTON_PAUSE));
+                                } else ((MenuItem) event.widget).setText("Pause");
+                            }
+                            break;
+                        case "Pause":
+                            userCommand = Constants.PAUSE;
+                            if (isButton) {
+                                ((Button) event.widget).setText("Solve");
+                                ((Button) event.widget).setImage(new Image(Display.getCurrent(), Constants.IMAGE_BUTTON_SOLVE));
+                            } else ((MenuItem) event.widget).setText("Solve");
+                            break;
                     }
-                }
-                if (solveGame) {
-                    userCommand = Constants.SOLVE;
+                } else { // Is the user connected to remote solver server? NO;
+                    int style = SWT.ICON_WORKING | SWT.OK;
+                    MessageBox messageBox = new MessageBox(shell, style);
+                    messageBox.setMessage("Cannot connect to the remote solver server. Please check the connection status using the Settings page and try again.");
+                    messageBox.open();
                 }
                 setChanged();
                 notifyObservers();
@@ -284,11 +324,11 @@ public class WindowShell extends Observable {
         };
     }
 
-    private Listener saveListener(final Shell parent, final Board board) {
+    private Listener saveListener(final Shell shell, final Board board) {
         return new Listener() {
             @Override
             public void handleEvent(Event event) {
-                FileDialog saveDialog = new FileDialog(parent, SWT.SAVE);
+                FileDialog saveDialog = new FileDialog(shell, SWT.SAVE);
                 saveDialog.setFilterExtensions(Constants.EXTENSIONS);
                 String saveTo = saveDialog.open();
                 if (saveTo != null && saveTo.length() > 0) {
@@ -301,11 +341,11 @@ public class WindowShell extends Observable {
         };
     }
 
-    private Listener loadListener(final Shell parent, final Board board) {
+    private Listener loadListener(final Shell shell, final Board board) {
         return new Listener() {
             @Override
             public void handleEvent(Event event) {
-                FileDialog loadDialog = new FileDialog(parent, SWT.OPEN);
+                FileDialog loadDialog = new FileDialog(shell, SWT.OPEN);
                 loadDialog.setFilterExtensions(Constants.EXTENSIONS);
                 String loadFrom = loadDialog.open();
                 if (loadFrom != null && loadFrom.length() > 0) {
@@ -346,7 +386,7 @@ public class WindowShell extends Observable {
         return rmiConnected;
     }
 
-    private void setRmiConnected(boolean rmiConnected) {
+    public void setRmiConnected(boolean rmiConnected) {
         this.rmiConnected = rmiConnected;
     }
 
