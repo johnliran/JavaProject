@@ -168,11 +168,13 @@ public class Presenter implements Observer {
     }
     
     public void closeAllThreads() throws InterruptedException {
+    	System.out.println(threadsList.size());
     	for (Thread thread : threadsList) {
 			if (thread.isAlive()) {
-    			thread.stop();
+				thread.stop();
+    			System.out.println("i Closed " + thread);
 				thread.join();
-        		System.out.println("i Closed " + thread);
+        		System.out.println("After Joining " + thread);
 			}
 		}
     }

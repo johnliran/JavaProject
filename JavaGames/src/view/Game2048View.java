@@ -131,7 +131,6 @@ public class Game2048View extends Observable implements View, Runnable {
                         notifyObservers();
                         break;
                     case SWT.NO:
-                        windowShell.closeAll();
                         display.dispose();
                         System.exit(0);
                         break;
