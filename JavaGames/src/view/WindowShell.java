@@ -22,6 +22,7 @@ public class WindowShell extends Observable {
     private int solveDepth;
     private boolean rmiConnected;
     private String remoteServer;
+	private Combo connectToCombo;
     private Label connectionStatus;
 
     public WindowShell(String title, int width, int height, Display display, Shell shell, Board board) {
@@ -143,7 +144,7 @@ public class WindowShell extends Observable {
         solveDepthCombo.select(solveDepthCombo.getItemCount() / 2);
 
         createLabel(parent, Constants.DEFAULT_FONT_SIZE, "Connect to Server");
-        Combo connectToCombo = new Combo(parent, SWT.DROP_DOWN);
+		connectToCombo = new Combo(parent, SWT.DROP_DOWN);
         connectToCombo.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
         connectToCombo.setItems(Constants.SERVERS_LIST);
         connectToCombo.select(0);
@@ -234,6 +235,7 @@ public class WindowShell extends Observable {
         return new Listener() {
             @Override
             public void handleEvent(Event event) {
+            	setRemoteServer(connectToCombo.getText());
                 userCommand = Constants.CONNECT;
                 setChanged();
                 notifyObservers();
