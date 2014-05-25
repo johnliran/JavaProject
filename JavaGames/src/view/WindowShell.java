@@ -1,6 +1,7 @@
 package view;
 
-import controller.Constants;
+import java.util.ArrayList;
+import java.util.Observable;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -9,9 +10,22 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.widgets.TabItem;
 
-import java.util.Observable;
+import controller.Constants;
 
 /**
  * Generic Window Shell
@@ -23,8 +37,8 @@ public class WindowShell extends Observable {
     private int solveDepth;
     private boolean rmiConnected;
     private String remoteServer;
-	private Combo connectToCombo;
     private Label connectionStatus;
+    private ArrayList<String> serversList;
 
     public WindowShell(String title, int width, int height, Display display, Shell shell, Board board) {
         shell.setText(title);
@@ -38,8 +52,9 @@ public class WindowShell extends Observable {
         ((Composite) board).setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 8));
 
         // Initialize with default values
+        serversList = new ArrayList<>();
+        serversList.add(Constants.DEFAULT_SERVER);
         rmiConnected = false;
-        setRemoteServer(Constants.SERVERS_LIST[0]);
         setSolveDepth(Constants.SOLVE_DEPTHS_LIST[Constants.SOLVE_DEPTHS_LIST.length / 2]);
         setNumOfHints(Constants.NUMBER_OF_HINTS_LIST[0]);
 
@@ -57,9 +72,9 @@ public class WindowShell extends Observable {
         SashForm settingsForm = new SashForm(tabFolder, SWT.VERTICAL);
         Composite settingsComposite = new Composite(settingsForm, SWT.FILL);
         GridLayout settingsLayout = new GridLayout(1, false);
-        settingsLayout.verticalSpacing = 1;
+        settingsLayout.verticalSpacing = 5;
         settingsComposite.setLayout(settingsLayout);
-        createSettingsButtons(settingsComposite);
+        createSettingsButtons(settingsComposite, board);
         settingsTab.setText("Settings");
         settingsTab.setControl(settingsForm);
     }
@@ -68,41 +83,20 @@ public class WindowShell extends Observable {
         Menu menuBar = new Menu(parent, SWT.BAR);
         Menu fileMenu = new Menu(menuBar);
         Menu editMenu = new Menu(menuBar);
+        
 
-        MenuItem file = new MenuItem(menuBar, SWT.CASCADE);
-        file.setText("File");
-        file.setMenu(fileMenu);
-
-        MenuItem editItem = new MenuItem(menuBar, SWT.CASCADE);
-        editItem.setText("Edit");
-        editItem.setMenu(editMenu);
-
-        MenuItem loadItem = new MenuItem(fileMenu, SWT.PUSH);
-        loadItem.setText("Load");
-
-        MenuItem saveItem = new MenuItem(fileMenu, SWT.PUSH);
-        saveItem.setText("Save");
-
-        MenuItem exitItem = new MenuItem(fileMenu, SWT.PUSH);
-        exitItem.setText("Exit");
-
-        MenuItem solveItem = new MenuItem(editMenu, SWT.PUSH);
-        solveItem.setText("Solve");
-
-        MenuItem undoItem = new MenuItem(editMenu, SWT.PUSH);
-        undoItem.setText("Undo");
-
-        MenuItem resetItem = new MenuItem(editMenu, SWT.PUSH);
-        resetItem.setText("Reset");
-
+        createMenuItem(menuBar, SWT.CASCADE, "File").setMenu(fileMenu);
+        createMenuItem(menuBar, SWT.CASCADE, "Edit").setMenu(editMenu);
+        
+        createMenuItem(fileMenu, SWT.PUSH, "Load").addListener(SWT.Selection, loadListener(parent, board));
+        createMenuItem(fileMenu, SWT.PUSH, "Save").addListener(SWT.Selection, saveListener(parent, board));
+        createMenuItem(fileMenu, SWT.PUSH, "Exit").addListener(SWT.Selection, exitListener());
+        createMenuItem(editMenu, SWT.PUSH, "Solve").addListener(SWT.Selection, solvePauseListener(board));
+        createMenuItem(editMenu, SWT.PUSH, "Undo").addListener(SWT.Selection, undoListener(board));
+        createMenuItem(editMenu, SWT.PUSH, "Reset").addListener(SWT.Selection, resetListener(board));
+        
         parent.setMenuBar(menuBar);
 
-        solveItem.addListener(SWT.Selection, solvePauseListener(board));
-        undoItem.addListener(SWT.Selection, undoListener(board));
-        resetItem.addListener(SWT.Selection, resetListener(board));
-        saveItem.addListener(SWT.Selection, saveListener(parent, board));
-        loadItem.addListener(SWT.Selection, loadListener(parent, board));
-        exitItem.addListener(SWT.Selection, exitListener());
     }
 
     private void createPlayButtons(Composite parent, Board board) {
@@ -111,10 +105,10 @@ public class WindowShell extends Observable {
         createButton(parent, "Reset", Constants.IMAGE_BUTTON_RESET).addListener(SWT.Selection, resetListener(board));
         createButton(parent, "Save", Constants.IMAGE_BUTTON_SAVE).addListener(SWT.Selection, saveListener(parent.getShell(), board));
         createButton(parent, "Load", Constants.IMAGE_BUTTON_LOAD).addListener(SWT.Selection, loadListener(parent.getShell(), board));
-        score = createLabel(parent, Constants.SCORE_FONT_SIZE, 0 + "         ");
+        score = createLabel(parent, SWT.CENTER, Constants.SCORE_FONT_SIZE, 0 + "         ");
     }
 
-    private void createSettingsButtons(Composite parent) {
+    private void createSettingsButtons(Composite parent, Board board) {
         /*
 		 * Group solverGroup = new Group(parent, SWT.SHADOW_ETCHED_IN);
 		 * solverGroup.setText("Solver"); solverGroup.setLayout(new
@@ -124,7 +118,7 @@ public class WindowShell extends Observable {
 		 * serverGroup.setText("Remote Server"); serverGroup.setLayout(new
 		 * GridLayout(1, false));
 		 */
-        createLabel(parent, Constants.DEFAULT_FONT_SIZE, "Number Of Hints");
+        createLabel(parent, SWT.LEFT, Constants.DEFAULT_FONT_SIZE, "Number Of Hints");
         Combo numOfHintsCombo = new Combo(parent, SWT.READ_ONLY);
         numOfHintsCombo.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
         for (int possibleNumberOfHints : Constants.NUMBER_OF_HINTS_LIST) {
@@ -133,7 +127,7 @@ public class WindowShell extends Observable {
         numOfHintsCombo.add("To Resolve");
         numOfHintsCombo.select(0);
 
-        createLabel(parent, Constants.DEFAULT_FONT_SIZE, "Solve Depth");
+        createLabel(parent, SWT.LEFT, Constants.DEFAULT_FONT_SIZE, "Solve Depth");
         Combo solveDepthCombo = new Combo(parent, SWT.READ_ONLY);
         solveDepthCombo.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
         for (int possibleSolveDepth : Constants.SOLVE_DEPTHS_LIST) {
@@ -141,26 +135,28 @@ public class WindowShell extends Observable {
         }
         solveDepthCombo.select(solveDepthCombo.getItemCount() / 2);
 
-        createLabel(parent, Constants.DEFAULT_FONT_SIZE, "Connect to Server");
-		connectToCombo = new Combo(parent, SWT.DROP_DOWN);
+        createLabel(parent, SWT.LEFT, Constants.DEFAULT_FONT_SIZE, "Connect to Server");
+		Combo connectToCombo = new Combo(parent, SWT.DROP_DOWN);
         connectToCombo.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
-        connectToCombo.setItems(Constants.SERVERS_LIST);
+        for (String server : serversList) {
+            connectToCombo.add(server);
+        }
         connectToCombo.select(0);
 
         Button connect = createButton(parent, "Connect", Constants.IMAGE_BUTTON_CONNECT);
+        
+        numOfHintsCombo.addListener(SWT.Modify, numOfHintsListener(board));
+        solveDepthCombo.addListener(SWT.Modify, solveDepthListener(board));
+//        connectToCombo.addListener(SWT.FocusIn, connectToLitener(connect));
+//        connectToCombo.addListener(SWT.Traverse, connectToLitener(connect));
+        connect.addListener(SWT.Selection, connectListener(connectToCombo, board));
 
-        numOfHintsCombo.addListener(SWT.Modify, numOfHintsListener());
-        solveDepthCombo.addListener(SWT.Modify, solveDepthListener());
-        connectToCombo.addListener(SWT.FocusIn, connectToLitener(connect));
-        connectToCombo.addListener(SWT.Traverse, connectToLitener(connect));
-        connect.addListener(SWT.Selection, connectListener());
-
-        connectionStatus = createLabel(parent, Constants.DEFAULT_FONT_SIZE, "");
+        connectionStatus = createLabel(parent, SWT.CENTER, Constants.DEFAULT_FONT_SIZE, "");
         setConnectionStatusStyle();
     }
 
-    private Label createLabel(Composite parent, int fontSize, String text) {
-        Label label = new Label(parent, SWT.CENTER);
+    private Label createLabel(Composite parent, int labelAlignment, int fontSize, String text) {
+        Label label = new Label(parent, labelAlignment);
         label.setForeground(new Color(Display.getCurrent(), Constants.FCOLOR_R, Constants.FCOLOR_G, Constants.FCOLOR_B));
         label.setFont(new Font(Display.getCurrent(), label.getFont().getFontData()[0].getName(), fontSize, SWT.BOLD));
         label.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
@@ -175,8 +171,15 @@ public class WindowShell extends Observable {
         button.setText(text);
         return button;
     }
+    
+    private MenuItem createMenuItem(Menu menuBar, int menuItemStyle, String text) {
+    	MenuItem item = new MenuItem(menuBar, menuItemStyle);
+        item.setText(text);
 
-    private Listener numOfHintsListener() {
+        return item;
+    }
+
+    private Listener numOfHintsListener(final Board board) {
         return new Listener() {
             @Override
             public void handleEvent(Event event) {
@@ -191,11 +194,12 @@ public class WindowShell extends Observable {
                 if (solveGame) {
                     setNumOfHints(Integer.MAX_VALUE);
                 }
+                ((Composite)board).forceFocus();
             }
         };
     }
 
-    private Listener solveDepthListener() {
+    private Listener solveDepthListener(final Board board) {
         return new Listener() {
             @Override
             public void handleEvent(Event event) {
@@ -206,37 +210,45 @@ public class WindowShell extends Observable {
                         break;
                     }
                 }
+                ((Composite)board).forceFocus();
             }
         };
     }
+//
+//    private Listener connectToLitener(final Button connect) {
+//        return new Listener() {
+//            @Override
+//            public void handleEvent(Event event) {
+//                switch (event.type) {
+//                    case SWT.FocusIn:
+//                        System.out.println("FocusIn");
+//                        break;
+//                    case SWT.Traverse:
+//                        if (event.detail == SWT.TRAVERSE_RETURN) {
+//                            System.out.println("Enter");
+//                            connect.forceFocus();
+//                        }
+//                        break;
+//                }
+//            }
+//        };
+//    }
 
-    private Listener connectToLitener(final Button connect) {
+    private Listener connectListener(final Combo connectToCombo,final Board board) {
         return new Listener() {
             @Override
             public void handleEvent(Event event) {
-                switch (event.type) {
-                    case SWT.FocusIn:
-                        System.out.println("FocusIn");
-                        break;
-                    case SWT.Traverse:
-                        if (event.detail == SWT.TRAVERSE_RETURN) {
-                            System.out.println("Enter");
-                            connect.forceFocus();
-                        }
-                        break;
-                }
-            }
-        };
-    }
-
-    private Listener connectListener() {
-        return new Listener() {
-            @Override
-            public void handleEvent(Event event) {
-            	setRemoteServer(connectToCombo.getText());
+            	String server = connectToCombo.getText();
+            	setRemoteServer(server);
                 userCommand = Constants.CONNECT;
                 setChanged();
                 notifyObservers();
+                if (!serversList.contains(server) && isRmiConnected()) {
+            		serversList.add(server);
+            		connectToCombo.add(server);
+            	}
+                ((Composite)board).forceFocus();
+                
             }
         };
     }
@@ -269,8 +281,7 @@ public class WindowShell extends Observable {
                                 if (isButton) {
                                     ((Button) event.widget).setText("Pause");
                                     ((Button) event.widget).setImage(new Image(Display.getCurrent(), Constants.IMAGE_BUTTON_PAUSE));
-                                    setChanged();
-                                    notifyObservers();
+                                    
                                 } else ((MenuItem) event.widget).setText("Pause");
                             }
                             break;
@@ -283,6 +294,8 @@ public class WindowShell extends Observable {
                                 ((MenuItem) event.widget).setText("Solve");
                             break;
                     }
+                    setChanged();
+                    notifyObservers();
                 } else { // Is the user connected to remote solver server? NO;
                     displayErrorMessage(Constants.ERROR_SOLVE_WITHOUT_CONNECT);
                 }

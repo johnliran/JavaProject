@@ -31,8 +31,8 @@ public class Game2048View extends Observable implements View, Runnable {
         initMouseCommand();
         board = new Game2048Board(shell, SWT.NONE, mouseCommand);
         String title = "2048";
-        int width = 500;
-        int height = 350;
+        int width = 550;
+        int height = 390;
         windowShell = new WindowShell(title, width, height, display, shell, board);
         initKeyboardListener();
         shell.open();
