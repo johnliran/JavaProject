@@ -2,7 +2,6 @@ package view;
 
 import java.util.ArrayList;
 import java.util.Observable;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.graphics.Color;
@@ -39,16 +38,15 @@ public class WindowShell extends Observable {
     private String remoteServer;
     private Label connectionStatus;
     private ArrayList<String> serversList;
+    private Combo connectToCombo;
 
-    public WindowShell(String title, int width, int height, Display display, Shell shell, Board board) {
+	public WindowShell(String title, int width, int height, Display display, Shell shell, Board board) {
         shell.setText(title);
         shell.setSize(width, height);
         shell.setLayout(new GridLayout(2, false));
         shell.setBackground(new Color(display, Constants.BCOLOR_R, Constants.BCOLOR_G, Constants.BCOLOR_B));
         shell.setBackgroundMode(SWT.INHERIT_DEFAULT);
         shell.addListener(SWT.Close, exitListener());
-        
-
         ((Composite) board).setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 8));
 
         // Initialize with default values
@@ -57,7 +55,7 @@ public class WindowShell extends Observable {
         rmiConnected = false;
         setSolveDepth(Constants.SOLVE_DEPTHS_LIST[Constants.SOLVE_DEPTHS_LIST.length / 2]);
         setNumOfHints(Constants.NUMBER_OF_HINTS_LIST[0]);
-
+        
         createMenuBar(shell, board);
 
         TabFolder tabFolder = new TabFolder(shell, SWT.NULL);
@@ -84,27 +82,24 @@ public class WindowShell extends Observable {
         Menu fileMenu = new Menu(menuBar);
         Menu editMenu = new Menu(menuBar);
         
-
         createMenuItem(menuBar, SWT.CASCADE, "File").setMenu(fileMenu);
         createMenuItem(menuBar, SWT.CASCADE, "Edit").setMenu(editMenu);
-        
-        createMenuItem(fileMenu, SWT.PUSH, "Load").addListener(SWT.Selection, loadListener(parent, board));
-        createMenuItem(fileMenu, SWT.PUSH, "Save").addListener(SWT.Selection, saveListener(parent, board));
+        createMenuItem(fileMenu, SWT.PUSH, "Load").addListener(SWT.Selection, loadListener(board));
+        createMenuItem(fileMenu, SWT.PUSH, "Save").addListener(SWT.Selection, saveListener(board));
         createMenuItem(fileMenu, SWT.PUSH, "Exit").addListener(SWT.Selection, exitListener());
         createMenuItem(editMenu, SWT.PUSH, "Solve").addListener(SWT.Selection, solvePauseListener(board));
         createMenuItem(editMenu, SWT.PUSH, "Undo").addListener(SWT.Selection, undoListener(board));
         createMenuItem(editMenu, SWT.PUSH, "Reset").addListener(SWT.Selection, resetListener(board));
         
         parent.setMenuBar(menuBar);
-
     }
 
     private void createPlayButtons(Composite parent, Board board) {
         createButton(parent, "Solve", Constants.IMAGE_BUTTON_SOLVE).addListener(SWT.Selection, solvePauseListener(board));
         createButton(parent, "Undo", Constants.IMAGE_BUTTON_UNDO).addListener(SWT.Selection, undoListener(board));
         createButton(parent, "Reset", Constants.IMAGE_BUTTON_RESET).addListener(SWT.Selection, resetListener(board));
-        createButton(parent, "Save", Constants.IMAGE_BUTTON_SAVE).addListener(SWT.Selection, saveListener(parent.getShell(), board));
-        createButton(parent, "Load", Constants.IMAGE_BUTTON_LOAD).addListener(SWT.Selection, loadListener(parent.getShell(), board));
+        createButton(parent, "Load", Constants.IMAGE_BUTTON_LOAD).addListener(SWT.Selection, loadListener(board));
+        createButton(parent, "Save", Constants.IMAGE_BUTTON_SAVE).addListener(SWT.Selection, saveListener(board));
         score = createLabel(parent, SWT.CENTER, Constants.SCORE_FONT_SIZE, 0 + "         ");
     }
 
@@ -136,22 +131,20 @@ public class WindowShell extends Observable {
         solveDepthCombo.select(solveDepthCombo.getItemCount() / 2);
 
         createLabel(parent, SWT.LEFT, Constants.DEFAULT_FONT_SIZE, "Connect to Server");
-		Combo connectToCombo = new Combo(parent, SWT.DROP_DOWN);
+		connectToCombo = new Combo(parent, SWT.DROP_DOWN);
         connectToCombo.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
-        for (String server : serversList) {
-            connectToCombo.add(server);
-        }
+        connectToCombo.add(Constants.DEFAULT_SERVER);
         connectToCombo.select(0);
 
         Button connect = createButton(parent, "Connect", Constants.IMAGE_BUTTON_CONNECT);
         
         numOfHintsCombo.addListener(SWT.Modify, numOfHintsListener(board));
         solveDepthCombo.addListener(SWT.Modify, solveDepthListener(board));
-//        connectToCombo.addListener(SWT.FocusIn, connectToLitener(connect));
-//        connectToCombo.addListener(SWT.Traverse, connectToLitener(connect));
+//      connectToCombo.addListener(SWT.FocusIn, connectToLitener(connect));
+//      connectToCombo.addListener(SWT.Traverse, connectToLitener(connect));
         connect.addListener(SWT.Selection, connectListener(connectToCombo, board));
 
-        connectionStatus = createLabel(parent, SWT.CENTER, Constants.DEFAULT_FONT_SIZE, "");
+        connectionStatus = createLabel(parent, SWT.CENTER, Constants.DEFAULT_FONT_SIZE, "Disconnectted");
         setConnectionStatusStyle();
     }
 
@@ -178,6 +171,17 @@ public class WindowShell extends Observable {
 
         return item;
     }
+    
+    private void createFileDialog(int fileDialogType, int commandToExecute) {
+        FileDialog dialog = new FileDialog(new Shell(Display.getCurrent()), fileDialogType);
+        dialog.setFilterExtensions(Constants.EXTENSIONS);
+        String input = dialog.open();
+        if (input != null && input.length() > 0) {
+            userCommand = commandToExecute;
+            setChanged();
+            notifyObservers(input);
+        } 
+    }
 
     private Listener numOfHintsListener(final Board board) {
         return new Listener() {
@@ -194,7 +198,7 @@ public class WindowShell extends Observable {
                 if (solveGame) {
                     setNumOfHints(Integer.MAX_VALUE);
                 }
-                ((Composite)board).forceFocus();
+                ((Composite) board).forceFocus();
             }
         };
     }
@@ -210,11 +214,11 @@ public class WindowShell extends Observable {
                         break;
                     }
                 }
-                ((Composite)board).forceFocus();
+                ((Composite) board).forceFocus();
             }
         };
     }
-//
+
 //    private Listener connectToLitener(final Button connect) {
 //        return new Listener() {
 //            @Override
@@ -234,7 +238,7 @@ public class WindowShell extends Observable {
 //        };
 //    }
 
-    private Listener connectListener(final Combo connectToCombo,final Board board) {
+    private Listener connectListener(final Combo connectToCombo, final Board board) {
         return new Listener() {
             @Override
             public void handleEvent(Event event) {
@@ -247,7 +251,7 @@ public class WindowShell extends Observable {
             		serversList.add(server);
             		connectToCombo.add(server);
             	}
-                ((Composite)board).forceFocus();
+                ((Composite) board).forceFocus();
                 
             }
         };
@@ -332,6 +336,15 @@ public class WindowShell extends Observable {
         return new Listener() {
             @Override
             public void handleEvent(Event event) {
+                int style = SWT.ICON_WORKING | SWT.YES | SWT.NO;
+                MessageBox messageBox = new MessageBox(new Shell(Display.getCurrent()), style);
+                messageBox.setMessage(Constants.EXIT);
+                if (messageBox.open() == SWT.YES) {
+                	createFileDialog(SWT.SAVE, Constants.SAVE);
+                    userCommand = Constants.SAVECONFIG;
+                    setChanged();
+                    notifyObservers();
+                }
                 closeAll();
                 Display.getCurrent().dispose();
                 System.exit(0);
@@ -339,35 +352,21 @@ public class WindowShell extends Observable {
         };
     }
 
-    private Listener saveListener(final Shell shell, final Board board) {
+    private Listener loadListener(final Board board) {
         return new Listener() {
             @Override
             public void handleEvent(Event event) {
-                FileDialog saveDialog = new FileDialog(shell, SWT.SAVE);
-                saveDialog.setFilterExtensions(Constants.EXTENSIONS);
-                String saveTo = saveDialog.open();
-                if (saveTo != null && saveTo.length() > 0) {
-                    userCommand = Constants.SAVE;
-                    setChanged();
-                    notifyObservers(saveTo);
-                }
+            	createFileDialog(SWT.OPEN, Constants.LOAD);
                 ((Composite) board).forceFocus();
             }
         };
     }
-
-    private Listener loadListener(final Shell shell, final Board board) {
+    
+    private Listener saveListener(final Board board) {
         return new Listener() {
             @Override
             public void handleEvent(Event event) {
-                FileDialog loadDialog = new FileDialog(shell, SWT.OPEN);
-                loadDialog.setFilterExtensions(Constants.EXTENSIONS);
-                String loadFrom = loadDialog.open();
-                if (loadFrom != null && loadFrom.length() > 0) {
-                    userCommand = Constants.LOAD;
-                    setChanged();
-                    notifyObservers(loadFrom);
-                }
+            	createFileDialog(SWT.SAVE, Constants.SAVE);
                 ((Composite) board).forceFocus();
             }
         };
@@ -449,8 +448,26 @@ public class WindowShell extends Observable {
         try {
 			Thread.currentThread().join();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+    }
+    
+    public ArrayList<String> getServersList() {
+		return serversList;
+	}
+    
+	public void setServersList(ArrayList<String> serversList) {
+		this.serversList = serversList;
+        for (String server : serversList) {
+        	if (!connectToCombo.getText().equalsIgnoreCase(server)) {
+        		connectToCombo.add(server);
+        	}
+        }
+	}
+    
+    public void initialize() {
+    	userCommand = Constants.LOADCONFIG;
+    	setChanged();
+    	notifyObservers();
     }
 }

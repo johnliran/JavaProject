@@ -450,7 +450,6 @@ public class GameMazeModel extends Observable implements Model {
 			counter ++;
 			moveByAction(myActions.get(0));
 			myActions.remove(0);
-			System.out.println("Im still going " + counter);
 		}
 		
 			
@@ -484,18 +483,40 @@ public class GameMazeModel extends Observable implements Model {
 			moveUp(false);
 		if (rows > 0 && cols == 0)
 			moveDown(false);
-		
-		
-
 	}
 	
 	/**
 	 * @param serverName to connect
 	 */
 	@Override
-	public void connectRMI(String serverName) throws RemoteException,
-			NotBoundException {
+	public void connectRMI(String serverName) throws RemoteException, NotBoundException {
 		registry = LocateRegistry.getRegistry(serverName, RMIConstants.PORT);
 		remote = (RemoteInterface) registry.lookup(RMIConstants.RMI_ID);
+	}
+	
+	/**
+	 * @param xmlFileName	Output file name
+	 */
+	@Override
+	public void saveConfiguration(ArrayList<String> serversList, String xmlFileName) {
+		try {
+			Serializer.serializeToXML(serversList, xmlFileName);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * @param xmlFileName	Input file name
+	 */
+	@Override
+	public ArrayList<String> loadConfiguration(String xmlFileName) {
+		try {
+			ArrayList<String> serversList = new ArrayList<>();
+			serversList = (ArrayList<String>) Serializer.deserializeXML(xmlFileName);
+			return serversList;
+		} catch (Exception e) {
+			return new ArrayList<String>();
+		}
 	}
 }

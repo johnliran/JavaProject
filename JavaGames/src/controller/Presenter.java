@@ -19,10 +19,8 @@ public class Presenter implements Observer {
 	private ArrayList<Thread> threadsList;
 
 	/**
-	 * @param observable
-	 *            Model and View (The Caller)
-	 * @param notification
-	 *            Observable's Parameters
+	 * @param observable	Model and View (The Caller)
+	 * @param notification	Observable's Parameters
 	 */
 	@Override
 	public void update(Observable observable, Object notification) {
@@ -129,7 +127,6 @@ public class Presenter implements Observer {
 			case Constants.CONNECT:
 				try {
 					String serverName = ui.getWindowShell().getRemoteServer();
-					System.out.println(serverName);
 					m.connectRMI(serverName);
 					ui.getWindowShell().setRmiConnected(true);
 				} catch (RemoteException | NotBoundException e) {
@@ -151,7 +148,6 @@ public class Presenter implements Observer {
 				break;
 
 			case Constants.RESET:
-
 				try {
 					closeAllThreads();
 				} catch (InterruptedException e) {
@@ -167,6 +163,15 @@ public class Presenter implements Observer {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
+				break;
+				
+			case Constants.SAVECONFIG:
+				ArrayList<String> serversList = ui.getWindowShell().getServersList();
+				m.saveConfiguration(serversList, Constants.CONFIG_FILE);
+				break;
+				
+			case Constants.LOADCONFIG:
+				ui.getWindowShell().setServersList(m.loadConfiguration(Constants.CONFIG_FILE));
 				break;
 
 			case Constants.CLOSETHREADS:
@@ -201,6 +206,7 @@ public class Presenter implements Observer {
 
 	public void startGame() {
 		m.initialize();
+		ui.getWindowShell().initialize();
 		ui.run();
 	}
 	

@@ -18,13 +18,9 @@ public class Game2048Model implements Cloneable, Model {
     public int score;
     public boolean gameWon;
     public boolean gameOver;
-//    private Stack<int[][]> previousBoards;
-//    private Stack<Integer> previousScores;
 
     public Game2048Model() {
         this.board = new int[Constants.BOARDSIZE][Constants.BOARDSIZE];
-//        this.previousBoards = new Stack<int[][]>();
-//        this.previousScores = new Stack<Integer>();
     }
     
     public Game2048Model(Game2048Object gameObject) {
@@ -96,7 +92,6 @@ public class Game2048Model implements Cloneable, Model {
                             setScore(getScore() + numberToCheck);
                             if (numberToCheck == Constants.TARGETSCORE && !isGameWon()) {
                                 setGameWon(true);
-//                                notifyObservers();
                             }
                         } else return moved;
                     }
@@ -108,7 +103,6 @@ public class Game2048Model implements Cloneable, Model {
         }
         if (moved && !simulate) {
             setData(newBoard);
-//            generate();
         }
         return moved;
     }
