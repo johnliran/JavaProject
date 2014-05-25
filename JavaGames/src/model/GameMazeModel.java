@@ -34,87 +34,31 @@ public class GameMazeModel extends Observable implements Model {
 	private Registry registry;
 	private RemoteInterface remote;
 	private int[][] initialMaze = {
-			{ Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL,
-					Constants.WALL, Constants.WALL, Constants.WALL,
-					Constants.WALL, Constants.WALL, Constants.WALL,
-					Constants.WALL, Constants.WALL, Constants.WALL,
-					Constants.WALL, Constants.WALL },
-			{ Constants.WALL, Constants.BLANK, Constants.BLANK,
-					Constants.BLANK, Constants.WALL, Constants.BLANK,
-					Constants.BLANK, Constants.BLANK, Constants.BLANK,
-					Constants.BLANK, Constants.BLANK, Constants.BLANK,
-					Constants.BLANK, Constants.BLANK, Constants.WALL },
-			{ Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK,
-					Constants.WALL, Constants.BLANK, Constants.WALL,
-					Constants.WALL, Constants.BLANK, Constants.WALL,
-					Constants.WALL, Constants.BLANK, Constants.WALL,
-					Constants.BLANK, Constants.WALL },
-			{ Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK,
-					Constants.WALL, Constants.BLANK, Constants.BLANK,
-					Constants.WALL, Constants.BLANK, Constants.WALL,
-					Constants.BLANK, Constants.BLANK, Constants.WALL,
-					Constants.BLANK, Constants.WALL },
-			{ Constants.WALL, Constants.BLANK, Constants.WALL, Constants.WALL,
-					Constants.WALL, Constants.WALL, Constants.WALL,
-					Constants.WALL, Constants.BLANK, Constants.WALL,
-					Constants.WALL, Constants.BLANK, Constants.WALL,
-					Constants.WALL, Constants.WALL },
-			{ Constants.WALL, Constants.BLANK, Constants.BLANK,
-					Constants.BLANK, Constants.BLANK, Constants.BLANK,
-					Constants.BLANK, Constants.BLANK, Constants.BLANK,
-					Constants.BLANK, Constants.WALL, Constants.BLANK,
-					Constants.WALL, Constants.BLANK, Constants.WALL },
-			{ Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK,
-					Constants.WALL, Constants.WALL, Constants.WALL,
-					Constants.WALL, Constants.WALL, Constants.WALL,
-					Constants.WALL, Constants.BLANK, Constants.WALL,
-					Constants.BLANK, Constants.WALL },
-			{ Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK,
-					Constants.WALL, Constants.BLANK, Constants.BLANK,
-					Constants.BLANK, Constants.BLANK, Constants.BLANK,
-					Constants.WALL, Constants.BLANK, Constants.BLANK,
-					Constants.BLANK, Constants.CHEESE },
-			{ Constants.WALL, Constants.BLANK, Constants.WALL, Constants.WALL,
-					Constants.WALL, Constants.BLANK, Constants.WALL,
-					Constants.BLANK, Constants.WALL, Constants.BLANK,
-					Constants.WALL, Constants.BLANK, Constants.WALL,
-					Constants.BLANK, Constants.WALL },
-			{ Constants.MOUSE_RIGHT, Constants.BLANK, Constants.BLANK,
-					Constants.BLANK, Constants.WALL, Constants.BLANK,
-					Constants.WALL, Constants.BLANK, Constants.WALL,
-					Constants.BLANK, Constants.WALL, Constants.BLANK,
-					Constants.WALL, Constants.BLANK, Constants.WALL },
-			{ Constants.WALL, Constants.WALL, Constants.WALL, Constants.BLANK,
-					Constants.WALL, Constants.BLANK, Constants.WALL,
-					Constants.BLANK, Constants.WALL, Constants.BLANK,
-					Constants.WALL, Constants.BLANK, Constants.WALL,
-					Constants.BLANK, Constants.WALL },
-			{ Constants.WALL, Constants.BLANK, Constants.BLANK,
-					Constants.BLANK, Constants.WALL, Constants.BLANK,
-					Constants.WALL, Constants.BLANK, Constants.WALL,
-					Constants.BLANK, Constants.WALL, Constants.BLANK,
-					Constants.WALL, Constants.BLANK, Constants.WALL },
-			{ Constants.WALL, Constants.BLANK, Constants.WALL, Constants.WALL,
-					Constants.WALL, Constants.WALL, Constants.WALL,
-					Constants.BLANK, Constants.WALL, Constants.WALL,
-					Constants.WALL, Constants.WALL, Constants.WALL,
-					Constants.BLANK, Constants.WALL },
-			{ Constants.WALL, Constants.BLANK, Constants.BLANK,
-					Constants.BLANK, Constants.BLANK, Constants.BLANK,
-					Constants.WALL, Constants.BLANK, Constants.BLANK,
-					Constants.BLANK, Constants.BLANK, Constants.BLANK,
-					Constants.BLANK, Constants.BLANK, Constants.WALL },
-			{ Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL,
-					Constants.WALL, Constants.WALL, Constants.WALL,
-					Constants.WALL, Constants.WALL, Constants.WALL,
-					Constants.WALL, Constants.WALL, Constants.WALL,
-					Constants.WALL, Constants.WALL }, };
-
+            {Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL},
+            {Constants.WALL, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.WALL},
+            {Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL},
+            {Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL},
+            {Constants.WALL, Constants.BLANK, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.WALL, Constants.WALL},
+            {Constants.WALL, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL},
+            {Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL},
+            {Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.CHEESE},
+            {Constants.WALL, Constants.BLANK, Constants.WALL, Constants.WALL, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL},
+            {Constants.MOUSE_RIGHT, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL},
+            {Constants.WALL, Constants.WALL, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL},
+            {Constants.WALL, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.WALL},
+            {Constants.WALL, Constants.BLANK, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.BLANK, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.BLANK, Constants.WALL},
+            {Constants.WALL, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.WALL, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.BLANK, Constants.WALL},
+            {Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL, Constants.WALL},
+    };
+	
 	public GameMazeModel() {
 		this.maze = new int[initialMaze.length][initialMaze[0].length];
 		this.state = new GameMazeState();
 	}
-
+	/**
+	 * @param dx,dy for movement, simulate Specify whether or not to make changes
+	 * @return True: Movement was made / False: No movement was made
+	 */
 	public boolean move(int dx, int dy, boolean simulate) {
 		int x = ((Point) (state.getState())).x;
 		int y = ((Point) (state.getState())).y;
@@ -277,8 +221,7 @@ public class GameMazeModel extends Observable implements Model {
 	}
 
 	/**
-	 * @param simulate
-	 *            Specify whether or not to make changes
+	 * @param simulate Specify whether or not to make changes
 	 * @return True: Movement was made / False: No movement was made
 	 */
 	@Override
@@ -375,8 +318,7 @@ public class GameMazeModel extends Observable implements Model {
 	}
 
 	/**
-	 * @param gameWon
-	 *            True: Game Won
+	 * @param gameWon True: Game Won
 	 */
 	@Override
 	public void setGameWon(boolean gameWon) {
@@ -384,8 +326,7 @@ public class GameMazeModel extends Observable implements Model {
 	}
 
 	/**
-	 * @param xmlFileName
-	 *            Output file name
+	 * @param xmlFileName Output file name
 	 */
 	@Override
 	public void saveGame(String xmlFileName) {
@@ -397,16 +338,13 @@ public class GameMazeModel extends Observable implements Model {
 	}
 
 	/**
-	 * @param xmlFileName
-	 *            Input file name
+	 * @param xmlFileName Input file name
 	 */
 	@Override
 	public void loadGame(String xmlFileName) {
 		try {
-			setData(((GameMazeModel) Serializer.deserializeXML(xmlFileName))
-					.getData());
-			setScore(((GameMazeModel) Serializer.deserializeXML(xmlFileName))
-					.getScore());
+			setData(((GameMazeModel) Serializer.deserializeXML(xmlFileName)).getData());
+			setScore(((GameMazeModel) Serializer.deserializeXML(xmlFileName)).getScore());
 			updateMaze(state, getStartState());
 			state.setState(getStartState().getState());
 		} catch (Exception e) {
@@ -448,8 +386,7 @@ public class GameMazeModel extends Observable implements Model {
 	public GameMazeState getStartState() {
 		for (int row = 0; row < maze.length; row++) {
 			for (int column = 0; column < maze[0].length; column++) {
-				if (maze[row][column] > 0
-						&& maze[row][column] != Constants.CHEESE) {
+				if (maze[row][column] > 0 && maze[row][column] != Constants.CHEESE) {
 					GameMazeState start = new GameMazeState();
 					start.setState(new Point(row, column));
 					return start;
@@ -473,17 +410,14 @@ public class GameMazeModel extends Observable implements Model {
 	}
 
 	private int numberOfMovesToSolveGame() {
-		AStar as = new AStar(new GameMazeDomain(this), new GameMazeDistanceG(),
-				new GameMazeDistanceH());
-		ArrayList<Action> actions = as.search(this.getStartState(),
-				this.getGoalState());
+		AStar as = new AStar(new GameMazeDomain(this), new GameMazeDistanceG(), new GameMazeDistanceH());
+		ArrayList<Action> actions = as.search(this.getStartState(), this.getGoalState());
 		return actions.size();
 	}
 
 	@Override
 	public int getHint(int numOfHints, int solveDepth)
-			throws CloneNotSupportedException, RemoteException,
-			NotBoundException {
+			throws CloneNotSupportedException, RemoteException, NotBoundException {
 		ArrayList<Action> myActions = new ArrayList<Action>();
 		try {
 			myActions = getMoves();
@@ -555,7 +489,9 @@ public class GameMazeModel extends Observable implements Model {
 
 	}
 	
-
+	/**
+	 * @param serverName to connect
+	 */
 	@Override
 	public void connectRMI(String serverName) throws RemoteException,
 			NotBoundException {

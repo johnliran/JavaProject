@@ -47,6 +47,9 @@ public class Game2048Model extends Observable implements Model {
 		this.previousScores = new Stack<Integer>();
 	}
 
+	/**
+	 * @param simulate Specify whether or not to make changes
+	 */
 	public void rotate(int direction) {
 		int[][] newBoard = new int[board.length][board.length];
 		switch (direction) {
@@ -74,6 +77,10 @@ public class Game2048Model extends Observable implements Model {
 		setData(newBoard);
 	}
 
+	/**
+	 * @param simulate Specify whether or not to make changes
+	 * @return True: Movement was made / False: No movement was made
+	 */
 	public boolean move(boolean simulate) {
 		int[][] newBoard = new int[board.length][board.length];
 		// We use linkedlist to organize all the cells which have numbers
@@ -129,8 +136,7 @@ public class Game2048Model extends Observable implements Model {
 	}
 
 	/**
-	 * @param simulate
-	 *            Specify whether or not to make changes
+	 * @param simulate Specify whether or not to make changes
 	 * @return True: Movement was made / False: No movement was made
 	 */
 	@Override
@@ -152,8 +158,7 @@ public class Game2048Model extends Observable implements Model {
 	}
 
 	/**
-	 * @param simulate
-	 *            Specify whether or not to make changes
+	 * @param simulate Specify whether or not to make changes
 	 * @return True: Movement was made / False: No movement was made
 	 */
 	@Override
@@ -175,8 +180,7 @@ public class Game2048Model extends Observable implements Model {
 	}
 
 	/**
-	 * @param simulate
-	 *            Specify whether or not to make changes
+	 * @param simulate Specify whether or not to make changes
 	 * @return True: Movement was made / False: No movement was made
 	 */
 	@Override
@@ -200,8 +204,7 @@ public class Game2048Model extends Observable implements Model {
 	}
 
 	/**
-	 * @param simulate
-	 *            Specify whether or not to make changes
+	 * @param simulate Specify whether or not to make changes
 	 * @return True: Movement was made / False: No movement was made
 	 */
 	@Override
@@ -227,7 +230,10 @@ public class Game2048Model extends Observable implements Model {
 	public int[][] getData() {
 		return board;
 	}
-
+	
+	/**
+	 * @param int[][] board
+	 */
 	public void setData(int[][] data) {
 		this.board = data;
 	}
@@ -267,16 +273,25 @@ public class Game2048Model extends Observable implements Model {
 		}
 	}
 
+	/**
+	 * Backup the data before changing
+	 */
 	public void backup() {
 		previousBoards.push(board);
 		previousScores.push(score);
 	}
-
+	
+	/**
+	 * Delete states
+	 */
 	public void delete() {
 		previousBoards.pop();
 		previousScores.pop();
 	}
-
+	/**
+	 * @param Nothing
+	 * @return ArrayList<State> of free states
+	 */
 	public ArrayList<State> getFreeStates() {
 		ArrayList<State> freeStates = new ArrayList<State>();
 		for (int row = 0; row < board.length; row++) {
@@ -291,10 +306,16 @@ public class Game2048Model extends Observable implements Model {
 		return freeStates;
 	}
 
+	/**
+	 * @param Nothing
+	 * @return Generate 2/4 with a chance of 0.9/0.1
+	 */
 	public int generateValue() {
 		return (Math.random() < 0.9) ? 2 : 4;
 	}
-
+	/**
+	 * Generate the 2/4 into a radnom cell
+	 */
 	public void generate() {
 		ArrayList<State> freeStates = getFreeStates();
 		if (freeStates.size() > 0) {
@@ -386,10 +407,15 @@ public class Game2048Model extends Observable implements Model {
 		notifyObservers();
 	}
 
+	/**
+	 * @return return Sack of PreviousBoards
+	 */
 	public Stack<int[][]> getPreviousBoards() {
 		return previousBoards;
 	}
-
+	/**
+	 * @param Stack<int[][]> previousBoards
+	 */
 	public void setPreviousBoards(Stack<int[][]> previousBoards) {
 		this.previousBoards = previousBoards;
 	}
@@ -454,6 +480,10 @@ public class Game2048Model extends Observable implements Model {
 		return false;
 	}
 
+	/**
+	 * @param numOfHints and solveDepth for the server to proccess
+	 * @return return the int symbol for recommended move
+	 */
 	@Override
 	public int getHint(int numOfHints, int solveDepth)
 			throws CloneNotSupportedException, RemoteException,
@@ -487,6 +517,9 @@ public class Game2048Model extends Observable implements Model {
 		return hint;
 	}
 
+	/**
+	 * @param serverName to connect
+	 */
 	@Override
 	public void connectRMI(String serverName) throws RemoteException,
 			NotBoundException {
@@ -494,6 +527,9 @@ public class Game2048Model extends Observable implements Model {
 		remote = (RemoteInterface) registry.lookup(RMIConstants.RMI_ID);
 	}
 
+	/**
+	 * @param solveDepth for solution
+	 */
 	@Override
 	public void solveGame(int solveDepth) throws RemoteException,
 			CloneNotSupportedException, NotBoundException, InterruptedException {

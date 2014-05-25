@@ -91,14 +91,11 @@ public class Presenter implements Observer {
 					@Override
 					public void run() {
 						try {
-							int solveDepth = ui.getWindowShell()
-									.getSolveDepth();
+							int solveDepth = ui.getWindowShell().getSolveDepth();
 							m.solveGame(solveDepth);
-						} catch (RemoteException | CloneNotSupportedException
-								| InterruptedException | NotBoundException e) {
+						} catch (RemoteException | CloneNotSupportedException | InterruptedException | NotBoundException e) {
 							ui.getWindowShell().setRmiConnected(false);
-							ui.getWindowShell().displayErrorMessage(
-									Constants.ERROR_SERVER_GENERAL);
+							ui.getWindowShell().displayErrorMessage(Constants.ERROR_SERVER_GENERAL);
 						}
 					}
 				};
@@ -117,12 +114,10 @@ public class Presenter implements Observer {
 							int numOfHints = ui.getWindowShell()
 									.getNumOfHints();
 							m.getHint(numOfHints, solveDepth);
-						} catch (RemoteException | CloneNotSupportedException
-								| InterruptedException | NotBoundException e) {
+						} catch (RemoteException | CloneNotSupportedException | InterruptedException | NotBoundException e) {
 							System.out.println(e.getMessage());
 							ui.getWindowShell().setRmiConnected(false);
-							ui.getWindowShell().displayErrorMessage(
-									Constants.ERROR_SERVER_GENERAL);
+							ui.getWindowShell().displayErrorMessage(Constants.ERROR_SERVER_GENERAL);
 						}
 					}
 				};
@@ -138,8 +133,7 @@ public class Presenter implements Observer {
 					m.connectRMI(serverName);
 					ui.getWindowShell().setRmiConnected(true);
 				} catch (RemoteException | NotBoundException e) {
-					ui.getWindowShell().displayErrorMessage(
-							Constants.ERROR_COULDNT_CONNECT);
+					ui.getWindowShell().displayErrorMessage(Constants.ERROR_COULDNT_CONNECT);
 					ui.getWindowShell().setRmiConnected(false);
 				}
 				break;
