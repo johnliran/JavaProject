@@ -38,7 +38,6 @@ public class Game2048Model extends Observable implements Model {
 	private Stack<Integer> previousScores;
 	private Registry registry;
 	private RemoteInterface remote;
-	private String errorMessage;
 
 	public Game2048Model() {
 
@@ -342,8 +341,7 @@ public class Game2048Model extends Observable implements Model {
 	}
 
 	/**
-	 * @param score
-	 *            Game score
+	 * @param score	Game score
 	 */
 	public void setScore(int score) {
 		this.score = score;
@@ -358,8 +356,7 @@ public class Game2048Model extends Observable implements Model {
 	}
 
 	/**
-	 * @param gameWon
-	 *            True: Game Won
+	 * @param gameWon	True: Game Won
 	 */
 	@Override
 	public void setGameWon(boolean gameWon) {
@@ -367,8 +364,7 @@ public class Game2048Model extends Observable implements Model {
 	}
 
 	/**
-	 * @param xmlFileName
-	 *            Output file name
+	 * @param xmlFileName	Output file name
 	 */
 	@Override
 	public void saveGame(String xmlFileName) {
@@ -380,31 +376,48 @@ public class Game2048Model extends Observable implements Model {
 	}
 
 	/**
-	 * @param xmlFileName
-	 *            Input file name
+	 * @param xmlFileName	Input file name
 	 */
 	@Override
 	public void loadGame(String xmlFileName) {
 		try {
-			setData(((Game2048Model) Serializer.deserializeXML(xmlFileName))
-					.getData());
-			setScore(((Game2048Model) Serializer.deserializeXML(xmlFileName))
-					.getScore());
-			setPreviousBoards(((Game2048Model) Serializer.deserializeXML(xmlFileName))
-					.getPreviousBoards());
-			setPreviousScores(((Game2048Model) Serializer.deserializeXML(xmlFileName))
-					.getPreviousScores());
-			setGameWon(((Game2048Model) Serializer.deserializeXML(xmlFileName))
-					.isGameWon());
-			setGameOver(((Game2048Model) Serializer.deserializeXML(xmlFileName))
-					.isGameOver());
-			
-			
+			setData(((Game2048Model) Serializer.deserializeXML(xmlFileName)).getData());
+			setScore(((Game2048Model) Serializer.deserializeXML(xmlFileName)).getScore());
+			setPreviousBoards(((Game2048Model) Serializer.deserializeXML(xmlFileName)).getPreviousBoards());
+			setPreviousScores(((Game2048Model) Serializer.deserializeXML(xmlFileName)).getPreviousScores());
+			setGameWon(((Game2048Model) Serializer.deserializeXML(xmlFileName)).isGameWon());
+			setGameOver(((Game2048Model) Serializer.deserializeXML(xmlFileName)).isGameOver());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		setChanged();
 		notifyObservers();
+	}
+	
+	/**
+	 * @param xmlFileName	Output file name
+	 */
+	@Override
+	public void saveConfiguration(ArrayList<String> serversList, String xmlFileName) {
+		try {
+			Serializer.serializeToXML(serversList, xmlFileName);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * @param xmlFileName	Input file name
+	 */
+	@Override
+	public ArrayList<String> loadConfiguration(String xmlFileName) {
+		try {
+			ArrayList<String> serversList = new ArrayList<>();
+			serversList = (ArrayList<String>) Serializer.deserializeXML(xmlFileName);
+			return serversList;
+		} catch (Exception e) {
+			return new ArrayList<String>();
+		}
 	}
 
 	/**
@@ -413,6 +426,7 @@ public class Game2048Model extends Observable implements Model {
 	public Stack<int[][]> getPreviousBoards() {
 		return previousBoards;
 	}
+	
 	/**
 	 * @param Stack<int[][]> previousBoards
 	 */

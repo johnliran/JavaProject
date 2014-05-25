@@ -11,7 +11,7 @@ public class GameMazeDistanceH implements Distance {
 
     /**
      * @param from Start position
-     * @param to   Enf position
+     * @param to   End position
      * @return Distance between Start to End (square root)
      */
     @Override

@@ -17,7 +17,6 @@ public class GameMazeObject implements Serializable{
 		this.maze = game.getData();
 		this.state = game.getStartState();
 		this.score = game.getScore();
-		
 	}
 
 
