@@ -113,7 +113,7 @@ public class GameMazeView extends Observable implements View, Runnable {
             }
         });
     }
-
+    
     @Override
     public void run() {
         while (!shell.isDisposed()) {
@@ -128,15 +128,15 @@ public class GameMazeView extends Observable implements View, Runnable {
      * @param data  Board data
      */
     @Override
-    public void displayData(int[][] data) {
-        board.setBoardData(data);
-        display.syncExec(new Runnable() {
-            @Override
-            public void run() {
-                board.redraw();
-            }
-        });
-    }
+    public void displayData(final int[][] data) {
+		display.syncExec(new Runnable() {
+			@Override
+			public void run() {
+				board.setBoardData(data);
+				board.redraw();
+			}
+		});
+	}
 
     /**
      * @return User's command
@@ -150,12 +150,20 @@ public class GameMazeView extends Observable implements View, Runnable {
      * @param score Game score
      */
     @Override
-    public void displayScore(int score) {
-        windowShell.setScore(score);
+    public void displayScore(final int score) {
+    	display.syncExec(new Runnable() {
+            @Override
+            public void run() {
+            	windowShell.setScore(score);
+            }
+            });
     }
 
     @Override
     public void gameWon() {
+    	display.syncExec(new Runnable() {
+            @Override
+            public void run() {
         userNotified = true;
         int style = SWT.ICON_WORKING | SWT.YES | SWT.NO;
         MessageBox messageBox = new MessageBox(shell, style);
@@ -174,10 +182,15 @@ public class GameMazeView extends Observable implements View, Runnable {
                 System.exit(0);
                 break;
         }
+            }
+    	});
     }
 
     @Override
     public void gameOver() {
+    	display.syncExec(new Runnable() {
+            @Override
+            public void run() {
         int style = SWT.ICON_WORKING | SWT.YES | SWT.NO;
         MessageBox messageBox = new MessageBox(shell, style);
         messageBox.setMessage("You loose! Do you want to retry again?");
@@ -196,6 +209,8 @@ public class GameMazeView extends Observable implements View, Runnable {
                 break;
 
         }
+            }
+    	});
     }
 
     /**

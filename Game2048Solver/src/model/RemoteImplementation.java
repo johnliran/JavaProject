@@ -3,11 +3,14 @@ package model;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import model.algorithms.AISolver;
+import model.algorithms.AStar;
+import model.algorithms.Action;
 import model.algorithms.Model;
 import RMIInterface.RemoteInterface;
 
@@ -26,10 +29,11 @@ public class RemoteImplementation extends UnicastRemoteObject implements RemoteI
 	public RemoteImplementation() throws RemoteException {
 		super();
 		tpes = Executors.newFixedThreadPool(2);
+		System.out.println("Remote is now Up");
 	}
 
 	@Override
-	public int getHint(final Object game, final int solveDepth) throws RemoteException, CloneNotSupportedException, InterruptedException{
+	public int get2048Hint(final Object game, final int solveDepth) throws RemoteException, CloneNotSupportedException, InterruptedException{
 		final HashMap<String, Integer> container = new HashMap<>();
 		container.put("Move", 0);
 		container.put("Changed", 0);
@@ -63,6 +67,20 @@ public class RemoteImplementation extends UnicastRemoteObject implements RemoteI
 		}
 		
 	return container.get("Move");				
+	}
+	
+	@Override
+	public ArrayList<Action> getMazeHint(Object game) {
+			System.out.println("Im in getMazeHint");
+			System.out.println(game);
+			GameMazeModel mazeGame = new GameMazeModel((GameMazeObject)game);
+			System.out.println(mazeGame.getStartState());
+	        AStar as = new AStar(new GameMazeDomain(mazeGame), new GameMazeDistanceG(), new GameMazeDistanceH());
+	        System.out.println("I have the as");
+	        ArrayList<Action> actions = as.search(mazeGame.getStartState(), mazeGame.getGoalState());
+	        System.out.println("Lets test the actions" + actions);
+	        return actions;
+	    
 	}
 
 

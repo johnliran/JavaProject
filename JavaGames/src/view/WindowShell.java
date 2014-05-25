@@ -1,6 +1,7 @@
 package view;
 
 import controller.Constants;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.graphics.Color;
@@ -435,5 +436,11 @@ public class WindowShell extends Observable {
         setChanged();
         notifyObservers();
         Thread.currentThread().stop();
+        try {
+			Thread.currentThread().join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 }

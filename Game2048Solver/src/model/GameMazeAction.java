@@ -10,7 +10,7 @@ import org.eclipse.swt.graphics.Point;
 /**
  * Holds X and Y coordinates
  */
-public class GameMazeAction implements Action, Serializable {
+public class GameMazeAction implements Action,Serializable {
     private int dx;
     private int dy;
 
