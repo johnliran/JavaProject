@@ -26,7 +26,7 @@ public final class Constants {
     public final static int DIAGONAL_MOVEMENT_SCORE = 15;
     public final static int STRAIGHT_MOVEMENT_SCORE = 10;
     public final static int SCORE_FONT_SIZE = 24;
-    public final static int DEFAULT_FONT_SIZE = 12;
+    public final static int DEFAULT_FONT_SIZE = 10;
     public final static int BCOLOR_R = 187;
     public final static int BCOLOR_G = 173;
     public final static int BCOLOR_B = 160;
@@ -37,7 +37,7 @@ public final class Constants {
     public final static int CLOSETHREADS = 999;
     public final static int[] SOLVE_DEPTHS_LIST = {3, 4, 5, 6, 7, 8, 9, 10};
     public final static int[] NUMBER_OF_HINTS_LIST = {1, 3, 5, 7, 10};
-    public final static String[] SERVERS_LIST = {"localhost"};
+    public final static String DEFAULT_SERVER = "localhost";
     public final static String[] EXTENSIONS = {"xml"};
     public final static String IMAGE_BUTTON_CONNECT = "images/WindowShell/Connect.png";
     public final static String IMAGE_BUTTON_LOAD = "images/WindowShell/Load.png";
