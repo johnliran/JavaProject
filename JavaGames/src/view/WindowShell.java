@@ -119,7 +119,7 @@ public class WindowShell extends Observable {
         for (int possibleNumberOfHints : Constants.NUMBER_OF_HINTS_LIST) {
             numOfHintsCombo.add(Integer.toString(possibleNumberOfHints));
         }
-        numOfHintsCombo.add("To Resolve");
+        numOfHintsCombo.add("Solve");
         numOfHintsCombo.select(0);
 
         createLabel(parent, SWT.LEFT, Constants.DEFAULT_FONT_SIZE, "Solve Depth");
