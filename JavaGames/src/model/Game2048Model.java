@@ -369,11 +369,37 @@ public class Game2048Model extends Observable implements Model {
 					.getData());
 			setScore(((Game2048Model) Serializer.deserializeXML(xmlFileName))
 					.getScore());
+			setPreviousBoards(((Game2048Model) Serializer.deserializeXML(xmlFileName))
+					.getPreviousBoards());
+			setPreviousScores(((Game2048Model) Serializer.deserializeXML(xmlFileName))
+					.getPreviousScores());
+			setGameWon(((Game2048Model) Serializer.deserializeXML(xmlFileName))
+					.isGameWon());
+			setGameOver(((Game2048Model) Serializer.deserializeXML(xmlFileName))
+					.isGameOver());
+			
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		setChanged();
 		notifyObservers();
+	}
+
+	public Stack<int[][]> getPreviousBoards() {
+		return previousBoards;
+	}
+
+	public void setPreviousBoards(Stack<int[][]> previousBoards) {
+		this.previousBoards = previousBoards;
+	}
+
+	public Stack<Integer> getPreviousScores() {
+		return previousScores;
+	}
+
+	public void setPreviousScores(Stack<Integer> previousScores) {
+		this.previousScores = previousScores;
 	}
 
 	/**

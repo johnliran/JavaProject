@@ -272,6 +272,8 @@ public class WindowShell extends Observable {
                                 if (isButton) {
                                     ((Button) event.widget).setText("Pause");
                                     ((Button) event.widget).setImage(new Image(Display.getCurrent(), Constants.IMAGE_BUTTON_PAUSE));
+                                    setChanged();
+                                    notifyObservers();
                                 } else ((MenuItem) event.widget).setText("Pause");
                             }
                             break;
@@ -287,8 +289,6 @@ public class WindowShell extends Observable {
                 } else { // Is the user connected to remote solver server? NO;
                     displayErrorMessage(Constants.ERROR_SOLVE_WITHOUT_CONNECT);
                 }
-                setChanged();
-                notifyObservers();
                 ((Composite) board).forceFocus();
             }
         };
