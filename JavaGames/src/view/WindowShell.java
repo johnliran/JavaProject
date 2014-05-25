@@ -32,11 +32,8 @@ public class WindowShell extends Observable {
         shell.setLayout(new GridLayout(2, false));
         shell.setBackground(new Color(display, Constants.BCOLOR_R, Constants.BCOLOR_G, Constants.BCOLOR_B));
         shell.setBackgroundMode(SWT.INHERIT_DEFAULT);
-        shell.addListener(SWT.Close, new Listener() {
-            public void handleEvent(Event event) {
-                closeAll();
-            }
-        });
+        shell.addListener(SWT.Close, exitListener());
+        
 
         ((Composite) board).setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 8));
 
