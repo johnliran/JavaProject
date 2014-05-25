@@ -1,5 +1,5 @@
-##Welcome
-- For more information please review our [JavaDoc](javadoc/index.html) web pages.
+## Welcome
+- For more information please review our JavaDocs web pages ([Games](javadoc/JavaGames_javadoc/index.html), [Solver](javadoc/GamesSolver_javadoc/index.html) and [RMIInterface](javadoc/RMIInterface_javadoc/index.html)).
 - The following project is programmed by Johnnatan Cohen and Liran Polak.
 
 ## 2048
