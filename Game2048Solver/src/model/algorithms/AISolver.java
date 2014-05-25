@@ -29,7 +29,7 @@ import java.util.Map;
  * 
  * @author Vasilis Vryniotis <bbriniotis at datumbox.com>
  */
-public class AISolver implements Constants{
+public class AISolver {
     
     /**
      * Player vs Computer enum class
@@ -59,7 +59,6 @@ public class AISolver implements Constants{
 //        Map<String, Object> result = minimax(theBoard, depth, Player.USER);
         
         Map<String, Object> result = alphabeta(theBoard, depth, Integer.MIN_VALUE, Integer.MAX_VALUE, Player.USER);
-        System.out.println(result.get("Direction"));
         return (int)result.get("Direction");
     }
     
@@ -72,28 +71,48 @@ public class AISolver implements Constants{
      * @return
      * @throws CloneNotSupportedException 
      */
-    /*
-    private static Map<String, Object> minimax(Model theBoard, int depth, Player player) throws CloneNotSupportedException {
+
+private static Map<String, Object> minimax(Model theBoard, int depth, Player player) throws CloneNotSupportedException {
         Map<String, Object> result = new HashMap<>();
         
         int bestDirection = 0;
         int bestScore;
 //        isGameTerminated
-        if(depth==0 || theBoard.isGameTerminated()) {
-            bestScore=heuristicScore(theBoard.getScore(),theBoard.getNumberOfEmptyCells(),calculateClusteringScore(theBoard.getData()));
+        if(depth==0 || (theBoard.isGameWon() || theBoard.isGameOver())) {
+            bestScore=heuristicScore(theBoard.getScore(),theBoard.getNumOfFreeStates(),calculateClusteringScore(theBoard.getData()));
         }
         else {
             if(player == Player.USER) {
                 bestScore = Integer.MIN_VALUE;
-                for(int direction : directionArr) {
-                    Model newBoard = (Model) theBoard.clone();
-
+                for(int direction : Constants.DIRECTIONS) {
+                	boolean moved=false;
+                	Model newBoard = (Model) theBoard.clone();
 //                    We need to implement one move method
-                    int points=newBoard.move(direction);
-                    
+                    switch (direction) {
+					case Constants.UP: {
+						moved = newBoard.moveUp(false);
+						break;
+					}
+					case Constants.DOWN: {
+						moved = newBoard.moveDown(false);
+						break;
+					}
+					case Constants.RIGHT: {
+						moved = newBoard.moveRight(false);
+						break;
+					}
+					case Constants.LEFT: {
+						moved = newBoard.moveLeft(false);
+						break;
+					}
+
+					default:
+						break;
+					}
+ 
 //                    We need to implement the isEqual so it will work with the Model
 //                    if(points==0 && newBoard.isEqual(theBoard.getData(), newBoard.getData())) {
-                      if(points==0 && newBoard.equals(newBoard.getData())) {
+                      if(!moved && newBoard.equals(newBoard.getData())) {
                     	continue;
                     }
 
@@ -117,8 +136,8 @@ public class AISolver implements Constants{
                 int i,j;
                 int[][] boardArray;
                 for(Integer cellId : moves) {
-                    i = cellId/BOARDSIZE;
-                    j = cellId%BOARDSIZE;
+                    i = cellId/Constants.BOARDSIZE;
+                    j = cellId%Constants.BOARDSIZE;
 
                     for(int value : possibleValues) {
                         Model newBoard = (Model) theBoard.clone();
@@ -139,7 +158,7 @@ public class AISolver implements Constants{
         
         return result;
     }
-    */
+
     /**
      * Finds the best move bay using the Alpha-Beta pruning algorithm.
      * 
@@ -171,22 +190,22 @@ public class AISolver implements Constants{
         else {
             if(player == Player.USER) {
             	boolean moved=false;
-                for(int direction : DIRECTIONS) {
+                for(int direction : Constants.DIRECTIONS) {
                     Model newBoard = (Model) theBoard.clone();
                     switch (direction) {
-					case UP: {
+					case Constants.UP: {
 						moved = newBoard.moveUp(false);
 						break;
 					}
-					case DOWN: {
+					case Constants.DOWN: {
 						moved = newBoard.moveDown(false);
 						break;
 					}
-					case RIGHT: {
+					case Constants.RIGHT: {
 						moved = newBoard.moveRight(false);
 						break;
 					}
-					case LEFT: {
+					case Constants.LEFT: {
 						moved = newBoard.moveLeft(false);
 						break;
 					}
@@ -220,9 +239,9 @@ public class AISolver implements Constants{
 
                 int i,j;
                 abloop: for(Integer cellId : moves) {
-                    i = cellId/BOARDSIZE;
+                    i = cellId/Constants.BOARDSIZE;
                     
-                    j = cellId%BOARDSIZE;
+                    j = cellId%Constants.BOARDSIZE;
 
                     for(int value : possibleValues) {
                         Model newBoard = (Model) theBoard.clone();

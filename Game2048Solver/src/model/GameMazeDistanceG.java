@@ -12,7 +12,7 @@ public class GameMazeDistanceG implements Distance {
 
     /**
      * @param from Start position
-     * @param to   End position
+     * @param to   Enf position
      * @return Movement score
      */
     @Override

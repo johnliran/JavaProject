@@ -1,14 +1,22 @@
 package model;
 
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import model.algorithms.AISolver;
+import model.algorithms.AStar;
+import model.algorithms.Action;
 import model.algorithms.Model;
 import RMIInterface.RemoteInterface;
 
 public class RemoteImplementation extends UnicastRemoteObject implements RemoteInterface {
-
+	private final ExecutorService tpes ;
+	private boolean isChanged = false;
 	/**
 	 * 
 	 */
@@ -20,16 +28,51 @@ public class RemoteImplementation extends UnicastRemoteObject implements RemoteI
 
 	public RemoteImplementation() throws RemoteException {
 		super();
-		// TODO Auto-generated constructor stub
+		tpes = Executors.newFixedThreadPool(2);
 	}
 
 	@Override
-	public int getHint(Object game) throws RemoteException, CloneNotSupportedException{
-		System.out.println("Im in hint");
-		Game2048Model myGame = new Game2048Model((Game2048Object)game);		
-	return AISolver.findBestMove((Model)myGame, 7);
+	public int get2048Hint(final Object game, final int solveDepth) throws RemoteException, CloneNotSupportedException, InterruptedException{
+		final HashMap<String, Integer> container = new HashMap<>();
+		container.put("Move", 0);
+		container.put("Changed", 0);
+		isChanged = false;
+		final Thread t=Thread.currentThread();
+		tpes.execute(new Runnable() {
+			@Override
+			public void run() {
+				Game2048Model myGame = new Game2048Model((Game2048Object)game);	
+				try {
+					int move = AISolver.findBestMove((Model)myGame, solveDepth);
+					container.put("Move", move);
+					container.put("Changed", 1);
+					t.interrupt();
+				} catch (CloneNotSupportedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} 
+			}						
+		});
 		
+		try {
+			while (container.get("Changed") != 1) {
+				 try {
+				 Thread.sleep(Integer.MAX_VALUE);
+				 } catch (InterruptedException e) { }
+				 }
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	return container.get("Move");				
 	}
-
-
+	
+	@Override
+	public ArrayList<Action> getMazeHint(Object game) {
+			GameMazeModel mazeGame = new GameMazeModel((GameMazeObject)game);
+	        AStar as = new AStar(new GameMazeDomain(mazeGame), new GameMazeDistanceG(), new GameMazeDistanceH());
+	        ArrayList<Action> actions = as.search(mazeGame.getStartState(), mazeGame.getGoalState());
+	        return actions;
+	}
 }

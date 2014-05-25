@@ -27,406 +27,490 @@ import controller.Constants;
 /**
  * Game 2048 Model
  */
-public class Game2048Model extends Observable implements Model{
-	 
+public class Game2048Model extends Observable implements Model {
+
 	private static final long serialVersionUID = 1L;
 	private int[][] board;
-    private int score;
-    private boolean gameWon;
-    private boolean gameOver;
-    private Stack<int[][]> previousBoards;
-    private Stack<Integer> previousScores;
+	private int score;
+	private boolean gameWon;
+	private boolean gameOver;
+	private Stack<int[][]> previousBoards;
+	private Stack<Integer> previousScores;
+	private Registry registry;
+	private RemoteInterface remote;
 
-    
-    
-    
-    public Game2048Model() {
-    	
-        this.board = new int[Constants.BOARDSIZE][Constants.BOARDSIZE];
-        this.previousBoards = new Stack<int[][]>();
-        this.previousScores = new Stack<Integer>();
-    }
+	public Game2048Model() {
 
-    public void rotate(int direction) {
-        int[][] newBoard = new int[board.length][board.length];
-        switch (direction) {
-            case Constants.RIGHT: {
-                for (int row = 0; row < newBoard.length; row++) {
-                    for (int column = 0; column < newBoard.length; column++) {
-                        newBoard[column][(newBoard.length - 1) - row] = board[row][column];
-                    }
-                }
-                break;
-            }
+		this.board = new int[Constants.BOARDSIZE][Constants.BOARDSIZE];
+		this.previousBoards = new Stack<int[][]>();
+		this.previousScores = new Stack<Integer>();
+	}
 
-            case Constants.LEFT: {
-                for (int row = 0; row < newBoard.length; row++) {
-                    for (int column = 0; column < newBoard.length; column++) {
-                        newBoard[(newBoard.length - 1) - column][row] = board[row][column];
-                    }
-                }
-                break;
-            }
+	/**
+	 * @param simulate Specify whether or not to make changes
+	 */
+	public void rotate(int direction) {
+		int[][] newBoard = new int[board.length][board.length];
+		switch (direction) {
+		case Constants.RIGHT: {
+			for (int row = 0; row < newBoard.length; row++) {
+				for (int column = 0; column < newBoard.length; column++) {
+					newBoard[column][(newBoard.length - 1) - row] = board[row][column];
+				}
+			}
+			break;
+		}
 
-            default:
-                break;
-        }
-        setData(newBoard);
-    }
+		case Constants.LEFT: {
+			for (int row = 0; row < newBoard.length; row++) {
+				for (int column = 0; column < newBoard.length; column++) {
+					newBoard[(newBoard.length - 1) - column][row] = board[row][column];
+				}
+			}
+			break;
+		}
 
-    public boolean move(boolean simulate) {
-        int[][] newBoard = new int[board.length][board.length];
-        // We use linkedlist to organize all the cells which have numbers
-        LinkedList<Integer> numbers = new LinkedList<Integer>();
-        boolean moved = false;
-        boolean seenZero;
-        // Get over all the board and take out the numbers into List
-        for (int row = 0; row < newBoard.length; row++) {
-            seenZero = false;
-            for (int column = 0; column < newBoard.length; column++) {
-                if (board[row][column] != 0) {
-                    numbers.add(board[row][column]);
-                    // After putting the numbers into the stack,We can override and pad the line with 0
-                    if (!simulate) {
-                        newBoard[row][column] = 0;
-                    }
-                    if (seenZero) {
-                        moved = true;
-                    }
-                } else {
-                    seenZero = true;
-                }
-            }
-            // Merge if there are equal numbers
-            for (int column = 0; column < newBoard.length && !numbers.isEmpty(); column++) {
-                int numberToCheck = numbers.poll();
-                if (!numbers.isEmpty()) {
-                    if (numberToCheck == numbers.peek()) {
-                        numberToCheck += numbers.poll();
-                        moved = true;
-                        if (!simulate) {
-                            setScore(getScore() + numberToCheck);
-                            if (numberToCheck == Constants.TARGETSCORE && !isGameWon()) {
-                                setGameWon(true);
-                                notifyObservers();
-                            }
-                        } else return moved;
-                    }
-                }
-                if (!simulate) {
-                    newBoard[row][column] = numberToCheck;
-                }
-            }
-        }
-        if (moved && !simulate) {
-            setData(newBoard);
-            generate();
-        }
-        return moved;
-    }
+		default:
+			break;
+		}
+		setData(newBoard);
+	}
 
-    /**
-     * @param simulate Specify whether or not to make changes
-     * @return True: Movement was made / False: No movement was made
-     */
-    @Override
-    public boolean moveUp(boolean simulate) {
-        if (!simulate) {
-            backup();
-        }
-        rotate(Constants.LEFT);
-        boolean moved = move(simulate);
-        if (!simulate && !moved) {
-            delete();
-        }
-        rotate(Constants.RIGHT);
-        if (!simulate) {
-            setChanged();
-            notifyObservers();
-        }
-        return moved;
-    }
+	/**
+	 * @param simulate Specify whether or not to make changes
+	 * @return True: Movement was made / False: No movement was made
+	 */
+	public boolean move(boolean simulate) {
+		int[][] newBoard = new int[board.length][board.length];
+		// We use linkedlist to organize all the cells which have numbers
+		LinkedList<Integer> numbers = new LinkedList<Integer>();
+		boolean moved = false;
+		boolean seenZero;
+		// Get over all the board and take out the numbers into List
+		for (int row = 0; row < newBoard.length; row++) {
+			seenZero = false;
+			for (int column = 0; column < newBoard.length; column++) {
+				if (board[row][column] != 0) {
+					numbers.add(board[row][column]);
+					// After putting the numbers into the stack,We can override
+					// and pad the line with 0
+					if (!simulate) {
+						newBoard[row][column] = 0;
+					}
+					if (seenZero) {
+						moved = true;
+					}
+				} else {
+					seenZero = true;
+				}
+			}
+			// Merge if there are equal numbers
+			for (int column = 0; column < newBoard.length && !numbers.isEmpty(); column++) {
+				int numberToCheck = numbers.poll();
+				if (!numbers.isEmpty()) {
+					if (numberToCheck == numbers.peek()) {
+						numberToCheck += numbers.poll();
+						moved = true;
+						if (!simulate) {
+							setScore(getScore() + numberToCheck);
+							if (numberToCheck == Constants.TARGETSCORE
+									&& !isGameWon()) {
+								setGameWon(true);
+								notifyObservers();
+							}
+						} else
+							return moved;
+					}
+				}
+				if (!simulate) {
+					newBoard[row][column] = numberToCheck;
+				}
+			}
+		}
+		if (moved && !simulate) {
+			setData(newBoard);
+			generate();
+		}
+		return moved;
+	}
 
-    /**
-     * @param simulate Specify whether or not to make changes
-     * @return True: Movement was made / False: No movement was made
-     */
-    @Override
-    public boolean moveDown(boolean simulate) {
-        if (!simulate) {
-            backup();
-        }
-        rotate(Constants.RIGHT);
-        boolean moved = move(simulate);
-        if (!simulate && !moved) {
-            delete();
-        }
-        rotate(Constants.LEFT);
-        if (!simulate) {
-            setChanged();
-            notifyObservers();
-        }
-        return moved;
-    }
+	/**
+	 * @param simulate Specify whether or not to make changes
+	 * @return True: Movement was made / False: No movement was made
+	 */
+	@Override
+	public boolean moveUp(boolean simulate) {
+		if (!simulate) {
+			backup();
+		}
+		rotate(Constants.LEFT);
+		boolean moved = move(simulate);
+		if (!simulate && !moved) {
+			delete();
+		}
+		rotate(Constants.RIGHT);
+		if (!simulate) {
+			setChanged();
+			notifyObservers();
+		}
+		return moved;
+	}
 
-    /**
-     * @param simulate Specify whether or not to make changes
-     * @return True: Movement was made / False: No movement was made
-     */
-    @Override
-    public boolean moveRight(boolean simulate) {
-        if (!simulate) {
-            backup();
-        }
-        rotate(Constants.LEFT);
-        rotate(Constants.LEFT);
-        boolean moved = move(simulate);
-        if (!simulate && !moved) {
-            delete();
-        }
-        rotate(Constants.RIGHT);
-        rotate(Constants.RIGHT);
-        if (!simulate) {
-            setChanged();
-            notifyObservers();
-        }
-        return moved;
-    }
+	/**
+	 * @param simulate Specify whether or not to make changes
+	 * @return True: Movement was made / False: No movement was made
+	 */
+	@Override
+	public boolean moveDown(boolean simulate) {
+		if (!simulate) {
+			backup();
+		}
+		rotate(Constants.RIGHT);
+		boolean moved = move(simulate);
+		if (!simulate && !moved) {
+			delete();
+		}
+		rotate(Constants.LEFT);
+		if (!simulate) {
+			setChanged();
+			notifyObservers();
+		}
+		return moved;
+	}
 
-    /**
-     * @param simulate Specify whether or not to make changes
-     * @return True: Movement was made / False: No movement was made
-     */
-    @Override
-    public boolean moveLeft(boolean simulate) {
-        if (!simulate) {
-            backup();
-        }
-        boolean moved = move(simulate);
-        if (!simulate && !moved) {
-            delete();
-        }
-        if (!simulate) {
-            setChanged();
-            notifyObservers();
-        }
-        return moved;
-    }
+	/**
+	 * @param simulate Specify whether or not to make changes
+	 * @return True: Movement was made / False: No movement was made
+	 */
+	@Override
+	public boolean moveRight(boolean simulate) {
+		if (!simulate) {
+			backup();
+		}
+		rotate(Constants.LEFT);
+		rotate(Constants.LEFT);
+		boolean moved = move(simulate);
+		if (!simulate && !moved) {
+			delete();
+		}
+		rotate(Constants.RIGHT);
+		rotate(Constants.RIGHT);
+		if (!simulate) {
+			setChanged();
+			notifyObservers();
+		}
+		return moved;
+	}
 
-    /**
-     * @return Board data
-     */
-    @Override
-    public int[][] getData() {
-        return board;
-    }
+	/**
+	 * @param simulate Specify whether or not to make changes
+	 * @return True: Movement was made / False: No movement was made
+	 */
+	@Override
+	public boolean moveLeft(boolean simulate) {
+		if (!simulate) {
+			backup();
+		}
+		boolean moved = move(simulate);
+		if (!simulate && !moved) {
+			delete();
+		}
+		if (!simulate) {
+			setChanged();
+			notifyObservers();
+		}
+		return moved;
+	}
 
-    public void setData(int[][] data) {
-        this.board = data;
-    }
+	/**
+	 * @return Board data
+	 */
+	@Override
+	public int[][] getData() {
+		return board;
+	}
+	
+	/**
+	 * @param int[][] board
+	 */
+	public void setData(int[][] data) {
+		this.board = data;
+	}
 
-    /**
-     * Initialize the model's data members when a new game starts
-     */
-    @Override
-    public void initialize() {
-        this.score = 0;
-        this.previousBoards.clear();
-        this.previousScores.clear();
-        this.gameWon = false;
-        this.gameOver = false;
+	/**
+	 * Initialize the model's data members when a new game starts
+	 */
+	@Override
+	public void initialize() {
+		this.score = 0;
+		this.previousBoards.clear();
+		this.previousScores.clear();
+		this.gameWon = false;
+		this.gameOver = false;
 
-        for (int i = 0; i < board.length; ++i) {
-            for (int j = 0; j < board[0].length; ++j) {
-                board[i][j] = 0;
-            }
-        }
-        generate();
-        generate();
-        setChanged();
-        notifyObservers();
-    }
+		for (int i = 0; i < board.length; ++i) {
+			for (int j = 0; j < board[0].length; ++j) {
+				board[i][j] = 0;
+			}
+		}
+		generate();
+		generate();
+		setChanged();
+		notifyObservers();
+	}
 
-    /**
-     * Restores the player's last movement
-     */
-    @Override
-    public void restore() {
-        if (!previousBoards.isEmpty()) {
-            setData(previousBoards.pop());
-            setScore(previousScores.pop());
-            setChanged();
-            notifyObservers();
-        }
-    }
+	/**
+	 * Restores the player's last movement
+	 */
+	@Override
+	public void restore() {
+		if (!previousBoards.isEmpty()) {
+			setData(previousBoards.pop());
+			setScore(previousScores.pop());
+			setChanged();
+			notifyObservers();
+		}
+	}
 
-    public void backup() {
-        previousBoards.push(board);
-        previousScores.push(score);
-    }
+	/**
+	 * Backup the data before changing
+	 */
+	public void backup() {
+		previousBoards.push(board);
+		previousScores.push(score);
+	}
+	
+	/**
+	 * Delete states
+	 */
+	public void delete() {
+		previousBoards.pop();
+		previousScores.pop();
+	}
+	/**
+	 * @param Nothing
+	 * @return ArrayList<State> of free states
+	 */
+	public ArrayList<State> getFreeStates() {
+		ArrayList<State> freeStates = new ArrayList<State>();
+		for (int row = 0; row < board.length; row++) {
+			for (int column = 0; column < board.length; column++) {
+				if (board[row][column] == 0) {
+					State free = new State();
+					free.setState(new Point(row, column));
+					freeStates.add(free);
+				}
+			}
+		}
+		return freeStates;
+	}
 
-    public void delete() {
-        previousBoards.pop();
-        previousScores.pop();
-    }
+	/**
+	 * @param Nothing
+	 * @return Generate 2/4 with a chance of 0.9/0.1
+	 */
+	public int generateValue() {
+		return (Math.random() < 0.9) ? 2 : 4;
+	}
+	/**
+	 * Generate the 2/4 into a radnom cell
+	 */
+	public void generate() {
+		ArrayList<State> freeStates = getFreeStates();
+		if (freeStates.size() > 0) {
+			int index = new Random().nextInt(freeStates.size());
+			Point point = (Point) (freeStates.get(index).getState());
+			int row = point.x;
+			int column = point.y;
+			board[row][column] = generateValue();
+			if (freeStates.size() == 1) {
+				if (!(moveUp(true) || moveDown(true) || moveLeft(true) || moveRight(true))) {
+					setGameOver(true);
+					notifyObservers();
+				}
+			}
+		}
+	}
 
-    public ArrayList<State> getFreeStates() {
-        ArrayList<State> freeStates = new ArrayList<State>();
-        for (int row = 0; row < board.length; row++) {
-            for (int column = 0; column < board.length; column++) {
-                if (board[row][column] == 0) {
-                    State free = new State();
-                    free.setState(new Point(row, column));
-                    freeStates.add(free);
-                }
-            }
-        }
-        return freeStates;
-    }
+	/**
+	 * @return Game score
+	 */
+	@Override
+	public int getScore() {
+		return score;
+	}
 
-    public int generateValue() {
-        return (Math.random() < 0.9) ? 2 : 4;
-    }
+	/**
+	 * @param score	Game score
+	 */
+	public void setScore(int score) {
+		this.score = score;
+	}
 
-    public void generate() {
-        ArrayList<State> freeStates = getFreeStates();
-        if (freeStates.size() > 0) {
-            int index = new Random().nextInt(freeStates.size());
-            Point point = (Point) (freeStates.get(index).getState());
-            int row = point.x;
-            int column = point.y;
-            board[row][column] = generateValue();
-            if (freeStates.size() == 1) {
-                if (!(moveUp(true) || moveDown(true) || moveLeft(true) || moveRight(true))) {
-                    setGameOver(true);
-                    notifyObservers();
-                }
-            }
-        }
-    }
+	/**
+	 * @return True: Game Won
+	 */
+	@Override
+	public boolean isGameWon() {
+		return gameWon;
+	}
 
-    /**
-     * @return Game score
-     */
-    @Override
-    public int getScore() {
-        return score;
-    }
+	/**
+	 * @param gameWon	True: Game Won
+	 */
+	@Override
+	public void setGameWon(boolean gameWon) {
+		this.gameWon = gameWon;
+	}
 
-    /**
-     * @param score Game score
-     */
-    public void setScore(int score) {
-        this.score = score;
-    }
-
-    /**
-     * @return True: Game Won
-     */
-    @Override
-    public boolean isGameWon() {
-        return gameWon;
-    }
-
-    /**
-     * @param gameWon True: Game Won
-     */
-    @Override
-    public void setGameWon(boolean gameWon) {
-        this.gameWon = gameWon;
-    }
-
-    /**
-     * @param xmlFileName Output file name
-     */
-    @Override
-    public void saveGame(String xmlFileName) {
-        try {
-            Serializer.serializeToXML(this, xmlFileName);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * @param xmlFileName Input file name
-     */
-    @Override
-    public void loadGame(String xmlFileName) {
-        try {
-            setData(((Game2048Model) Serializer.deserializeXML(xmlFileName)).getData());
-            setScore(((Game2048Model) Serializer.deserializeXML(xmlFileName)).getScore());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        setChanged();
-        notifyObservers();
-    }
-
-    /**
-     * @return True: Game Over
-     */
-    @Override
-    public boolean isGameOver() {
-        return gameOver;
-    }
-
-    public void setGameOver(boolean gameOver) {
-        this.gameOver = gameOver;
-    }
-
-    /**
-     * @param simulate Specify whether or not to make changes
-     * @return True: Movement was made / False: No movement was made
-     */
-    @Override
-    public boolean moveUpRight(boolean simulate) {
-        return false;
-    }
-
-    /**
-     * @param simulate Specify whether or not to make changes
-     * @return True: Movement was made / False: No movement was made
-     */
-    @Override
-    public boolean moveUpLeft(boolean simulate) {
-        return false;
-    }
-
-    /**
-     * @param simulate Specify whether or not to make changes
-     * @return True: Movement was made / False: No movement was made
-     */
-    @Override
-    public boolean moveDownRight(boolean simulate) {
-        return false;
-    }
-
-    /**
-     * @param simulate Specify whether or not to make changes
-     * @return True: Movement was made / False: No movement was made
-     */
-    @Override
-    public boolean moveDownLeft(boolean simulate) {
-        return false;
-    }
-    
-    @Override
-	 public int getHint() throws CloneNotSupportedException, RemoteException, NotBoundException {
-    	Registry registry = LocateRegistry.getRegistry("localhost",RMIConstants.PORT);
-    	RemoteInterface remote = (RemoteInterface) registry.lookup(RMIConstants.RMI_ID);
-    	Game2048Object myGame = new Game2048Object(this);
-    	int hint = 0;
-		try {		
-			hint = remote.getHint((Object)myGame);
+	/**
+	 * @param xmlFileName	Output file name
+	 */
+	@Override
+	public void saveGame(String xmlFileName) {
+		try {
+			Serializer.serializeToXML(this, xmlFileName);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-//			 hint = AIsolver.findBestMove(this, 5);
-			 switch (hint) {
-			 case Constants.UP:
-				 moveUp(false);
-				 break;
+	}
+
+	/**
+	 * @param xmlFileName	Input file name
+	 */
+	@Override
+	public void loadGame(String xmlFileName) {
+		try {
+			setData(((Game2048Model) Serializer.deserializeXML(xmlFileName)).getData());
+			setScore(((Game2048Model) Serializer.deserializeXML(xmlFileName)).getScore());
+			setPreviousBoards(((Game2048Model) Serializer.deserializeXML(xmlFileName)).getPreviousBoards());
+			setPreviousScores(((Game2048Model) Serializer.deserializeXML(xmlFileName)).getPreviousScores());
+			setGameWon(((Game2048Model) Serializer.deserializeXML(xmlFileName)).isGameWon());
+			setGameOver(((Game2048Model) Serializer.deserializeXML(xmlFileName)).isGameOver());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		setChanged();
+		notifyObservers();
+	}
+	
+	/**
+	 * @param xmlFileName	Output file name
+	 */
+	@Override
+	public void saveConfiguration(ArrayList<String> serversList, String xmlFileName) {
+		try {
+			Serializer.serializeToXML(serversList, xmlFileName);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * @param xmlFileName	Input file name
+	 */
+	@Override
+	public ArrayList<String> loadConfiguration(String xmlFileName) {
+		try {
+			ArrayList<String> serversList = new ArrayList<>();
+			serversList = (ArrayList<String>) Serializer.deserializeXML(xmlFileName);
+			return serversList;
+		} catch (Exception e) {
+			return new ArrayList<String>();
+		}
+	}
+
+	/**
+	 * @return return Sack of PreviousBoards
+	 */
+	public Stack<int[][]> getPreviousBoards() {
+		return previousBoards;
+	}
+	
+	/**
+	 * @param Stack<int[][]> previousBoards
+	 */
+	public void setPreviousBoards(Stack<int[][]> previousBoards) {
+		this.previousBoards = previousBoards;
+	}
+
+	public Stack<Integer> getPreviousScores() {
+		return previousScores;
+	}
+
+	public void setPreviousScores(Stack<Integer> previousScores) {
+		this.previousScores = previousScores;
+	}
+
+	/**
+	 * @return True: Game Over
+	 */
+	@Override
+	public boolean isGameOver() {
+		return gameOver;
+	}
+
+	public void setGameOver(boolean gameOver) {
+		this.gameOver = gameOver;
+	}
+
+	/**
+	 * @param simulate
+	 *            Specify whether or not to make changes
+	 * @return True: Movement was made / False: No movement was made
+	 */
+	@Override
+	public boolean moveUpRight(boolean simulate) {
+		return false;
+	}
+
+	/**
+	 * @param simulate
+	 *            Specify whether or not to make changes
+	 * @return True: Movement was made / False: No movement was made
+	 */
+	@Override
+	public boolean moveUpLeft(boolean simulate) {
+		return false;
+	}
+
+	/**
+	 * @param simulate
+	 *            Specify whether or not to make changes
+	 * @return True: Movement was made / False: No movement was made
+	 */
+	@Override
+	public boolean moveDownRight(boolean simulate) {
+		return false;
+	}
+
+	/**
+	 * @param simulate
+	 *            Specify whether or not to make changes
+	 * @return True: Movement was made / False: No movement was made
+	 */
+	@Override
+	public boolean moveDownLeft(boolean simulate) {
+		return false;
+	}
+
+	/**
+	 * @param numOfHints and solveDepth for the server to proccess
+	 * @return return the int symbol for recommended move
+	 */
+	@Override
+	public int getHint(int numOfHints, int solveDepth)
+			throws CloneNotSupportedException, RemoteException,
+			NotBoundException, InterruptedException {
+		Game2048Object myGame = new Game2048Object(this);
+		int hint = 0;
+		for (int i = 0; i < numOfHints; i++) {
+			hint = remote.get2048Hint((Object) myGame, solveDepth);
+
+			switch (hint) {
+			case Constants.UP:
+				moveUp(false);
+				break;
 			case Constants.DOWN:
 				moveDown(false);
 				break;
@@ -436,21 +520,40 @@ public class Game2048Model extends Observable implements Model{
 			case Constants.RIGHT:
 				moveRight(false);
 				break;
-	
+
 			default:
 				break;
-			 }
-    	return hint;
-	 }
-    
-    @Override
-    public void solveGame() throws RemoteException, CloneNotSupportedException, NotBoundException{
-    	while (!isGameWon())
-    		getHint();
-    }
-    
-    @Override
-    public boolean equals(Object object) {
-    	return true;
-    }
+			}
+
+		}
+
+		// hint = AIsolver.findBestMove(this, 5);
+		return hint;
+	}
+
+	/**
+	 * @param serverName to connect
+	 */
+	@Override
+	public void connectRMI(String serverName) throws RemoteException,
+			NotBoundException {
+		registry = LocateRegistry.getRegistry(serverName, RMIConstants.PORT);
+		remote = (RemoteInterface) registry.lookup(RMIConstants.RMI_ID);
+	}
+
+	/**
+	 * @param solveDepth for solution
+	 */
+	@Override
+	public void solveGame(int solveDepth) throws RemoteException,
+			CloneNotSupportedException, NotBoundException, InterruptedException {
+		while (!isGameWon()) {
+			getHint(1, solveDepth);
+		}
+	}
+
+	@Override
+	public boolean equals(Object object) {
+		return true;
+	}
 }

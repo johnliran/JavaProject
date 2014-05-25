@@ -1,27 +1,23 @@
 package model;
 
-import controller.Constants;
 import model.algorithms.Distance;
 import model.algorithms.State;
 import org.eclipse.swt.graphics.Point;
 
 /**
- * Distance G
+ * Heuristic Distance
  */
-public class GameMazeDistanceG implements Distance {
+public class GameMazeDistanceH implements Distance {
 
     /**
      * @param from Start position
-     * @param to   End position
-     * @return Movement score
+     * @param to   Enf position
+     * @return Distance between Start to End (square root)
      */
     @Override
     public double getDistance(State from, State to) {
         Point pFrom = (Point) from.getState();
         Point pTo = (Point) to.getState();
-        if ((pTo.x - pFrom.x) == 0 || (pTo.y - pFrom.y) == 0) {
-            return Constants.STRAIGHT_MOVEMENT_SCORE;
-        }
-        return Constants.DIAGONAL_MOVEMENT_SCORE;
+        return Math.sqrt((((Math.abs(pTo.x - pFrom.x)) * (Math.abs(pTo.x - pFrom.x))) + ((Math.abs(pTo.y - pFrom.y)) * (Math.abs(pTo.y - pFrom.y))) * 10));
     }
 }
