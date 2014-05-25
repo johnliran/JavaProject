@@ -1,5 +1,5 @@
 ## Welcome
-- For more information please review our GitHub landing page, [johnliran.github.io/JavaProject](johnliran.github.io/JavaProject).
+- For more information please review our GitHub landing page, [johnliran.github.io/JavaProject](http://johnliran.github.io/JavaProject).
 - The following project is programmed by Johnnatan Cohen and Liran Polak.
 
 ## 2048
