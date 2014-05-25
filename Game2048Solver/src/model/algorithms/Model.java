@@ -37,4 +37,12 @@ public interface Model {
 	public void setEmptyCell(int i, int j, int value);
 
 	public Object clone() throws CloneNotSupportedException;
+
+//	public boolean moveDownLeft(boolean simulate);
+//
+//	public boolean moveDownRight(boolean simulate);
+//
+//	public boolean moveUpLeft(boolean simulate);
+//
+//	public boolean moveUpRight(boolean simulate);
 }

@@ -1,9 +1,12 @@
 package model.algorithms;
 
+import java.io.Serializable;
+
 /**
  * State
  */
-public class State implements Comparable<State> {
+public class State implements Comparable<State>, Serializable {
+	private static final long serialVersionUID = 1L;
     private Object state;
     private State parentState;
     private Action leadingAction;
