@@ -1,5 +1,5 @@
 ## Welcome
-- For more information please review our JavaDocs web pages ([Games](javadoc/JavaGames_javadoc/index.html), [Solver](javadoc/GamesSolver_javadoc/index.html) and [RMIInterface](javadoc/RMIInterface_javadoc/index.html)).
+- For more information please review our GitHub landing page, [johnliran.github.io/JavaProject](johnliran.github.io/JavaProject).
 - The following project is programmed by Johnnatan Cohen and Liran Polak.
 
 ## 2048
