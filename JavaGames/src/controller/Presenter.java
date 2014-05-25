@@ -19,8 +19,10 @@ public class Presenter implements Observer {
 	private ArrayList<Thread> threadsList;
 
 	/**
-	 * @param observable    Model and View (The Caller)
-	 * @param notification  Observable's Parameters
+	 * @param observable
+	 *            Model and View (The Caller)
+	 * @param notification
+	 *            Observable's Parameters
 	 */
 	@Override
 	public void update(Observable observable, Object notification) {
@@ -74,13 +76,14 @@ public class Presenter implements Observer {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				startGame();
+				m.initialize();
 				break;
 
 			default:
 				break;
 			}
 		}
+
 		if (observable instanceof WindowShell) {
 			switch (ui.getWindowShell().getUserCommand()) {
 			case Constants.SOLVE:
@@ -88,12 +91,14 @@ public class Presenter implements Observer {
 					@Override
 					public void run() {
 						try {
-							int solveDepth = ui.getWindowShell().getSolveDepth();
+							int solveDepth = ui.getWindowShell()
+									.getSolveDepth();
 							m.solveGame(solveDepth);
 						} catch (RemoteException | CloneNotSupportedException
 								| InterruptedException | NotBoundException e) {
 							ui.getWindowShell().setRmiConnected(false);
-							ui.getWindowShell().displayErrorMessage(Constants.ERROR_SERVER_GENERAL);
+							ui.getWindowShell().displayErrorMessage(
+									Constants.ERROR_SERVER_GENERAL);
 						}
 					}
 				};
@@ -107,13 +112,17 @@ public class Presenter implements Observer {
 					@Override
 					public void run() {
 						try {
-							int solveDepth = ui.getWindowShell().getSolveDepth();
-							int numOfHints = ui.getWindowShell().getNumOfHints();
+							int solveDepth = ui.getWindowShell()
+									.getSolveDepth();
+							int numOfHints = ui.getWindowShell()
+									.getNumOfHints();
 							m.getHint(numOfHints, solveDepth);
 						} catch (RemoteException | CloneNotSupportedException
 								| InterruptedException | NotBoundException e) {
+							System.out.println(e.getMessage());
 							ui.getWindowShell().setRmiConnected(false);
-							ui.getWindowShell().displayErrorMessage(Constants.ERROR_SERVER_GENERAL);
+							ui.getWindowShell().displayErrorMessage(
+									Constants.ERROR_SERVER_GENERAL);
 						}
 					}
 				};
@@ -129,7 +138,8 @@ public class Presenter implements Observer {
 					m.connectRMI(serverName);
 					ui.getWindowShell().setRmiConnected(true);
 				} catch (RemoteException | NotBoundException e) {
-					ui.getWindowShell().displayErrorMessage(Constants.ERROR_COULDNT_CONNECT);
+					ui.getWindowShell().displayErrorMessage(
+							Constants.ERROR_COULDNT_CONNECT);
 					ui.getWindowShell().setRmiConnected(false);
 				}
 				break;
@@ -147,12 +157,14 @@ public class Presenter implements Observer {
 				break;
 
 			case Constants.RESET:
+
 				try {
 					closeAllThreads();
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				startGame();
+				m.initialize();
+
 				break;
 
 			case Constants.PAUSE:
@@ -188,7 +200,7 @@ public class Presenter implements Observer {
 		for (Thread thread : threadsList) {
 			if (thread.isAlive()) {
 				thread.stop();
-				thread.join();
+				thread.join(1000);
 			}
 		}
 	}
@@ -197,4 +209,5 @@ public class Presenter implements Observer {
 		m.initialize();
 		ui.run();
 	}
+	
 }

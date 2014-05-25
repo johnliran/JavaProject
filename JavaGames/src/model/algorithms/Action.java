@@ -3,7 +3,7 @@ package model.algorithms;
 /**
  * Action
  */
-public interface Action {
+public interface Action  {
 
     public State doAction(State state);
 

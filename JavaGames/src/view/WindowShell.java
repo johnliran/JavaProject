@@ -1,6 +1,7 @@
 package view;
 
 import controller.Constants;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.graphics.Color;
@@ -31,11 +32,8 @@ public class WindowShell extends Observable {
         shell.setLayout(new GridLayout(2, false));
         shell.setBackground(new Color(display, Constants.BCOLOR_R, Constants.BCOLOR_G, Constants.BCOLOR_B));
         shell.setBackgroundMode(SWT.INHERIT_DEFAULT);
-        shell.addListener(SWT.Close, new Listener() {
-            public void handleEvent(Event event) {
-                closeAll();
-            }
-        });
+        shell.addListener(SWT.Close, exitListener());
+        
 
         ((Composite) board).setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 8));
 
@@ -271,6 +269,8 @@ public class WindowShell extends Observable {
                                 if (isButton) {
                                     ((Button) event.widget).setText("Pause");
                                     ((Button) event.widget).setImage(new Image(Display.getCurrent(), Constants.IMAGE_BUTTON_PAUSE));
+                                    setChanged();
+                                    notifyObservers();
                                 } else ((MenuItem) event.widget).setText("Pause");
                             }
                             break;
@@ -286,8 +286,6 @@ public class WindowShell extends Observable {
                 } else { // Is the user connected to remote solver server? NO;
                     displayErrorMessage(Constants.ERROR_SOLVE_WITHOUT_CONNECT);
                 }
-                setChanged();
-                notifyObservers();
                 ((Composite) board).forceFocus();
             }
         };
@@ -435,5 +433,11 @@ public class WindowShell extends Observable {
         setChanged();
         notifyObservers();
         Thread.currentThread().stop();
+        try {
+			Thread.currentThread().join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 }
