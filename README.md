@@ -18,9 +18,5 @@ Diagonal move also make a shorcut of moves.
 - You can save, quit, and load again whenever you want.
 - Both games can be controlled by keyboard arrows or Mouse dragging.
 - Developed on Mac OS X - Compatible to most of the common platforms.
- 
-===================================================================
-- The source code is currently not available for download due to a private repository limitations. It'll be publish as soon as we will have all features implemented.
-
 ===================================================================
 
